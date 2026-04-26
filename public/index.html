@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ZiaLabs AI — Your AI-powered research co-pilot. Search millions of academic papers, extract insights, and generate code.">
+  <title>ZiaLabs AI — Research Co-Pilot</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23C8102E'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='12' font-weight='bold' font-family='sans-serif'>ZL</text></svg>">
+</head>
+<body>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toasts"></div>
+
+<!-- ════════════════ LANDING PAGE ════════════════ -->
+<div class="page active" id="pg-landing">
+  <nav>
+    <div class="nav-logo" onclick="App.showPage('pg-landing')">
+      <div class="nl-box">ZL</div>
+      <div class="nl-name">ZiaLabs<span class="nl-super">AI</span></div>
+    </div>
+    <div class="nav-links">
+      <a href="#features">Product</a><a>Research</a><a>Pricing</a><a>Blog</a>
+    </div>
+    <div class="nav-cta">
+      <button class="btn-ghost" onclick="App.showPage('pg-signin')">Sign in</button>
+      <button class="btn-red" onclick="App.showPage('pg-signup')">Get started free</button>
+    </div>
+  </nav>
+
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="hero fade-in">
+      <div class="hero-eyebrow"><div class="pulse"></div><span>Now live — ArXiv + Semantic Scholar</span></div>
+      <h1>Research that thinks<br><em>before you ask</em></h1>
+      <p class="hero-sub">ZiaLabs is your AI research co-pilot. Search millions of academic papers, extract insights, generate code — all in one place.</p>
+      <div class="hero-actions">
+        <button class="btn-hero btn-hero-primary" onclick="App.showPage('pg-signup')">Start for free</button>
+        <button class="btn-hero btn-hero-secondary" onclick="App.showPage('pg-signin')">Sign in to your account</button>
+      </div>
+      <p class="hero-note">No credit card required &nbsp;·&nbsp; <span>Google Sign-In</span> supported &nbsp;·&nbsp; Free tier available</p>
+    </div>
+
+    <div class="stats-row fade-in delay-2">
+      <div class="stat-item"><div class="stat-num">2.4<span>M+</span></div><div class="stat-desc">Papers indexed</div></div>
+      <div class="stat-item"><div class="stat-num">98<span>%</span></div><div class="stat-desc">Search accuracy</div></div>
+      <div class="stat-item"><div class="stat-num">12<span>K+</span></div><div class="stat-desc">Researchers using ZiaLabs</div></div>
+      <div class="stat-item"><div class="stat-num">5<span>x</span></div><div class="stat-desc">Faster than manual review</div></div>
+    </div>
+  </div>
+
+  <div class="features fade-in delay-3" id="features" style="max-width:1100px;margin:0 auto">
+    <div class="section-label">Core Features</div>
+    <div class="section-title">Everything you need to do serious research</div>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg></div>
+        <div class="feat-title">Multi-source search</div>
+        <div class="feat-desc">ArXiv, Semantic Scholar — search millions of papers with a single query across multiple databases.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg></div>
+        <div class="feat-title">AI insights engine</div>
+        <div class="feat-desc">Automatically extract key findings, methodology, and conclusions from any research paper.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg></div>
+        <div class="feat-title">Code generation</div>
+        <div class="feat-desc">Generate Python, R or MATLAB implementations directly from research papers instantly.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg></div>
+        <div class="feat-title">PDF upload & analyze</div>
+        <div class="feat-desc">Upload your papers — ZiaLabs reads them and provides intelligent answers and analysis.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg></div>
+        <div class="feat-title">Citation tracking</div>
+        <div class="feat-desc">Find related papers, citations, and references automatically with one click.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></div>
+        <div class="feat-title">Research summaries</div>
+        <div class="feat-desc">Convert dense papers into clear, readable summaries — 10x faster reading experience.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ SIGN IN ════════════════ -->
+<div class="page" id="pg-signin">
+  <div class="auth-wrap">
+    <div class="auth-left">
+      <div class="auth-left-logo">
+        <div class="nl-box">ZL</div>
+        <div class="nl-name" style="color:#fff;font-size:16px;font-weight:600">ZiaLabs<span style="font-size:9px;color:rgba(255,255,255,0.65);letter-spacing:2px;text-transform:uppercase;margin-left:4px;vertical-align:super">AI</span></div>
+      </div>
+      <div>
+        <div class="auth-tagline">Research smarter,<br><em>not harder.</em></div>
+        <p style="font-size:14px;color:rgba(255,255,255,0.7);margin-top:16px;line-height:1.7">Millions of academic papers. One intelligent interface. Welcome back.</p>
+      </div>
+      <div class="auth-left-foot">© 2025 ZiaLabs Technologies Pvt. Ltd.</div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;padding:40px;background:#fff;flex:1">
+      <div style="width:100%;max-width:400px">
+        <div style="margin-bottom:32px">
+          <div class="auth-title">Welcome back</div>
+          <div class="auth-sub">Sign in to continue your research</div>
+        </div>
+        <div class="auth-error" id="si-error"></div>
+        <button class="google-btn" onclick="Auth.googleSignIn()">
+          <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+        <div class="divider"><div class="divider-line"></div><div class="divider-text">or sign in with email</div><div class="divider-line"></div></div>
+        <div class="form-group">
+          <label class="form-label">Email address</label>
+          <input class="form-input" type="email" placeholder="you@example.com" id="si-email">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" placeholder="Enter your password" id="si-pass">
+        </div>
+        <div style="text-align:right;margin:-8px 0 16px"><a style="font-size:12px;color:var(--red);cursor:pointer;font-weight:500">Forgot password?</a></div>
+        <button class="btn-full" id="si-btn" onclick="Auth.emailSignIn()">Sign in to ZiaLabs</button>
+        <div class="auth-switch">Don't have an account? <a onclick="App.showPage('pg-signup')">Create one free</a></div>
+        <div class="terms">By signing in, you agree to our <a>Terms</a> and <a>Privacy Policy</a>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ SIGN UP ════════════════ -->
+<div class="page" id="pg-signup">
+  <div class="auth-wrap">
+    <div class="auth-left">
+      <div class="auth-left-logo">
+        <div class="nl-box">ZL</div>
+        <div class="nl-name" style="color:#fff;font-size:16px;font-weight:600">ZiaLabs<span style="font-size:9px;color:rgba(255,255,255,0.65);letter-spacing:2px;text-transform:uppercase;margin-left:4px;vertical-align:super">AI</span></div>
+      </div>
+      <div>
+        <div class="auth-tagline">Your AI<br>research partner<br><em>starts here.</em></div>
+        <p style="font-size:14px;color:rgba(255,255,255,0.7);margin-top:16px;line-height:1.7">Join 12,000+ researchers already using ZiaLabs to accelerate their work.</p>
+      </div>
+      <div class="auth-left-foot">Free tier — no credit card needed.</div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;padding:40px;background:#fff;flex:1">
+      <div style="width:100%;max-width:400px">
+        <div style="margin-bottom:28px">
+          <div class="auth-title">Create your account</div>
+          <div class="auth-sub">Start for free — upgrade anytime</div>
+        </div>
+        <div class="auth-error" id="su-error"></div>
+        <button class="google-btn" onclick="Auth.googleSignIn()">
+          <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Sign up with Google
+        </button>
+        <div class="divider"><div class="divider-line"></div><div class="divider-text">or create with email</div><div class="divider-line"></div></div>
+        <div class="form-group">
+          <label class="form-label">Full name</label>
+          <input class="form-input" type="text" placeholder="Dr. Zia Khan" id="su-name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Work / research email</label>
+          <input class="form-input" type="email" placeholder="you@university.edu" id="su-email">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" placeholder="Min. 8 characters" id="su-pass">
+        </div>
+        <button class="btn-full" id="su-btn" onclick="Auth.emailSignUp()">Create free account</button>
+        <div class="auth-switch">Already have an account? <a onclick="App.showPage('pg-signin')">Sign in</a></div>
+        <div class="terms">By signing up, you agree to our <a>Terms of Service</a> and <a>Privacy Policy</a>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ DASHBOARD ════════════════ -->
+<div class="page" id="pg-dash">
+  <div class="dash-layout">
+    <div class="sidebar">
+      <div class="sb-logo" onclick="App.showPage('pg-landing')">
+        <div class="nl-box">ZL</div>
+        <div class="nl-name">ZiaLabs<span class="nl-super">AI</span></div>
+      </div>
+      <div class="sb-nav">
+        <div class="sb-section">Main</div>
+        <div class="sb-item active" onclick="Dashboard.setSidebar(this)">
+          <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg> Dashboard
+        </div>
+        <div class="sb-item" onclick="Dashboard.setSidebar(this)">
+          <svg viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg> Search Papers
+        </div>
+        <div class="sb-item" onclick="Dashboard.setSidebar(this)">
+          <svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg> AI Insights
+        </div>
+        <div class="sb-item" onclick="Dashboard.setSidebar(this)">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg> My Papers
+        </div>
+        <div class="sb-section">Account</div>
+        <div class="sb-item" onclick="Dashboard.setSidebar(this)">
+          <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg> Settings
+        </div>
+      </div>
+      <div class="sb-user">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div class="sb-user-av" id="dash-av">R</div>
+          <div>
+            <div class="sb-user-name" id="dash-uname">Researcher</div>
+            <div class="sb-user-role" id="dash-role">Researcher · Free plan</div>
+          </div>
+        </div>
+        <div class="sb-logout" onclick="Auth.signOut()">Sign out</div>
+      </div>
+    </div>
+
+    <div class="dash-main">
+      <div class="dash-topbar">
+        <div>
+          <div class="dash-title">Research Dashboard</div>
+          <div class="dash-subtitle">Good to have you back, <span id="dash-greeting">researcher</span></div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-badge" id="dash-plan-badge">Free plan</div>
+          <button class="btn-red" style="font-size:12px;padding:7px 16px">Upgrade</button>
+        </div>
+      </div>
+
+      <div class="dash-content">
+        <div class="metrics-row">
+          <div class="metric-card"><div class="mc-label">Searches</div><div class="mc-val" id="m-searches">0</div><div class="mc-change" id="m-searches-sub">+0 this week</div></div>
+          <div class="metric-card"><div class="mc-label">Papers saved</div><div class="mc-val" id="m-papers">0</div><div class="mc-change">Your library</div></div>
+          <div class="metric-card"><div class="mc-label">Insights generated</div><div class="mc-val" id="m-insights">0</div><div class="mc-change">AI responses</div></div>
+          <div class="metric-card"><div class="mc-label">API calls left</div><div class="mc-val" id="m-api">500</div><div class="mc-change down" id="m-api-sub">500 limit / mo</div></div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">ZiaLabs AI Agent</div>
+              <div class="panel-action" onclick="Chat.clear()">Clear chat</div>
+            </div>
+            <div class="chat-msgs" id="dchat"></div>
+            <div class="chat-input-row">
+              <input type="text" placeholder="Research karo ya kuch pucho..." id="dinp" onkeydown="if(event.key==='Enter')Chat.send()">
+              <button class="ci-send" onclick="Chat.send()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="panel">
+              <div class="panel-head"><div class="panel-title">Active sources</div><div class="panel-action">Manage</div></div>
+              <div class="src-status">
+                <div class="src-row"><div class="src-info"><div class="src-dot"></div><div><div class="src-name">ArXiv</div><div class="src-count">2.1M papers</div></div></div><div class="src-toggle" onclick="this.classList.toggle('off')"></div></div>
+                <div class="src-row"><div class="src-info"><div class="src-dot"></div><div><div class="src-name">Semantic Scholar</div><div class="src-count">200M+ papers</div></div></div><div class="src-toggle" onclick="this.classList.toggle('off')"></div></div>
+                <div class="src-row"><div class="src-info"><div class="src-dot off"></div><div><div class="src-name">IEEE Xplore</div><div class="src-count">Coming soon</div></div></div><div class="src-toggle off" onclick="this.classList.toggle('off')"></div></div>
+                <div class="src-row"><div class="src-info"><div class="src-dot off"></div><div><div class="src-name">Google Scholar</div><div class="src-count">Coming soon</div></div></div><div class="src-toggle off" onclick="this.classList.toggle('off')"></div></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head"><div class="panel-title">Recent searches</div><div class="panel-action">View all</div></div>
+              <div class="recent-searches" id="recent-searches">
+                <div style="padding:16px 0;text-align:center;font-size:12px;color:#9ca3af">No searches yet</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/app.js"></script>
+</body>
+</html>
