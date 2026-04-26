@@ -35,7 +35,7 @@ class AIAgent {
     } else {
       this.#genAI = new GoogleGenerativeAI(apiKey);
       this.#model = this.#genAI.getGenerativeModel({
-        model: 'gemini-1.5-flash',
+        model: 'gemini-flash-latest',
         systemInstruction: SYSTEM_PROMPT,
       });
     }
@@ -65,12 +65,19 @@ class AIAgent {
       try {
         // Get conversation history for context
         const history = ChatMessage.getRecentContext(userId, 20);
-        const chatHistory = history.slice(0, -1).map(msg => ({
-          role: msg.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: msg.content }],
-        }));
+        
+        // Sanitize history: Gemini strictly requires alternating user/model roles starting with user
+        let validHistory = [];
+        let expectedRole = 'user';
+        for (const msg of history.slice(0, -1)) {
+          const role = msg.role === 'assistant' ? 'model' : 'user';
+          if (role === expectedRole) {
+            validHistory.push({ role, parts: [{ text: msg.content }] });
+            expectedRole = role === 'user' ? 'model' : 'user';
+          }
+        }
 
-        const chat = this.#model.startChat({ history: chatHistory });
+        const chat = this.#model.startChat({ history: validHistory });
         const result = await chat.sendMessage(message);
         response = result.response.text();
       } catch (err) {
