@@ -1,5 +1,3 @@
-// ─── ZiaLabs AI — Semantic Scholar Search Service ───
-
 const SS_API = 'https://api.semanticscholar.org/graph/v1/paper/search';
 
 class SemanticScholarService {

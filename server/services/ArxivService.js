@@ -1,4 +1,3 @@
-// ─── ZiaLabs AI — ArXiv Paper Search Service ───
 const { parseStringPromise } = require('xml2js');
 
 const ARXIV_API = 'http://export.arxiv.org/api/query';

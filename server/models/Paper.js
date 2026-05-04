@@ -1,4 +1,3 @@
-// ─── ZiaLabs AI — Paper Model ───
 const DB = require('../config/database');
 
 class Paper {

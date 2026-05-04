@@ -15,13 +15,17 @@
 
 <!-- ════════════════ LANDING PAGE ════════════════ -->
 <div class="page active" id="pg-landing">
+
   <nav>
     <div class="nav-logo" onclick="App.showPage('pg-landing')">
       <div class="nl-box">ZL</div>
       <div class="nl-name">ZiaLabs<span class="nl-super">AI</span></div>
     </div>
     <div class="nav-links">
-      <a href="#features">Product</a><a>Research</a><a>Pricing</a><a>Blog</a>
+      <a href="#features">Product</a>
+      <a href="#research">Research</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#blog">Blog</a>
     </div>
     <div class="nav-cta">
       <button class="btn-ghost" onclick="App.showPage('pg-signin')">Sign in</button>
@@ -49,6 +53,7 @@
     </div>
   </div>
 
+  <!-- PRODUCT (FEATURES) -->
   <div class="features fade-in delay-3" id="features" style="max-width:1100px;margin:0 auto">
     <div class="section-label">Core Features</div>
     <div class="section-title">Everything you need to do serious research</div>
@@ -68,24 +73,94 @@
         <div class="feat-title">Code generation</div>
         <div class="feat-desc">Generate Python, R or MATLAB implementations directly from research papers instantly.</div>
       </div>
-      <div class="feat-card">
-        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg></div>
-        <div class="feat-title">PDF upload & analyze</div>
-        <div class="feat-desc">Upload your papers — ZiaLabs reads them and provides intelligent answers and analysis.</div>
+    </div>
+  </div>
+
+
+  <!-- RESEARCH -->
+  <div class="features" id="research" style="max-width:1100px;margin:0 auto;padding-top:40px">
+    <div class="section-label">Advanced Research</div>
+    <div class="section-title">Deep intelligence for global knowledge</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+      <div>
+        <p style="font-size:16px;color:var(--gray);line-height:1.7;margin-bottom:24px">ZiaLabs uses state-of-the-art LLMs to understand the context of your research, not just the keywords. We bridge the gap between discovery and implementation.</p>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:12px">
+          <li style="display:flex;gap:12px;font-size:14px;color:var(--black);font-weight:500"><svg viewBox="0 0 24 24" style="width:18px;fill:var(--red)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Semantic cross-referencing</li>
+          <li style="display:flex;gap:12px;font-size:14px;color:var(--black);font-weight:500"><svg viewBox="0 0 24 24" style="width:18px;fill:var(--red)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Automated literature reviews</li>
+          <li style="display:flex;gap:12px;font-size:14px;color:var(--black);font-weight:500"><svg viewBox="0 0 24 24" style="width:18px;fill:var(--red)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Real-time citation impact mapping</li>
+        </ul>
       </div>
-      <div class="feat-card">
-        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg></div>
-        <div class="feat-title">Citation tracking</div>
-        <div class="feat-desc">Find related papers, citations, and references automatically with one click.</div>
+      <div class="research-img-box">
+        <img src="/img/advanced_research.png" alt="Advanced AI Research">
+        <div class="img-overlay-badge">
+          <div class="pulse"></div>
+          <span>Intelligence Engine Active</span>
+        </div>
       </div>
-      <div class="feat-card">
-        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></div>
-        <div class="feat-title">Research summaries</div>
-        <div class="feat-desc">Convert dense papers into clear, readable summaries — 10x faster reading experience.</div>
+    </div>
+  </div>
+
+
+
+
+  <!-- PRICING -->
+  <div class="features" id="pricing" style="max-width:1100px;margin:0 auto;padding-top:80px">
+    <div class="section-label">Pricing</div>
+    <div class="section-title">Built for every stage of discovery</div>
+    <div class="features-grid" style="background:transparent;border:none;gap:24px">
+      <div class="feat-card" style="border:1px solid var(--border);border-radius:12px">
+        <div class="feat-title">Free</div>
+        <div style="font-size:32px;font-weight:700;margin:12px 0">$0 <span style="font-size:14px;color:var(--gray);font-weight:400">/ forever</span></div>
+        <p style="font-size:13px;color:var(--gray);margin-bottom:20px">Perfect for casual research and exploration.</p>
+        <button class="btn-ghost" style="width:100%" onclick="App.showPage('pg-signup')">Get Started</button>
+      </div>
+      <div class="feat-card" style="border:2px solid var(--red);border-radius:12px;position:relative;box-shadow:0 12px 32px rgba(200,16,46,0.06)">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;font-size:10px;padding:4px 10px;border-radius:20px;font-weight:700;text-transform:uppercase">Most Popular</div>
+        <div class="feat-title">Pro</div>
+        <div style="font-size:32px;font-weight:700;margin:12px 0">$3 <span style="font-size:14px;color:var(--gray);font-weight:400">/ mo</span></div>
+        <p style="font-size:13px;color:var(--gray);margin-bottom:20px">For serious researchers and PhD candidates.</p>
+        <button class="btn-red" style="width:100%" onclick="App.showPage('pg-signup')">Go Pro</button>
+      </div>
+      <div class="feat-card" style="border:1px solid var(--border);border-radius:12px">
+        <div class="feat-title">Enterprise</div>
+        <div style="font-size:32px;font-weight:700;margin:12px 0">Custom</div>
+        <p style="font-size:13px;color:var(--gray);margin-bottom:20px">For universities and corporate research labs.</p>
+        <button class="btn-ghost" style="width:100%">Contact Sales</button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- BLOG -->
+  <div class="features" id="blog" style="max-width:1100px;margin:0 auto;padding-top:80px;padding-bottom:120px">
+    <div class="section-label">ZiaLabs Blog</div>
+    <div class="section-title">The future of research, delivered weekly</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+      <div class="blog-card">
+        <div class="blog-img-wrap"><img src="/img/blog1.png" alt="Medical AI"></div>
+        <div style="font-size:12px;color:var(--red);font-weight:600;margin-bottom:8px">RESEARCH • 5 MIN READ</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px">How AI is accelerating COVID-19 literature reviews</div>
+        <p style="font-size:13px;color:var(--gray);line-height:1.5">Exploring the impact of automated insight extraction on pandemic research...</p>
+      </div>
+      <div class="blog-card">
+        <div class="blog-img-wrap"><img src="/img/blog2.png" alt="Semantic Search"></div>
+        <div style="font-size:12px;color:var(--red);font-weight:600;margin-bottom:8px">ENGINEERING • 8 MIN READ</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px">Scaling semantic search for 200M+ papers</div>
+        <p style="font-size:13px;color:var(--gray);line-height:1.5">The architecture behind ZiaLabs' multi-source paper indexing engine...</p>
+      </div>
+      <div class="blog-card">
+        <div class="blog-img-wrap"><img src="/img/blog3.png" alt="Code Generation"></div>
+        <div style="font-size:12px;color:var(--red);font-weight:600;margin-bottom:8px">TUTORIAL • 4 MIN READ</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px">Getting started with code generation from ArXiv</div>
+        <p style="font-size:13px;color:var(--gray);line-height:1.5">A step-by-step guide to turning research math into working Python code...</p>
       </div>
     </div>
   </div>
 </div>
+
+
 
 <!-- ════════════════ SIGN IN ════════════════ -->
 <div class="page" id="pg-signin">
@@ -215,19 +290,23 @@
       </div>
     </div>
 
+
     <div class="dash-main">
       <div class="dash-topbar">
         <div>
-          <div class="dash-title">Research Dashboard</div>
-          <div class="dash-subtitle">Good to have you back, <span id="dash-greeting">researcher</span></div>
+          <div class="dash-title" id="dash-view-title">Research Dashboard</div>
+          <div class="dash-subtitle" id="dash-view-subtitle">Good to have you back</div>
         </div>
+
         <div class="topbar-right">
           <div class="topbar-badge" id="dash-plan-badge">Free plan</div>
-          <button class="btn-red" style="font-size:12px;padding:7px 16px">Upgrade</button>
+          <button class="btn-red" style="font-size:12px;padding:7px 16px" onclick="Payment.upgrade()">Upgrade</button>
         </div>
+
       </div>
 
-      <div class="dash-content">
+      <!-- ── DASHBOARD HOME ── -->
+      <div class="dash-content" id="dc-home">
         <div class="metrics-row">
           <div class="metric-card"><div class="mc-label">Searches</div><div class="mc-val" id="m-searches">0</div><div class="mc-change" id="m-searches-sub">+0 this week</div></div>
           <div class="metric-card"><div class="mc-label">Papers saved</div><div class="mc-val" id="m-papers">0</div><div class="mc-change">Your library</div></div>
@@ -268,7 +347,77 @@
           </div>
         </div>
       </div>
+
+      <!-- ── SEARCH PAPERS ── -->
+      <div class="dash-content d-none" id="dc-search">
+        <div class="search-bar-row">
+          <input type="text" class="search-input" id="s-query" placeholder="Enter keywords, titles, or authors..." onkeydown="if(event.key==='Enter')Search.run()">
+          <button class="btn-red" onclick="Search.run()">Search Papers</button>
+        </div>
+        <div class="results-grid" id="s-results">
+          <div style="padding:60px 0;text-align:center">
+            <div style="font-size:40px;margin-bottom:16px">📚</div>
+            <div style="font-size:16px;font-weight:600;color:var(--black)">Millions of papers at your fingertips</div>
+            <div style="font-size:13px;color:var(--gray);margin-top:8px">Search across ArXiv and Semantic Scholar in real-time.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── AI INSIGHTS ── -->
+      <div class="dash-content d-none" id="dc-insights">
+        <div class="panel" style="max-width:800px;margin:0 auto">
+          <div class="panel-head"><div class="panel-title">AI Insights & Analysis</div></div>
+          <div style="padding:40px;text-align:center">
+            <div style="font-size:40px;margin-bottom:16px">✨</div>
+            <div style="font-size:16px;font-weight:600;color:var(--black)">AI Insights Engine</div>
+            <div style="font-size:13px;color:var(--gray);margin-top:12px;max-width:400px;margin-inline:auto">Select a paper from your library or search results to generate deep insights, summaries, and code implementations.</div>
+            <button class="btn-red" style="margin-top:24px" onclick="Dashboard.setSidebar(document.querySelector('.sb-item:nth-child(3)'))">Go to Search</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── MY PAPERS (LIBRARY) ── -->
+      <div class="dash-content d-none" id="dc-library">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+          <div style="font-size:14px;color:var(--gray)"><span id="lib-count">0</span> papers in your library</div>
+          <div>
+            <button class="btn-ghost" style="font-size:12px">Export BibTeX</button>
+            <button class="btn-red" style="font-size:12px; margin-left:8px;" onclick="document.getElementById('upload-paper-input').click()">Upload Paper</button>
+            <input type="file" id="upload-paper-input" style="display:none" accept="application/pdf" onchange="Library.upload(event)">
+          </div>
+        </div>
+        <div class="results-grid" id="l-results">
+          <div style="padding:60px 0;text-align:center">
+            <div style="font-size:40px;margin-bottom:16px">📁</div>
+            <div style="font-size:16px;font-weight:600;color:var(--black)">Your library is empty</div>
+            <div style="font-size:13px;color:var(--gray);margin-top:8px">Save papers from search results to build your collection.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div class="dash-content d-none" id="dc-settings">
+        <div class="panel" style="max-width:600px">
+          <div class="panel-head"><div class="panel-title">Account Settings</div></div>
+          <div style="padding:24px">
+            <div class="form-group">
+              <label class="form-label">Display Name</label>
+              <input type="text" class="form-input" id="set-name" value="Researcher">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-input" id="set-email" value="researcher@zialabs.ai" disabled>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Preferred Citations</label>
+              <select class="form-input" style="appearance:auto"><option>APA</option><option>MLA</option><option>IEEE</option><option>BibTeX</option></select>
+            </div>
+            <button class="btn-red" style="width:auto;padding:10px 24px">Save Changes</button>
+          </div>
+        </div>
+      </div>
     </div>
+
   </div>
 </div>
 

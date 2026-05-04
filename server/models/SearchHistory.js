@@ -1,4 +1,3 @@
-// ─── ZiaLabs AI — Search History Model ───
 const DB = require('../config/database');
 
 class SearchHistory {

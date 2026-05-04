@@ -1,4 +1,3 @@
-// ─── ZiaLabs AI — Multi-Source Paper Search Orchestrator ───
 const ArxivService = require('./ArxivService');
 const SemanticScholarService = require('./SemanticScholarService');
 

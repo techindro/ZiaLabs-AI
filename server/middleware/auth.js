@@ -1,4 +1,3 @@
-// ─── ZiaLabs AI — JWT Auth Middleware ───
 const AuthService = require('../services/AuthService');
 
 /**

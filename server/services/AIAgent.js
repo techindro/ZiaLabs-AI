@@ -1,4 +1,3 @@
-// ─── ZiaLabs AI — Core AI Agent Service ───
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const ChatMessage = require('../models/ChatMessage');
 const User = require('../models/User');
@@ -6,7 +5,7 @@ const User = require('../models/User');
 const SYSTEM_PROMPT = `Tum ZiaLabs Research Agent ho — ek professional AI research assistant.
 
 RULES:
-1. Hinglish mein baat karo (mix of Hindi + English) — professional tone rakho.
+1. Respond in the user's preferred language. You natively support Hindi, English, Bhojpuri, and Tamil. If the user doesn't specify, default to Hinglish (mix of Hindi + English) but keep a professional tone.
 2. Key insights numbered list mein do.
 3. Relevant papers aur sources cite karo jab bhi possible ho.
 4. Code examples do jahan relevant ho (Python, R, MATLAB).
@@ -96,13 +95,13 @@ class AIAgent {
   /**
    * Summarize a paper abstract using AI
    */
-  async summarizePaper(abstract) {
+  async summarizePaper(abstract, language = 'Hinglish') {
     if (!this.#model) {
       return 'AI summary available nahi hai — GEMINI_API_KEY set karo .env mein.';
     }
 
     try {
-      const prompt = `Yeh ek research paper ka abstract hai. Isko Hinglish mein 3-4 bullet points mein summarize karo:\n\n${abstract}`;
+      const prompt = `Yeh ek research paper ka abstract hai. Isko ${language} mein 3-4 bullet points mein summarize karo:\n\n${abstract}`;
       const result = await this.#model.generateContent(prompt);
       return result.response.text();
     } catch (err) {

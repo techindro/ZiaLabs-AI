@@ -1,4 +1,3 @@
-// ─── ZiaLabs AI — Frontend Application ───
 // Class-based SPA controller with API client, auth, chat, and dashboard management.
 
 const API_BASE = '/api';
@@ -253,6 +252,10 @@ class Dashboard {
     Dashboard.loadStats();
     Dashboard.loadRecentSearches();
     Chat.init();
+    
+    // Initialize the active sidebar view to properly set titles/subtitles
+    const activeItem = document.querySelector('.sb-item.active');
+    if (activeItem) Dashboard.setSidebar(activeItem);
   }
 
   static #setUserInfo() {
@@ -262,7 +265,6 @@ class Dashboard {
     const initials = user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
     document.getElementById('dash-av').textContent = initials;
     document.getElementById('dash-uname').textContent = user.name;
-    document.getElementById('dash-greeting').textContent = user.name.split(' ')[0];
     document.getElementById('dash-role').textContent = `Researcher · ${user.plan || 'Free'} plan`;
     document.getElementById('dash-plan-badge').textContent = `${user.plan || 'Free'} plan`;
   }
@@ -317,9 +319,221 @@ class Dashboard {
     return `${days}d ago`;
   }
 
+
   static setSidebar(el) {
     document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
     el.classList.add('active');
+
+    const text = el.textContent.trim();
+    let sectionId = 'dc-home';
+    let title = 'Research Dashboard';
+    let subtitle = `Good to have you back, ${Auth.user ? Auth.user.name.split(' ')[0] : 'researcher'}`;
+
+    if (text.includes('Search Papers')) {
+      sectionId = 'dc-search';
+      title = 'Search Academic Papers';
+      subtitle = 'Find relevant research across multiple academic sources';
+      Search.init();
+    } else if (text.includes('AI Insights')) {
+      sectionId = 'dc-insights';
+      title = 'AI Research Insights';
+      subtitle = 'Deep analysis and automated intelligence for your research';
+    } else if (text.includes('My Papers')) {
+      sectionId = 'dc-library';
+      title = 'My Research Library';
+      subtitle = 'Your personal collection of saved academic papers';
+      Library.init();
+    } else if (text.includes('Settings')) {
+      sectionId = 'dc-settings';
+      title = 'Account Settings';
+      subtitle = 'Manage your profile and research preferences';
+    }
+
+    document.querySelectorAll('.dash-content').forEach(c => c.classList.add('d-none'));
+    document.getElementById(sectionId).classList.remove('d-none');
+    document.getElementById('dash-view-title').textContent = title;
+    document.getElementById('dash-view-subtitle').textContent = subtitle;
+  }
+}
+
+// ════════════════════════════════════════════
+//  Search — Paper searching and results
+// ════════════════════════════════════════════
+class Search {
+  static init() {
+    // Focus search input
+    setTimeout(() => document.getElementById('s-query')?.focus(), 100);
+  }
+
+  static async run() {
+    const query = document.getElementById('s-query').value.trim();
+    if (!query) return;
+
+    const container = document.getElementById('s-results');
+    container.innerHTML = '<div style="padding:100px 0;text-align:center"><div class="dtyping" style="justify-content:center"><div class="ddot"></div><div class="ddot"></div><div class="ddot"></div></div><div style="font-size:13px;color:var(--gray);margin-top:16px">Searching millions of papers...</div></div>';
+
+    try {
+      const { papers } = await ApiClient.get(`/search?q=${encodeURIComponent(query)}`);
+      
+      if (papers.length === 0) {
+        container.innerHTML = '<div style="padding:60px 0;text-align:center"><div style="font-size:40px;margin-bottom:16px">🔍</div><div style="font-size:16px;font-weight:600;color:var(--black)">No papers found</div><div style="font-size:13px;color:var(--gray);margin-top:8px">Try adjusting your keywords or search filters.</div></div>';
+        return;
+      }
+
+      container.innerHTML = papers.map(p => Search.renderPaperCard(p)).join('');
+      Dashboard.loadStats(); // Update search count
+    } catch (err) {
+      Toast.error(err.message);
+      container.innerHTML = `<div style="padding:60px 0;text-align:center;color:#ef4444">${err.message}</div>`;
+    }
+  }
+
+  static renderPaperCard(p, isLibrary = false) {
+    const authors = Array.isArray(p.authors) ? p.authors.join(', ') : p.authors || 'Unknown Authors';
+    const year = p.published ? new Date(p.published).getFullYear() : 'N/A';
+    
+    return `
+      <div class="paper-card">
+        <div class="pc-top">
+          <div class="pc-source">${p.source || 'Academic'}</div>
+          <div class="pc-meta">${year} · ${p.citations || 0} citations</div>
+        </div>
+        <div class="pc-title">${p.title}</div>
+        <div class="pc-authors">${authors}</div>
+        <div class="pc-abstract">${p.abstract || 'No abstract available for this paper.'}</div>
+        <div class="pc-foot">
+          <a href="${p.sourceUrl}" target="_blank" style="font-size:12px;color:var(--red);text-decoration:none;font-weight:500">View Source ↗</a>
+          <div class="pc-actions">
+            ${isLibrary ? 
+              `${p.source === 'local_upload' ? `<button class="btn-save" onclick="window.open('${p.sourceUrl}?token=${ApiClient.getToken()}', '_blank')">Download</button>` : ''}
+              <button class="btn-save" onclick="Library.remove(${p.id})">Remove</button>` : 
+              `<button class="btn-save" id="btn-save-${Math.random().toString(36).substr(2, 9)}" onclick="Library.save(this, ${JSON.stringify(p).replace(/"/g, '&quot;')})">Save to Library</button>`
+            }
+            <button class="btn-save" style="background:var(--black);color:#fff;border:none" onclick="Search.analyze('${p.title.replace(/'/g, "\\'")}')">AI Insights</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  static analyze(title) {
+    Dashboard.setSidebar(document.querySelectorAll('.sb-item')[0]); // Go to dashboard
+    document.getElementById('dinp').value = `Analyze the paper titled "${title}" and give me key insights.`;
+    Chat.send();
+  }
+}
+
+// ════════════════════════════════════════════
+//  Library — Saved papers management
+// ════════════════════════════════════════════
+class Library {
+  static async init() {
+    const container = document.getElementById('l-results');
+    container.innerHTML = '<div style="padding:40px;text-align:center">Loading library...</div>';
+
+    try {
+      const { papers } = await ApiClient.get('/papers');
+      document.getElementById('lib-count').textContent = papers.length;
+
+      if (papers.length === 0) {
+        container.innerHTML = '<div style="padding:60px 0;text-align:center"><div style="font-size:40px;margin-bottom:16px">📁</div><div style="font-size:16px;font-weight:600;color:var(--black)">Your library is empty</div><div style="font-size:13px;color:var(--gray);margin-top:8px">Save papers from search results to build your collection.</div></div>';
+        return;
+      }
+
+      container.innerHTML = papers.map(p => Search.renderPaperCard(p, true)).join('');
+    } catch (err) {
+      Toast.error(err.message);
+    }
+  }
+
+  static async save(btn, paper) {
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+    try {
+      await ApiClient.post('/papers/save', paper);
+      btn.textContent = 'Saved';
+      btn.classList.add('saved');
+      Toast.success('Paper saved to library');
+      Dashboard.loadStats();
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Save to Library';
+      Toast.error(err.message);
+    }
+  }
+
+
+  static async remove(id) {
+    if (!confirm('Are you sure you want to remove this paper from your library?')) return;
+    try {
+      await ApiClient.del(`/papers/${id}`);
+      Toast.success('Paper removed');
+      Library.init();
+      Dashboard.loadStats();
+    } catch (err) {
+      Toast.error(err.message);
+    }
+  }
+
+  static async upload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // Reset input
+    event.target.value = '';
+
+    Toast.info(`Uploading ${file.name}...`);
+    try {
+      const formData = new FormData();
+      formData.append('paper', file);
+      
+      const res = await fetch(`${API_BASE}/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${ApiClient.getToken()}`
+        },
+        body: formData
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      
+      Toast.success('Paper uploaded and saved to library!');
+      Library.init();
+      Dashboard.loadStats();
+    } catch (err) {
+      Toast.error(err.message);
+    }
+  }
+}
+
+// ════════════════════════════════════════════
+//  Payment — Stripe integration
+// ════════════════════════════════════════════
+class Payment {
+  static async upgrade() {
+    try {
+      Toast.info('Preparing secure checkout...');
+      const { url } = await ApiClient.post('/payment/create-checkout-session');
+      if (url) {
+        window.location.href = url;
+      }
+    } catch (err) {
+      Toast.error(err.message);
+    }
+  }
+
+  static checkStatus() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('upgrade') === 'success') {
+      Toast.success('Upgrade successful! You are now a Pro member.');
+      // Remove param from URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+      if (Auth.isLoggedIn()) App.showPage('pg-dash');
+    } else if (params.get('upgrade') === 'cancel') {
+      Toast.info('Upgrade cancelled.');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   }
 }
 
@@ -342,6 +556,9 @@ class App {
   }
 
   static init() {
+    // Check for payment status first
+    Payment.checkStatus();
+
     // Auto-login if token exists
     if (Auth.isLoggedIn()) {
       // Verify token is still valid
@@ -359,3 +576,4 @@ class App {
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
 });
+

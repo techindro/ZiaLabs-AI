@@ -1,4 +1,3 @@
-// ─── ZiaLabs AI — User Model ───
 const DB = require('../config/database');
 
 class User {
@@ -41,9 +40,16 @@ class User {
     return user ? user.apiCallsUsed < user.apiCallsLimit : false;
   }
 
+
   static updatePlan(id, plan, newLimit = 500) {
     DB.run('UPDATE users SET plan = ?, api_calls_limit = ? WHERE id = ?', [plan, newLimit, id]);
   }
+
+  static upgradePlan(id, plan) {
+    const limit = plan === 'Pro' ? 5000 : 500;
+    DB.run('UPDATE users SET plan = ?, api_calls_limit = ? WHERE id = ?', [plan, limit, id]);
+  }
+
 
   toJSON() {
     return {

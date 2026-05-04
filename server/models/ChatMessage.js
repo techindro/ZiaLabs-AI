@@ -1,4 +1,3 @@
-// ─── ZiaLabs AI — Chat Message Model ───
 const DB = require('../config/database');
 
 class ChatMessage {
