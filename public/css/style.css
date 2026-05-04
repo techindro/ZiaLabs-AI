@@ -283,3 +283,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0 48px
 }
 
 
+
+.marquee-track { display: flex; width: max-content; animation: scroll-left 30s linear infinite; }
+.marquee-logo { display: flex; align-items: center; justify-content: center; height: 60px; padding: 0 40px; margin: 0 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; font-weight: 800; color: #0f172a; font-size: 18px; letter-spacing: -0.5px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+@keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
