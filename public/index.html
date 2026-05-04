@@ -34,15 +34,20 @@
   </nav>
 
   <div style="max-width:1100px;margin:0 auto">
-    <div class="hero fade-in">
-      <div class="hero-eyebrow"><div class="pulse"></div><span>Now live — ArXiv + Semantic Scholar</span></div>
-      <h1>Research that thinks<br><em>before you ask</em></h1>
-      <p class="hero-sub">ZiaLabs is your AI research co-pilot. Search millions of academic papers, extract insights, generate code — all in one place.</p>
-      <div class="hero-actions">
-        <button class="btn-hero btn-hero-primary" onclick="App.showPage('pg-signup')">Start for free</button>
-        <button class="btn-hero btn-hero-secondary" onclick="App.showPage('pg-signin')">Sign in to your account</button>
+    <div class="hero fade-in" style="display:flex;align-items:center;gap:40px;text-align:left;padding-bottom:40px">
+      <div style="flex:1">
+        <div class="hero-eyebrow"><div class="pulse"></div><span>Now live — ArXiv + Semantic Scholar</span></div>
+        <h1 style="text-align:left;margin-left:0;font-size:52px">Research that thinks<br><em>before you ask</em></h1>
+        <p class="hero-sub" style="margin-left:0;max-width:90%">ZiaLabs is your AI research co-pilot. Search millions of academic papers, extract insights, generate code — all in one place.</p>
+        <div class="hero-actions" style="justify-content:flex-start">
+          <button class="btn-hero btn-hero-primary" onclick="App.showPage('pg-signup')">Start for free</button>
+          <button class="btn-hero btn-hero-secondary" onclick="App.showPage('pg-signin')">Sign in</button>
+        </div>
+        <p class="hero-note" style="text-align:left">No credit card required &nbsp;·&nbsp; <span>Google Sign-In</span> supported</p>
       </div>
-      <p class="hero-note">No credit card required &nbsp;·&nbsp; <span>Google Sign-In</span> supported &nbsp;·&nbsp; Free tier available</p>
+      <div style="flex:1;display:flex;justify-content:flex-end;position:relative">
+        <img src="/img/hero_illustration.png" alt="University student reading research paper 3D illustration" style="max-width:100%;border-radius:24px;box-shadow:0 24px 48px rgba(0,0,0,0.06);object-fit:cover;height:450px;width:100%">
+      </div>
     </div>
 
     <div class="stats-row fade-in delay-2">
