@@ -344,6 +344,10 @@ class Dashboard {
   static setSidebar(el) {
     document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
     el.classList.add('active');
+    
+    // close mobile menu if it's open
+    const sb = document.getElementById('dash-sidebar');
+    if (sb.classList.contains('open')) App.toggleMobileMenu();
 
     const label = el.textContent.trim();
     let sectionId = 'dc-home';
@@ -551,6 +555,15 @@ class App {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     if (id === 'pg-dash') Dashboard.init();
+    
+    // ensure sidebar is hidden on page switch if we were on mobile
+    document.getElementById('dash-sidebar')?.classList.remove('open');
+  }
+
+  static toggleMobileMenu() {
+    const sb = document.getElementById('dash-sidebar');
+    if (!sb) return;
+    sb.classList.toggle('open');
   }
 
   static init() {

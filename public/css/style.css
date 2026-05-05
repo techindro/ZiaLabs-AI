@@ -297,17 +297,44 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0 48px
   nav{padding:0 20px}
   .nav-links{display:none}
   .hero{padding:40px 20px 30px}
-  .hero h1{font-size:36px}
-  .stats-row{flex-direction:column;margin:30px 20px 0}
-  .stat-item{border-right:none;border-bottom:1px solid var(--border)}
-  .features{padding:40px 20px}
-  .features-grid{grid-template-columns:1fr}
-  .auth-wrap{grid-template-columns:1fr}
-  .auth-left{display:none}
-  .dash-layout{grid-template-columns:1fr}
-  .sidebar{display:none}
-  .metrics-row{grid-template-columns:repeat(2,1fr)}
-  .dash-grid{grid-template-columns:1fr}
+/* Mobile Responsiveness & Navigation */
+.mobile-nav {
+  display: none;
+  align-items: center;
+  padding: 16px 20px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.m-menu-btn { cursor: pointer; padding: 4px; margin-left: auto; display: flex; align-items: center; }
+.m-menu-btn svg { width: 28px; height: 28px; fill: var(--black); }
+.m-close-btn { display: none; cursor: pointer; font-size: 20px; color: var(--gray); }
+
+@media(max-width:768px){
+  .hero h1 { font-size: 34px; line-height: 1.2; }
+  .stats-row { flex-direction: column; margin: 30px 20px 0; border-radius: 12px; }
+  .stat-item { border-right: none; border-bottom: 1px solid var(--border); padding: 24px; text-align: center; }
+  .stat-item:last-child { border-bottom: none; }
+  
+  .mobile-nav { display: flex; }
+  .sidebar { 
+    position: fixed; top: 0; left: -280px; width: 280px; height: 100vh; 
+    z-index: 2000; box-shadow: 20px 0 50px rgba(0,0,0,0.1); 
+    transition: left 0.3s ease; display: flex;
+  }
+  .sidebar.open { left: 0; }
+  .m-close-btn { display: block; margin-left: auto; }
+  
+  .dash-layout { grid-template-columns: 1fr; }
+  .metrics-row { grid-template-columns: 1fr; }
+  .dash-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; padding: 0 20px; }
+  .auth-wrap { grid-template-columns: 1fr; min-height: 100vh; }
+  .auth-left { display: none; }
+  
+  #blog-grid { grid-template-columns: 1fr !important; }
 }
 
 /* university logos marquee */

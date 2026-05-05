@@ -283,13 +283,23 @@
 </div>
 
 <!-- ════════════════ DASHBOARD ════════════════ -->
-<div class="page" id="pg-dash">
-  <div class="dash-layout">
-    <div class="sidebar">
-      <div class="sb-logo" onclick="App.showPage('pg-landing')">
-        <div class="nl-box">ZL</div>
-        <div class="nl-name">ZiaLabs<span class="nl-super">AI</span></div>
+    <!-- MOBILE NAV - Hidden on desktop, toggles the sidebar on phones -->
+    <div class="mobile-nav" id="m-nav-bar">
+      <div class="nl-box">ZL</div>
+      <div class="nl-name">ZiaLabs<span class="nl-super">AI</span></div>
+      <div class="m-menu-btn" onclick="App.toggleMobileMenu()">
+        <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
       </div>
+    </div>
+
+    <div class="dash-layout">
+      <!-- SIDEBAR - Controlled by .open class on mobile -->
+      <div class="sidebar" id="dash-sidebar">
+        <div class="sb-logo" onclick="App.showPage('pg-landing')">
+          <div class="nl-box">ZL</div>
+          <div class="nl-name">ZiaLabs<span class="nl-super">AI</span></div>
+          <div class="m-close-btn" onclick="App.toggleMobileMenu()">✕</div>
+        </div>
       <div class="sb-nav">
         <div class="sb-section">Main</div>
         <div class="sb-item active" onclick="Dashboard.setSidebar(this)">

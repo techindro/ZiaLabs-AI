@@ -7,6 +7,8 @@ const fs = require('fs');
 const authMiddleware = require('../middleware/auth');
 const AuthService = require('../services/AuthService');
 const Paper = require('../models/Paper');
+const AIAgent = require('../services/AIAgent');
+const ai = new AIAgent();
 
 // Setup multer for PDF uploads
 const storage = multer.diskStorage({
@@ -38,14 +40,21 @@ router.post('/', authMiddleware, upload.single('paper'), async (req, res) => {
     if (req.file.mimetype === 'application/pdf' || req.file.originalname.toLowerCase().endsWith('.pdf')) {
       try {
         const pdfData = await pdfParse(dataBuffer);
-        abstract = pdfData.text.substring(0, 1000) + '...';
+        const fullText = pdfData.text;
+        
+        // Use AI to generate a proper abstract if we have an API key
+        if (process.env.GEMINI_API_KEY) {
+          abstract = await ai.summarizePaper(fullText.substring(0, 10000)); // limit to 10k for now
+        } else {
+          abstract = fullText.substring(0, 800) + '...';
+        }
       } catch (err) {
-        console.warn('PDF parse failed, using fallback empty abstract', err);
-        abstract = 'Uploaded PDF could not be parsed automatically.';
+        console.warn('PDF parsing failed, falling back to basics', err);
+        abstract = 'Upload successful, but content extraction failed. View source for details.';
       }
     } else {
-      // Treat as plain text
-      abstract = dataBuffer.toString('utf-8').substring(0, 1000) + '...';
+      // It's a text file
+      abstract = dataBuffer.toString('utf-8').substring(0, 800) + '...';
     }
 
     const paper = Paper.save({
