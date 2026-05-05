@@ -561,8 +561,15 @@ class App {
         .then(({ user }) => {
           Auth.user = user;
           localStorage.setItem('zl_user', JSON.stringify(user));
+          
+          // if we are at /dashboard URL, show the dashboard
+          if (window.location.pathname === '/dashboard') {
+            App.showPage('pg-dash');
+          }
         })
         .catch(() => Auth.signOut());
+    }
+
     if (document.getElementById('blog-grid')) News.load();
   }
 }
