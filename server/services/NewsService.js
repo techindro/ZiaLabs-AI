@@ -1,10 +1,8 @@
 const xml2js = require('xml2js');
 
+// Using Google News RSS to populate the 'Latest Labs' section on the landing page.
+// Much easier than managing a CMS for news - just fetch and parse XML.
 class NewsService {
-  /**
-   * Fetches latest research news from Google News RSS
-   * @param {string} query - Search query (default: academic research news)
-   */
   static async getLatestNews(query = 'MIT OR Berkeley OR IIT AI Research') {
     try {
       const url = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=en-US&gl=US&ceid=US:en`;
@@ -17,13 +15,18 @@ class NewsService {
       const items = result.rss.channel.item || [];
       const list = Array.isArray(items) ? items : [items];
 
-      return list.slice(0, 10).map(item => ({
-        title: item.title,
-        link: item.link,
-        pubDate: item.pubDate,
-        source: item.source._ || item.source,
-        description: item.description
-      }));
+      return list.slice(0, 10).map(item => {
+        // Strip the source name from the title if it exists (e.g. "News Title - Source")
+        const cleanTitle = item.title.split(' - ')[0];
+        
+        return {
+          title: cleanTitle,
+          link: item.link,
+          pubDate: item.pubDate,
+          source: item.source._ || item.source,
+          description: item.description
+        };
+      });
     } catch (err) {
       console.error('NewsService error:', err.message);
       return [];

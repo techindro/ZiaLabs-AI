@@ -1,6 +1,6 @@
-// ZiaLabs frontend — single page app
-// built this as a simple class-based SPA, might refactor later
-
+// Main frontend entry point. 
+// Using a basic SPA structure with class-based logic. 
+// No React/Vue yet to keep it lightweight.
 const API_BASE = '/api';
 
 // handles all fetch calls to the backend
@@ -574,7 +574,7 @@ class App {
   }
 }
 
-// dynamic news from Google News RSS
+// Handled separately from the SPA routing to keep News logic clean.
 class News {
   static async load() {
     const box = document.getElementById('blog-grid');
@@ -582,23 +582,30 @@ class News {
 
     try {
       const { news } = await ApiClient.get('/news');
-      if (!news || !news.length) return;
+      if (!news?.length) return;
 
-      // render the top 3 latest updates
+      // Map RSS items to cards.
+      // NOTE: Using fallback images blog1/2/3 for now.
       box.innerHTML = news.slice(0, 3).map((item, idx) => {
-        const title = item.title.split(' - ')[0]; 
-        const source = item.source || 'Research Update';
+        const source = item.source || 'Lab Update';
+        
         return `
           <div class="blog-card" onclick="window.open('${item.link}', '_blank')">
-            <div class="blog-img-wrap"><img src="/img/blog${idx+1}.png" alt="News ${idx+1}"></div>
-            <div style="font-size:12px;color:var(--red);font-weight:600;margin-bottom:8px">${source.toUpperCase()} • LATEST UPDATE</div>
-            <div style="font-size:16px;font-weight:700;margin-bottom:8px">${title}</div>
-            <p style="font-size:13px;color:var(--gray);line-height:1.5">${item.description.replace(/<[^>]*>?/gm, '').slice(0, 100)}...</p>
+            <div class="blog-img-wrap">
+              <img src="/img/blog${idx+1}.png" alt="Research Update">
+            </div>
+            <div style="font-size:12px;color:var(--red);font-weight:600;margin-bottom:8px">
+              ${source.toUpperCase()} • LATEST
+            </div>
+            <div style="font-size:16px;font-weight:700;margin-bottom:8px">${item.title}</div>
+            <p style="font-size:13px;color:var(--gray);line-height:1.5">
+              ${item.description.replace(/<[^>]*>?/gm, '').slice(0, 110)}...
+            </p>
           </div>
         `;
       }).join('');
     } catch (err) {
-      console.error('Failed to load news:', err.message);
+      console.warn('News failed to load:', err.message);
     }
   }
 }

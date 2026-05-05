@@ -28,8 +28,11 @@ class AIAgent {
 
   constructor() {
     const key = process.env.GEMINI_API_KEY;
+    
+    // Check if the user actually set their API key. 
+    // Fallback to local mode if not.
     if (!key || key === 'your-gemini-api-key-here') {
-      console.warn('GEMINI_API_KEY not set — running in fallback mode');
+      console.warn('API key missing — switching to local fallback');
       this.#genAI = null;
       this.#model = null;
     } else {
@@ -42,8 +45,9 @@ class AIAgent {
   }
 
   async chat(userId, message) {
+    // Check if the user hasn't burned through their quota for the month.
     if (!User.hasApiCallsRemaining(userId)) {
-      return 'Aapke API calls limit ho gaye hain is month ke liye. Please upgrade karo ya next month wait karo. 🔒';
+      return 'Bhai, aapka monthly limit khatam ho gaya hai. 🔒 Please Pro mein upgrade karo ya fir next month ka wait karo.';
     }
 
     ChatMessage.create({ userId, role: 'user', content: message });
@@ -56,8 +60,8 @@ class AIAgent {
       try {
         const history = ChatMessage.getRecentContext(userId, 20);
 
-        // gemini requires strictly alternating user/model roles starting with user
-        // had to sanitize this manually because it throws if sequence is off
+        // Gemini is picky about the role order (user -> model -> user).
+        // If the context is messy, it throws a fit. Clean it up here.
         let validHistory = [];
         let expected = 'user';
         for (const msg of history.slice(0, -1)) {
@@ -72,8 +76,8 @@ class AIAgent {
         const result = await chat.sendMessage(message);
         response     = result.response.text();
       } catch (err) {
-        console.error('AI agent error:', err.message);
-        response = `Sorry, kuch error aaya: ${err.message}. Please try again.`;
+        console.error('AI error in chat:', err.message);
+        response = `Yaar, kuch issue aa gaya: ${err.message}. Ek baar fir se try karo?`;
       }
     }
 
