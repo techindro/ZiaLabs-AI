@@ -1,7 +1,8 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const ChatMessage = require('../models/ChatMessage');
-const User = require('../models/User');
+const User        = require('../models/User');
 
+// system prompt — defines agent personality and output rules
 const SYSTEM_PROMPT = `Tum ZiaLabs Research Agent ho — ek professional AI research assistant.
 
 RULES:
@@ -26,13 +27,13 @@ class AIAgent {
   #genAI;
 
   constructor() {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey || apiKey === 'your-gemini-api-key-here') {
-      console.warn('⚠️  GEMINI_API_KEY not set — AI agent will use fallback responses');
+    const key = process.env.GEMINI_API_KEY;
+    if (!key || key === 'your-gemini-api-key-here') {
+      console.warn('GEMINI_API_KEY not set — running in fallback mode');
       this.#genAI = null;
       this.#model = null;
     } else {
-      this.#genAI = new GoogleGenerativeAI(apiKey);
+      this.#genAI = new GoogleGenerativeAI(key);
       this.#model = this.#genAI.getGenerativeModel({
         model: 'gemini-flash-latest',
         systemInstruction: SYSTEM_PROMPT,
@@ -40,66 +41,52 @@ class AIAgent {
     }
   }
 
-  /**
-   * Send a message to the AI agent and get a response
-   * @param {number} userId - User ID
-   * @param {string} message - User's message
-   * @returns {Promise<string>} AI response text
-   */
   async chat(userId, message) {
-    // Check API limits
     if (!User.hasApiCallsRemaining(userId)) {
       return 'Aapke API calls limit ho gaye hain is month ke liye. Please upgrade karo ya next month wait karo. 🔒';
     }
 
-    // Save user message
     ChatMessage.create({ userId, role: 'user', content: message });
 
     let response;
 
     if (!this.#model) {
-      // Fallback when no API key
-      response = this.#fallbackResponse(message);
+      response = this.#fallback(message);
     } else {
       try {
-        // Get conversation history for context
         const history = ChatMessage.getRecentContext(userId, 20);
-        
-        // Sanitize history: Gemini strictly requires alternating user/model roles starting with user
+
+        // gemini requires strictly alternating user/model roles starting with user
+        // had to sanitize this manually because it throws if sequence is off
         let validHistory = [];
-        let expectedRole = 'user';
+        let expected = 'user';
         for (const msg of history.slice(0, -1)) {
           const role = msg.role === 'assistant' ? 'model' : 'user';
-          if (role === expectedRole) {
+          if (role === expected) {
             validHistory.push({ role, parts: [{ text: msg.content }] });
-            expectedRole = role === 'user' ? 'model' : 'user';
+            expected = role === 'user' ? 'model' : 'user';
           }
         }
 
-        const chat = this.#model.startChat({ history: validHistory });
+        const chat   = this.#model.startChat({ history: validHistory });
         const result = await chat.sendMessage(message);
-        response = result.response.text();
+        response     = result.response.text();
       } catch (err) {
-        console.error('AI Agent error:', err.message);
-        response = `Sorry, AI agent mein error aaya: ${err.message}. Please try again.`;
+        console.error('AI agent error:', err.message);
+        response = `Sorry, kuch error aaya: ${err.message}. Please try again.`;
       }
     }
 
-    // Save assistant response & increment API calls
     ChatMessage.create({ userId, role: 'assistant', content: response });
     User.incrementApiCalls(userId);
 
     return response;
   }
 
-  /**
-   * Summarize a paper abstract using AI
-   */
   async summarizePaper(abstract, language = 'Hinglish') {
     if (!this.#model) {
       return 'AI summary available nahi hai — GEMINI_API_KEY set karo .env mein.';
     }
-
     try {
       const prompt = `Yeh ek research paper ka abstract hai. Isko ${language} mein 3-4 bullet points mein summarize karo:\n\n${abstract}`;
       const result = await this.#model.generateContent(prompt);
@@ -109,16 +96,12 @@ class AIAgent {
     }
   }
 
-  /**
-   * Generate code from a paper context
-   */
   async generateCode(paperContext, language = 'python') {
     if (!this.#model) {
       return '# AI code generation requires GEMINI_API_KEY\n# Set it in your .env file';
     }
-
     try {
-      const prompt = `Is research paper ke context se ${language} code generate karo. Clean, commented, production-ready code likho:\n\n${paperContext}`;
+      const prompt = `Is research paper ke context se ${language} code generate karo. Clean, commented code likho:\n\n${paperContext}`;
       const result = await this.#model.generateContent(prompt);
       return result.response.text();
     } catch (err) {
@@ -126,23 +109,19 @@ class AIAgent {
     }
   }
 
-  /**
-   * Fallback response when API key is not available
-   */
-  #fallbackResponse(message) {
-    const lower = message.toLowerCase();
-
-    if (lower.includes('hello') || lower.includes('hi') || lower.includes('namaste')) {
-      return 'Namaste! 🙏 Main ZiaLabs AI Agent hoon. Aaj kya research karna chahte hain?\n\n**Note:** Full AI functionality ke liye GEMINI_API_KEY set karo `.env` file mein.';
+  // basic fallback when no api key is set
+  #fallback(message) {
+    const m = message.toLowerCase();
+    if (m.includes('hello') || m.includes('hi') || m.includes('namaste')) {
+      return 'Namaste! 🙏 Main ZiaLabs AI Agent hoon. Aaj kya research karna chahte hain?\n\n**Note:** Full AI ke liye GEMINI_API_KEY set karo `.env` mein.';
     }
-    if (lower.includes('paper') || lower.includes('search') || lower.includes('find')) {
-      return '📄 Papers search karne ke liye sidebar mein **Search Papers** option use karo. Main abhi limited mode mein hoon — full AI responses ke liye GEMINI_API_KEY configure karo.';
+    if (m.includes('paper') || m.includes('search') || m.includes('find')) {
+      return '📄 Papers search karne ke liye sidebar mein **Search Papers** use karo. Main abhi limited mode mein hoon.';
     }
-    if (lower.includes('code') || lower.includes('implement')) {
-      return '💻 Code generation ke liye mujhe GEMINI_API_KEY chahiye. Abhi ke liye:\n\n1. `.env` file mein `GEMINI_API_KEY` set karo\n2. Free key yahan se lo: https://aistudio.google.com/apikey\n3. Server restart karo';
+    if (m.includes('code') || m.includes('implement')) {
+      return '💻 Code generation ke liye GEMINI_API_KEY chahiye:\n\n1. `.env` mein `GEMINI_API_KEY` set karo\n2. Free key: https://aistudio.google.com/apikey\n3. Server restart karo';
     }
-
-    return `Main aapka message samajh gaya: "${message}"\n\n⚠️ Abhi main **limited mode** mein hoon. Full AI agent activate karne ke liye:\n\n1. Google AI Studio se free API key lo: https://aistudio.google.com/apikey\n2. \`.env\` file mein \`GEMINI_API_KEY=your-key\` add karo\n3. Server restart karo\n\nPhir main properly research questions answer kar paunga! 🚀`;
+    return `Samajh gaya: "${message}"\n\n⚠️ Abhi **limited mode** mein hoon. Full AI ke liye API key set karo aur server restart karo. 🚀`;
   }
 }
 

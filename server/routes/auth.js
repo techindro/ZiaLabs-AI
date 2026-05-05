@@ -1,13 +1,9 @@
 const express = require('express');
-const router = express.Router();
-const AuthService = require('../services/AuthService');
+const router  = express.Router();
+const AuthService    = require('../services/AuthService');
 const authMiddleware = require('../middleware/auth');
 const User = require('../models/User');
 
-/**
- * POST /api/auth/register
- * Create a new account with email/password
- */
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -18,10 +14,6 @@ router.post('/register', async (req, res) => {
   }
 });
 
-/**
- * POST /api/auth/login
- * Sign in with email/password
- */
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -32,10 +24,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-/**
- * POST /api/auth/google
- * Google sign-in (simulated)
- */
+// google sign-in — currently simulated, real OAuth coming later
 router.post('/google', (req, res) => {
   try {
     const { name, email } = req.body;
@@ -46,10 +35,6 @@ router.post('/google', (req, res) => {
   }
 });
 
-/**
- * GET /api/auth/me
- * Get current user profile (protected)
- */
 router.get('/me', authMiddleware, (req, res) => {
   try {
     const user = User.findById(req.user.id);
