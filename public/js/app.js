@@ -1,9 +1,8 @@
-// Main frontend entry point. 
-// Using a basic SPA structure with class-based logic. 
-// No React/Vue yet to keep it lightweight.
+// frontend SPA — no framework, just classes and vanilla DOM manipulation.
+// i organized everything into classes to keep it manageable as it grew.
 const API_BASE = '/api';
 
-// handles all fetch calls to the backend
+// centralized API client — every backend call goes through here
 class ApiClient {
   static #token = localStorage.getItem('zl_token') || null;
 
@@ -40,7 +39,7 @@ class ApiClient {
   }
 }
 
-// simple toast notifications
+// toast notifications (the little popups in the top-right corner)
 class Toast {
   static show(msg, type = 'info') {
     const box = document.getElementById('toasts');
@@ -60,7 +59,7 @@ class Toast {
   static info(msg)    { Toast.show(msg, 'info'); }
 }
 
-// auth stuff
+// authentication — handles sign in, sign up, google login, and session persistence
 class Auth {
   static user = JSON.parse(localStorage.getItem('zl_user') || 'null');
 
@@ -140,7 +139,7 @@ class Auth {
     }
   }
 
-  // TODO: replace this with real Google OAuth when we get the credentials set up
+  // TODO: swap this for real Google OAuth once we have production credentials
   static async googleSignIn() {
     try {
       const { user, token } = await ApiClient.post('/auth/google', {
@@ -169,7 +168,7 @@ class Auth {
   }
 }
 
-// chat with the AI agent
+// chat panel — talks to the gemini-powered backend
 class Chat {
   static #ready = false;
 
@@ -185,7 +184,7 @@ class Chat {
       const { messages } = await ApiClient.get('/chat/history');
       chatEl.innerHTML = '';
       if (!messages.length) {
-        Chat.#addBot('Namaste! 🙏 Main ZiaLabs AI Agent hoon. Aaj kya research karna chahte hain?');
+        Chat.#addBot('Hello! 👋 I am the ZiaLabs AI Research Agent. How can I help with your research today?');
       } else {
         messages.forEach(m => {
           if (m.role === 'user') Chat.#addUser(m.content);
@@ -194,7 +193,7 @@ class Chat {
       }
     } catch {
       // if history load fails just show greeting
-      Chat.#addBot('Namaste! 🙏 Main ZiaLabs AI Agent hoon. Aaj kya research karna chahte hain?');
+      Chat.#addBot('Hello! 👋 I am the ZiaLabs AI Research Agent. How can I help with your research today?');
     }
   }
 
@@ -254,7 +253,7 @@ class Chat {
     try {
       await ApiClient.del('/chat/clear');
       document.getElementById('dchat').innerHTML = '';
-      Chat.#addBot('Chat clear ho gaya! 🧹 Naya conversation shuru karo.');
+      Chat.#addBot('Chat cleared! 🧹 Start a new conversation.');
       Toast.success('Chat cleared');
     } catch (err) {
       Toast.error(err.message);
@@ -268,7 +267,7 @@ class Chat {
   }
 }
 
-// dashboard logic
+// dashboard — handles sidebar navigation, stats, and user info
 class Dashboard {
 
   static init() {
@@ -381,7 +380,7 @@ class Dashboard {
   }
 }
 
-// paper search
+// search — sends queries to /api/search and renders paper cards
 class Search {
   static init() {
     setTimeout(() => document.getElementById('s-query')?.focus(), 100);
@@ -436,7 +435,7 @@ class Search {
     `;
   }
 
-  // sends paper title to chat for AI analysis
+  // shortcut: clicking "AI Insights" on a paper pre-fills the chat with an analysis prompt
   static analyze(title) {
     Dashboard.setSidebar(document.querySelectorAll('.sb-item')[0]);
     document.getElementById('dinp').value = `Analyze the paper titled "${title}" and give me key insights.`;
@@ -444,7 +443,7 @@ class Search {
   }
 }
 
-// library / saved papers
+// library — saved papers with upload support
 class Library {
   static async init() {
     const box = document.getElementById('l-results');
@@ -521,7 +520,7 @@ class Library {
   }
 }
 
-// payments / stripe
+// stripe payment integration (test mode)
 class Payment {
   static async upgrade() {
     try {
@@ -546,7 +545,7 @@ class Payment {
   }
 }
 
-// page routing
+// SPA page router — shows/hides page divs based on id
 class App {
   static showPage(id) {
     if (id === 'pg-dash' && !Auth.isLoggedIn()) {
@@ -566,28 +565,32 @@ class App {
     sb.classList.toggle('open');
   }
 
-  static init() {
-    Payment.checkStatus();
+  static async init() {
+    try {
+      Payment.checkStatus();
 
-    if (Auth.isLoggedIn()) {
-      ApiClient.get('/auth/me')
-        .then(({ user }) => {
+      if (Auth.isLoggedIn()) {
+        try {
+          const { user } = await ApiClient.get('/auth/me');
           Auth.user = user;
           localStorage.setItem('zl_user', JSON.stringify(user));
           
-          // if we are at /dashboard URL, show the dashboard
           if (window.location.pathname === '/dashboard') {
             App.showPage('pg-dash');
           }
-        })
-        .catch(() => Auth.signOut());
-    }
+        } catch (authErr) {
+          Auth.signOut();
+        }
+      }
 
-    if (document.getElementById('blog-grid')) News.load();
+      if (document.getElementById('blog-grid')) News.load();
+    } catch (err) {
+      console.error('Init failed:', err);
+    }
   }
 }
 
-// Handled separately from the SPA routing to keep News logic clean.
+// blog/news section on the landing page — pulls from our RSS aggregator
 class News {
   static async load() {
     const box = document.getElementById('blog-grid');

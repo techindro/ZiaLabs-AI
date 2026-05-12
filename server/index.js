@@ -6,9 +6,9 @@ const path    = require('path');
 const DB      = require('./config/database');
 
 async function startServer() {
+  // db has to init before anything else because sql.js loads async
   await DB.init();
 
-  // load routes after db is ready (sql.js needs to init first)
   const authRoutes    = require('./routes/auth');
   const chatRoutes    = require('./routes/chat');
   const searchRoutes  = require('./routes/search');
@@ -22,14 +22,17 @@ async function startServer() {
 
   app.use(cors());
 
-  // stripe webhook needs raw body — must be before express.json
+  // stripe webhook needs the raw body — has to come before express.json()
+  // spent 2 hours debugging this before i realized the order matters
   app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true }));
 
+  // serve the frontend
   app.use(express.static(path.join(__dirname, '..', 'public')));
 
+  // api routes
   app.use('/api/auth',    authRoutes);
   app.use('/api/chat',    chatRoutes);
   app.use('/api/search',  searchRoutes);
@@ -46,7 +49,7 @@ async function startServer() {
     });
   });
 
-  // spa fallback — anything not /api goes to index.html
+  // SPA fallback — anything that isn't an API route gets index.html
   app.get('*', (req, res) => {
     if (!req.path.startsWith('/api')) {
       res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
