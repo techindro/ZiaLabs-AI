@@ -4,6 +4,7 @@ const authMiddleware       = require('../middleware/auth');
 const PaperSearchOrchestrator = require('../services/PaperSearchOrchestrator');
 const SearchHistory        = require('../models/SearchHistory');
 const User                 = require('../models/User');
+const { publishEvent }     = require('../config/kafka');
 
 // GET /api/search?q=...
 router.get('/', authMiddleware, async (req, res) => {
@@ -30,6 +31,12 @@ router.get('/', authMiddleware, async (req, res) => {
     });
 
     User.incrementApiCalls(req.user.id);
+
+    // Publish search-queries event to Kafka
+    publishEvent('search-queries', { event: 'search', userId: req.user.id, query: q.trim(), resultsCount: papers.length }).catch(err => {
+      console.warn('Failed to publish search-queries search event:', err.message);
+    });
+
     res.json({ query: q.trim(), total: papers.length, papers });
   } catch (err) {
     console.error('search error:', err.message);

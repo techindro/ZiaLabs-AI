@@ -4,10 +4,20 @@ const express = require('express');
 const cors    = require('cors');
 const path    = require('path');
 const DB      = require('./config/database');
+const KafkaConfig   = require('./config/kafka');
+const KafkaConsumer = require('./services/KafkaConsumer');
 
 async function startServer() {
   // db has to init before anything else because sql.js loads async
   await DB.init();
+
+  // Initialize Kafka producer
+  await KafkaConfig.initProducer();
+
+  // Start background Kafka consumer
+  KafkaConsumer.startConsumer().catch(err => {
+    console.error('Failed to start Kafka consumer:', err);
+  });
 
   const authRoutes    = require('./routes/auth');
   const chatRoutes    = require('./routes/chat');
@@ -69,8 +79,14 @@ async function startServer() {
     `);
   });
 
-  process.on('SIGINT', () => {
+  process.on('SIGINT', async () => {
     console.log('shutting down...');
+    try {
+      await KafkaConsumer.stopConsumer();
+      await KafkaConfig.disconnectProducer();
+    } catch (err) {
+      console.error('Kafka cleanup error during shutdown:', err);
+    }
     DB.close();
     process.exit(0);
   });

@@ -1,6 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+let stripe = null;
+if (process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY !== 'your-stripe-secret-key-here') {
+  try {
+    stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+  } catch (err) {
+    console.error('Failed to initialize Stripe:', err.message);
+  }
+}
+
 const authMiddleware = require('../middleware/auth');
 const User = require('../models/User');
 
@@ -10,10 +19,14 @@ const User = require('../models/User');
  */
 router.post('/create-checkout-session', authMiddleware, async (req, res) => {
   try {
+    if (!stripe) {
+      return res.status(400).json({ error: 'Stripe payments are not configured' });
+    }
+
     const userId = req.user.id;
     const user = User.findById(userId);
 
-    if (user.plan === 'Pro') {
+    if (user.plan && user.plan.toLowerCase() === 'pro') {
       return res.status(400).json({ error: 'You are already on the Pro plan' });
     }
 
@@ -46,6 +59,10 @@ router.post('/create-checkout-session', authMiddleware, async (req, res) => {
  * Stripe Webhook handler
  */
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  if (!stripe) {
+    return res.status(400).send('Stripe webhook not configured');
+  }
+
   const sig = req.headers['stripe-signature'];
   let event;
 
@@ -68,7 +85,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     console.log(`✅ Payment successful for user ${userId}`);
     
     // Upgrade user plan in DB
-    User.upgradePlan(userId, 'Pro');
+    User.upgradeToPro(userId);
   }
 
   res.json({ received: true });

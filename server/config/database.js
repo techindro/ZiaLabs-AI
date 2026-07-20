@@ -38,18 +38,20 @@ class DB {
 
       CREATE TABLE papers (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        userId INTEGER,
+        user_id INTEGER,
         title TEXT,
         authors TEXT,
         abstract TEXT,
-        url TEXT,
         source TEXT,
+        source_url TEXT,
+        published TEXT,
+        citations INTEGER DEFAULT 0,
         saved_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
 
       CREATE TABLE chat_messages (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        userId INTEGER,
+        user_id INTEGER,
         role TEXT,
         content TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -57,15 +59,32 @@ class DB {
 
       CREATE TABLE search_history (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        userId INTEGER,
+        user_id INTEGER,
         query TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        results_count INTEGER DEFAULT 0,
+        sources TEXT,
+        searched_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
     `);
   }
 
   static run(sql, params = []) {
-    return this.#db.run(sql, params);
+    this.#db.run(sql, params);
+    const lastIdRes = this.exec('SELECT last_insert_rowid() AS id');
+    const changesRes = this.exec('SELECT changes() AS changes');
+    return {
+      lastId: lastIdRes[0]?.id,
+      changes: changesRes[0]?.changes
+    };
+  }
+
+  static get(sql, params = []) {
+    const results = this.exec(sql, params);
+    return results.length ? results[0] : null;
+  }
+
+  static all(sql, params = []) {
+    return this.exec(sql, params);
   }
 
   static exec(sql, params = []) {

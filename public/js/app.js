@@ -143,8 +143,8 @@ class Auth {
   static async googleSignIn() {
     try {
       const { user, token } = await ApiClient.post('/auth/google', {
-        name: 'Zia Khan',
-        email: 'zia@gmail.com',
+        name: 'Shubham Patel',
+        email: 'shubham@gmail.com',
       });
       Auth.#save(user, token);
       Toast.success(`Welcome, ${user.name}!`);
@@ -278,6 +278,27 @@ class Dashboard {
 
     const active = document.querySelector('.sb-item.active');
     if (active) Dashboard.setSidebar(active);
+
+    // Check if there is a pending search query from the hero section
+    const pendingQuery = sessionStorage.getItem('pending_research_query');
+    if (pendingQuery) {
+      sessionStorage.removeItem('pending_research_query');
+      
+      // Navigate to the AI Insights tab
+      setTimeout(() => {
+        const insightsSbItem = Array.from(document.querySelectorAll('.sb-item')).find(item => item.textContent.includes('AI Insights'));
+        if (insightsSbItem) {
+          Dashboard.setSidebar(insightsSbItem);
+          
+          // Set the value of the consensus query input and run it
+          const consensusInput = document.getElementById('consensus-query');
+          if (consensusInput) {
+            consensusInput.value = pendingQuery;
+            InsightsDashboard.runConsensus();
+          }
+        }
+      }, 100);
+    }
   }
 
   static #setUserInfo() {
@@ -362,11 +383,17 @@ class Dashboard {
       sectionId = 'dc-insights';
       title     = 'AI Research Insights';
       subtitle  = 'Deep analysis and automated intelligence for your research';
+      InsightsDashboard.init();
     } else if (label.includes('My Papers')) {
       sectionId = 'dc-library';
       title     = 'My Research Library';
       subtitle  = 'Your saved papers collection';
       Library.init();
+    } else if (label.includes('Chat History')) {
+      sectionId = 'dc-history';
+      title     = 'Chat History Log';
+      subtitle  = 'Review and search your past conversations with ZiaLabs AI';
+      ChatHistoryView.init();
     } else if (label.includes('Settings')) {
       sectionId = 'dc-settings';
       title     = 'Account Settings';
@@ -565,6 +592,64 @@ class App {
     sb.classList.toggle('open');
   }
 
+  static subscribeNewsletter() {
+    const inp = document.getElementById('newsletter-inp');
+    const email = inp.value.trim();
+    if (!email) {
+      Toast.error('Please enter a valid email address.');
+      return;
+    }
+    inp.value = '';
+    Toast.success('Thanks for subscribing to ZiaLabs Research Insights!');
+  }
+
+  static togglePricing(isAnnual) {
+    const proPriceVal = document.getElementById('pro-price-val');
+    const proPricePeriod = document.getElementById('pro-price-period');
+    const monthlyLbl = document.getElementById('billing-monthly-lbl');
+    const yearlyLbl = document.getElementById('billing-yearly-lbl');
+
+    if (isAnnual) {
+      if (proPriceVal) proPriceVal.textContent = '$2';
+      if (proPricePeriod) {
+        proPricePeriod.innerHTML = '/ month <span id="pro-billing-subtitle" style="font-size:11px;color:var(--gray);font-weight:normal;display:block;margin-top:4px;">(billed annually, $24/yr)</span>';
+      }
+      if (monthlyLbl) {
+        monthlyLbl.style.color = 'var(--gray)';
+        monthlyLbl.style.fontWeight = '500';
+      }
+      if (yearlyLbl) {
+        yearlyLbl.style.color = 'var(--primary)';
+        yearlyLbl.style.fontWeight = '700';
+      }
+    } else {
+      if (proPriceVal) proPriceVal.textContent = '$3';
+      if (proPricePeriod) {
+        proPricePeriod.innerHTML = '/ month';
+      }
+      if (monthlyLbl) {
+        monthlyLbl.style.color = 'var(--primary)';
+        monthlyLbl.style.fontWeight = '700';
+      }
+      if (yearlyLbl) {
+        yearlyLbl.style.color = 'var(--gray)';
+        yearlyLbl.style.fontWeight = '500';
+      }
+    }
+  }
+
+  static handleHeroSearch() {
+    const input = document.getElementById('hero-search-input');
+    const query = input.value.trim();
+    if (!query) {
+      Toast.error('Please enter a research question first.');
+      return;
+    }
+    
+    sessionStorage.setItem('pending_research_query', query);
+    Auth.googleSignIn();
+  }
+
   static async init() {
     try {
       Payment.checkStatus();
@@ -622,6 +707,290 @@ class News {
       }).join('');
     } catch (err) {
       console.warn('News failed to load:', err.message);
+    }
+  }
+}
+
+// chat history view — shows previous messages
+class ChatHistoryView {
+  static #messages = [];
+
+  static async init() {
+    const box = document.getElementById('chat-history-log');
+    box.innerHTML = '<div style="padding:40px;text-align:center">Loading history...</div>';
+    document.getElementById('history-search').value = '';
+
+    try {
+      const { messages } = await ApiClient.get('/chat/history?limit=100');
+      ChatHistoryView.#messages = messages;
+      ChatHistoryView.render(messages);
+    } catch (err) {
+      Toast.error(err.message);
+      box.innerHTML = `<div style="padding:40px;text-align:center;color:#ef4444">${err.message}</div>`;
+    }
+  }
+
+  static render(messages) {
+    const box = document.getElementById('chat-history-log');
+    if (!messages.length) {
+      box.innerHTML = '<div style="padding:40px;text-align:center;font-size:14px;color:var(--gray)">No chat messages found. Start chatting on the dashboard!</div>';
+      return;
+    }
+
+    box.innerHTML = messages.map(m => {
+      const isUser = m.role === 'user';
+      const sender = isUser ? (Auth.user ? Auth.user.name : 'You') : 'ZiaLabs AI';
+      const avatarClass = isUser ? 'u' : 'b';
+      const avatarText = isUser ? (Auth.user ? Auth.user.name.slice(0, 2).toUpperCase() : 'U') : 'ZL';
+      const time = new Date(m.createdAt).toLocaleString();
+      const formatted = m.content
+        .replace(/\n/g, '<br>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+      return `
+        <div class="history-item">
+          <div class="history-avatar ${avatarClass}">${avatarText}</div>
+          <div class="history-body">
+            <div class="history-meta">
+              <span class="history-sender">${sender}</span>
+              <span class="history-time">${time}</span>
+            </div>
+            <div class="history-content">${formatted}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  static filter(term) {
+    const cleanTerm = term.toLowerCase().trim();
+    if (!cleanTerm) {
+      ChatHistoryView.render(ChatHistoryView.#messages);
+      return;
+    }
+    const filtered = ChatHistoryView.#messages.filter(m => 
+      m.content.toLowerCase().includes(cleanTerm) || 
+      m.role.toLowerCase().includes(cleanTerm)
+    );
+    ChatHistoryView.render(filtered);
+  }
+
+  static async clearAll() {
+    if (!confirm('Are you sure you want to clear all chat messages from history? This cannot be undone.')) return;
+    try {
+      await ApiClient.del('/chat/clear');
+      ChatHistoryView.#messages = [];
+      ChatHistoryView.render([]);
+      Chat.reset(); // reset main chat tab as well
+      Toast.success('All history cleared');
+    } catch (err) {
+      Toast.error(err.message);
+    }
+  }
+}
+
+// Advanced Research Tools (AI Insights tab)
+class InsightsDashboard {
+  static activeTab = 'consensus';
+  static activePaper = null;
+
+  static init() {
+    InsightsDashboard.switchTab(InsightsDashboard.activeTab);
+    InsightsDashboard.loadLibraryPapers();
+  }
+
+  static switchTab(tabName) {
+    InsightsDashboard.activeTab = tabName;
+    document.querySelectorAll('.insights-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.insights-pane').forEach(p => p.classList.add('d-none'));
+
+    if (tabName === 'consensus') {
+      document.querySelector('.insights-tab:nth-child(1)').classList.add('active');
+      document.getElementById('pane-consensus').classList.remove('d-none');
+    } else {
+      document.querySelector('.insights-tab:nth-child(2)').classList.add('active');
+      document.getElementById('pane-companion').classList.remove('d-none');
+    }
+  }
+
+  static async loadLibraryPapers() {
+    const selector = document.getElementById('insights-paper-selector');
+    try {
+      const { papers } = await ApiClient.get('/papers');
+      selector.innerHTML = '<option value="">-- Choose a paper from your library --</option>';
+      if (papers && papers.length) {
+        papers.forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = JSON.stringify(p);
+          opt.textContent = `${p.title.slice(0, 60)}... (${p.source || 'Local'})`;
+          selector.appendChild(opt);
+        });
+      }
+    } catch (err) {
+      console.warn('Failed to load library papers for insights:', err.message);
+    }
+  }
+
+  static async runConsensus() {
+    const query = document.getElementById('consensus-query').value.trim();
+    if (!query) return;
+
+    const loading = document.getElementById('consensus-loading');
+    const results = document.getElementById('consensus-results');
+
+    loading.classList.remove('d-none');
+    results.classList.add('d-none');
+
+    try {
+      const res = await ApiClient.post('/chat/consensus', { question: query });
+      const consensus = res.consensus;
+
+      // Fill in consensus synthesis box
+      document.getElementById('consensus-statement-text').textContent = consensus.consensusStatement;
+
+      // Update meter
+      const total = (consensus.yesCount || 0) + (consensus.noCount || 0) + (consensus.unclearCount || 0);
+      const pctYes = total > 0 ? ((consensus.yesCount || 0) / total) * 100 : 0;
+      const pctUnclear = total > 0 ? ((consensus.unclearCount || 0) / total) * 100 : 0;
+      const pctNo = total > 0 ? ((consensus.noCount || 0) / total) * 100 : 0;
+
+      document.getElementById('bar-yes').style.width = `${pctYes}%`;
+      document.getElementById('bar-unclear').style.width = `${pctUnclear}%`;
+      document.getElementById('bar-no').style.width = `${pctNo}%`;
+
+      document.getElementById('txt-yes').textContent = consensus.yesCount || 0;
+      document.getElementById('txt-unclear').textContent = consensus.unclearCount || 0;
+      document.getElementById('txt-no').textContent = consensus.noCount || 0;
+
+      // Render table rows
+      const tbody = document.getElementById('consensus-table-rows');
+      if (!consensus.papers || !consensus.papers.length) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;">No detailed analyses available.</td></tr>';
+      } else {
+        tbody.innerHTML = consensus.papers.map(p => {
+          const verdictClass = (p.verdict || '').toLowerCase();
+          return `
+            <tr>
+              <td style="padding:12px 16px;font-weight:600;color:var(--primary);">${p.title}</td>
+              <td style="padding:12px 16px;">
+                <span class="verdict-tag ${verdictClass}">${p.verdict}</span>
+              </td>
+              <td style="padding:12px 16px;line-height:1.5;">${p.findings}</td>
+              <td style="padding:12px 16px;color:var(--gray);">${p.methodology}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      results.classList.remove('d-none');
+    } catch (err) {
+      Toast.error(err.message);
+    } finally {
+      loading.classList.add('d-none');
+    }
+  }
+
+  static async loadPaperInsight(paperJsonStr) {
+    const emptyState = document.getElementById('insights-empty-state');
+    const loadingState = document.getElementById('insights-companion-loading');
+    const splitScreen = document.getElementById('insights-companion-split');
+
+    if (!paperJsonStr) {
+      InsightsDashboard.activePaper = null;
+      emptyState.classList.remove('d-none');
+      splitScreen.classList.add('d-none');
+      loadingState.classList.add('d-none');
+      return;
+    }
+
+    const paper = JSON.parse(paperJsonStr);
+    InsightsDashboard.activePaper = paper;
+
+    emptyState.classList.add('d-none');
+    splitScreen.classList.add('d-none');
+    loadingState.classList.remove('d-none');
+
+    // Title
+    document.getElementById('insight-paper-title').textContent = `Summary: ${paper.title.slice(0, 50)}...`;
+
+    // Clear previous chat
+    const chatBox = document.getElementById('insights-chat-thread');
+    chatBox.innerHTML = `<div class="dm"><div class="dav b">ZL</div><div class="dbub b">Hello! Ask me anything about <strong>"${paper.title}"</strong>. I have loaded its content for our discussion.</div></div>`;
+
+    try {
+      // Get structured summary
+      const { summary } = await ApiClient.post('/chat/structured-summary', {
+        title: paper.title,
+        abstract: paper.abstract || 'No abstract available.'
+      });
+
+      // Render summary
+      const takeawaysEl = document.getElementById('sc-takeaways');
+      if (summary.takeaways && summary.takeaways.length) {
+        takeawaysEl.innerHTML = summary.takeaways.map(t => `<li>${t}</li>`).join('');
+      } else {
+        takeawaysEl.innerHTML = '<li>Key takeaways not extracted.</li>';
+      }
+
+      document.getElementById('sc-methodology').textContent = summary.methodology || 'N/A';
+      document.getElementById('sc-findings').textContent = summary.findings || 'N/A';
+      document.getElementById('sc-limitations').textContent = summary.limitations || 'N/A';
+
+      splitScreen.classList.remove('d-none');
+    } catch (err) {
+      Toast.error(err.message);
+      emptyState.classList.remove('d-none');
+    } finally {
+      loadingState.classList.add('d-none');
+    }
+  }
+
+  static async sendPaperChat() {
+    const inp = document.getElementById('insights-chat-inp');
+    const text = inp.value.trim();
+    if (!text || !InsightsDashboard.activePaper) return;
+
+    inp.value = '';
+
+    // Append user message
+    const chatBox = document.getElementById('insights-chat-thread');
+    const uDiv = document.createElement('div');
+    uDiv.className = 'dm u';
+    const initials = Auth.user ? Auth.user.name.slice(0,2).toUpperCase() : 'U';
+    uDiv.innerHTML = `<div class="dav u">${initials}</div><div class="dbub u">${text}</div>`;
+    chatBox.appendChild(uDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Show typing
+    const tDiv = document.createElement('div');
+    tDiv.className = 'dm';
+    tDiv.id = 'insights-typ';
+    tDiv.innerHTML = `<div class="dav b">ZL</div><div class="dbub b"><div class="dtyping"><div class="ddot"></div><div class="ddot"></div><div class="ddot"></div></div></div>`;
+    chatBox.appendChild(tDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    try {
+      // Send chat message in context of paper abstract/details
+      const paperContext = `Paper Context: Title: "${InsightsDashboard.activePaper.title}", Abstract: "${InsightsDashboard.activePaper.abstract || ''}". User is asking a question in this context.`;
+      
+      const { response } = await ApiClient.post('/chat/message', {
+        message: `${paperContext}\nQuestion: ${text}`
+      });
+
+      document.getElementById('insights-typ')?.remove();
+
+      // Append bot response
+      const bDiv = document.createElement('div');
+      bDiv.className = 'dm';
+      const formatted = response
+        .replace(/\n/g, '<br>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      bDiv.innerHTML = `<div class="dav b">ZL</div><div class="dbub b">${formatted}</div>`;
+      chatBox.appendChild(bDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    } catch (err) {
+      document.getElementById('insights-typ')?.remove();
+      Toast.error(err.message);
     }
   }
 }

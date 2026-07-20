@@ -69,9 +69,9 @@ router.get('/stats', authMiddleware, (req, res) => {
       searchesThisWeek: SearchHistory.countThisWeek(userId),
       papersSaved: Paper.count(userId),
       insightsGenerated: ChatMessage.countByUser(userId),
-      apiCallsUsed: user.apiCallsUsed,
-      apiCallsLimit: user.apiCallsLimit,
-      plan: user.plan,
+      apiCallsUsed: user ? (user.api_calls || 0) : 0,
+      apiCallsLimit: user && user.plan === 'pro' ? 999999 : 50,
+      plan: user ? user.plan : 'free',
     };
 
     res.json({ stats });

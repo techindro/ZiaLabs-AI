@@ -5,7 +5,8 @@
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
-    "dev": "nodemon server/index.js"
+    "dev": "nodemon server/index.js",
+    "mcp": "node server/mcp/index.js"
   },
   "keywords": [
     "ai",
@@ -20,17 +21,21 @@
   "license": "MIT",
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "form-data": "^4.0.5",
     "jsonwebtoken": "^9.0.2",
+    "kafkajs": "^2.2.4",
     "multer": "^2.1.1",
     "pdf-parse": "^2.4.5",
+    "pngjs": "^7.0.0",
     "sql.js": "^1.11.0",
     "stripe": "^22.1.0",
-    "xml2js": "^0.6.2"
+    "xml2js": "^0.6.2",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
