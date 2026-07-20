@@ -1194,6 +1194,17 @@ class Playground {
 
     results.classList.remove('d-none');
   }
+
+  static submitEnterpriseDemo() {
+    const org = document.getElementById('ent-org').value.trim();
+    const email = document.getElementById('ent-email').value.trim();
+    if (!org || !email) return;
+
+    document.getElementById('enterprise-form').classList.add('d-none');
+    document.getElementById('ent-confirm-email').textContent = email;
+    document.getElementById('ent-success').classList.remove('d-none');
+    Toast.success("Enterprise inquiry submitted!");
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => App.init());

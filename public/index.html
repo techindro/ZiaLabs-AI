@@ -25,6 +25,7 @@
       <a href="#features">Product</a>
       <a href="#research">Research</a>
       <a href="#pricing">Pricing</a>
+      <a href="#enterprise">Enterprise</a>
       <a href="#blog">Blog</a>
     </div>
     <div class="nav-cta">
@@ -562,8 +563,76 @@
     </div>
   </div>
 
+  <!-- ENTERPRISE SECTION -->
+  <div class="features fade-in delay-3" id="enterprise" style="max-width:1100px;margin:80px auto 40px;padding:60px 40px;background:#fff;border:1px solid var(--border);border-radius:var(--border-radius-lg);box-shadow:0 20px 40px -15px rgba(0,0,0,0.03);">
+    <div class="section-label">Enterprise & Labs</div>
+    <div class="section-title" style="text-align:center;">ZiaLabs for R&D Teams and Universities</div>
+    <p style="text-align:center;font-size:15px;color:var(--gray);max-width:600px;margin:0 auto 40px;line-height:1.7;">
+      Empower your team of scientists, clinicians, or engineers with secure, custom-trained research co-pilots and shared literature workspaces.
+    </p>
 
+    <!-- Enterprise Features Grid -->
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center;margin-bottom:20px;">
+      <div>
+        <h4 style="font-family:var(--font-heading);font-size:20px;font-weight:700;color:var(--primary);margin-bottom:16px;">Institutional Compliance & Scale</h4>
+        <p style="font-size:14px;color:var(--gray);line-height:1.65;margin-bottom:24px;">
+          ZiaLabs Enterprise integrates directly with your institutional reference databases while complying with strict R&D data privacy standards. Your uploads are isolated and never used for public model training.
+        </p>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:14px;padding:0;margin:0 0 24px 0;">
+          <li style="display:flex;gap:12px;font-size:13.5px;color:var(--black);font-weight:600;align-items:center;">
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:var(--primary);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            <span>SOC-2 Type II Certified Data Silos</span>
+          </li>
+          <li style="display:flex;gap:12px;font-size:13.5px;color:var(--black);font-weight:600;align-items:center;">
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:var(--primary);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            <span>Custom API Keys & Shared MCP Servers</span>
+          </li>
+          <li style="display:flex;gap:12px;font-size:13.5px;color:var(--black);font-weight:600;align-items:center;">
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:var(--primary);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            <span>SAML SSO / Active Directory Integration</span>
+          </li>
+          <li style="display:flex;gap:12px;font-size:13.5px;color:var(--black);font-weight:600;align-items:center;">
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:var(--primary);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            <span>Shared R&D Workspaces & Billing</span>
+          </li>
+        </ul>
+      </div>
 
+      <!-- Enterprise Demo Contact Form -->
+      <div style="background:var(--bg-base);border:1px solid var(--border);border-radius:var(--border-radius-lg);padding:32px;box-shadow:0 4px 6px rgba(0,0,0,0.01);">
+        <h4 style="font-family:var(--font-heading);font-size:16px;font-weight:700;color:var(--black);margin-bottom:18px;">Request Institutional Demo</h4>
+        
+        <form id="enterprise-form" onsubmit="event.preventDefault(); Playground.submitEnterpriseDemo();">
+          <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label" style="font-size:12px;">Organization / University Name</label>
+            <input type="text" class="form-input" id="ent-org" placeholder="e.g. Stanford University" required style="background:#fff;margin-bottom:0;">
+          </div>
+          <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label" style="font-size:12px;">Work Email Address</label>
+            <input type="email" class="form-input" id="ent-email" placeholder="e.g. dean@stanford.edu" required style="background:#fff;margin-bottom:0;">
+          </div>
+          <div class="form-group" style="margin-bottom:20px;">
+            <label class="form-label" style="font-size:12px;">Team Size / Research Scope</label>
+            <select class="form-input" id="ent-size" style="background:#fff;appearance:auto;margin-bottom:0;">
+              <option>1-5 Researchers (Small Lab)</option>
+              <option>6-25 Researchers (Department)</option>
+              <option>26-100 Researchers (Multi-lab cluster)</option>
+              <option>100+ Researchers (Entire University/Enterprise)</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-red" style="width:100%;padding:12px;margin:0;">Request Demo & Sandbox Access</button>
+        </form>
+
+        <div id="ent-success" class="d-none" style="text-align:center;padding:20px 0;">
+          <div style="font-size:40px;margin-bottom:12px;">✉️</div>
+          <h5 style="font-size:15px;font-weight:700;color:var(--primary);margin-bottom:8px;">Inquiry Received!</h5>
+          <p style="font-size:12.5px;color:var(--gray);line-height:1.5;margin:0;">
+            Thanks for reaching out! Our R&D integration engineers will email you at <strong id="ent-confirm-email"></strong> within 1 business day.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- UNIVERSITY RESEARCH UPDATES -->
   <div class="features" id="blog" style="max-width:1100px;margin:0 auto;padding-top:80px;padding-bottom:120px">
