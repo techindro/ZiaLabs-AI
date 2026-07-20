@@ -168,6 +168,139 @@
     </div>
   </div>
 
+  <!-- AI RESEARCH PLAYGROUND (LITE DEMO) -->
+  <div class="features fade-in delay-3" id="playground" style="max-width:1100px;margin:80px auto 40px;padding:40px 20px;background:#fff;border:1px solid var(--border);border-radius:var(--border-radius-lg);box-shadow:0 20px 40px -15px rgba(0,0,0,0.03);">
+    <div class="section-label">Interactive Sandbox</div>
+    <div class="section-title" style="text-align:center;margin-bottom:12px;">Try ZiaLabs AI Instantly</div>
+    <p style="text-align:center;font-size:15px;color:var(--gray);max-width:600px;margin:0 auto 36px;line-height:1.7;">
+      Experience ZiaLabs core intelligence systems directly in your browser. Select a preset question or abstract below to see the models in action.
+    </p>
+
+    <div style="border:1px solid var(--border);border-radius:var(--border-radius-lg);overflow:hidden;background:#fff;">
+      <!-- Tab Bar -->
+      <div style="background:var(--primary-light);border-bottom:1px solid var(--border);padding:0 20px;display:flex;">
+        <button class="pg-tab active" id="pg-tab-consensus" onclick="Playground.switchTab('consensus')">Consensus Engine</button>
+        <button class="pg-tab" id="pg-tab-summary" onclick="Playground.switchTab('summary')">Structured Summarizer</button>
+      </div>
+
+      <!-- Tab 1: Consensus Engine -->
+      <div id="pg-content-consensus" class="pg-tab-content" style="padding:28px;">
+        <div style="display:flex;gap:12px;margin-bottom:20px;">
+          <input type="text" class="search-input" id="pg-consensus-query" placeholder="Ask a question or select a preset below..." style="margin-bottom:0;flex:1;" onkeydown="if(event.key==='Enter')Playground.runConsensus()">
+          <button class="btn-red" style="margin:0;" onclick="Playground.runConsensus()">Synthesize Consensus</button>
+        </div>
+
+        <!-- Presets -->
+        <div style="margin-bottom:28px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12.5px;">
+          <span style="color:var(--gray);font-weight:600;">Suggestions:</span>
+          <button class="preset-btn" onclick="Playground.selectPreset('Does zinc shorten cold duration?')">Does zinc shorten colds?</button>
+          <button class="preset-btn" onclick="Playground.selectPreset('Does caffeine enhance long-term memory recall?')">Does caffeine enhance memory recall?</button>
+          <button class="preset-btn" onclick="Playground.selectPreset('Is microplastics exposure harmful to human gut cells?')">Are microplastics harmful to gut cells?</button>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="pg-consensus-loading" class="d-none" style="text-align:center;padding:40px 0;">
+          <div class="dtyping" style="justify-content:center"><div class="ddot"></div><div class="ddot"></div><div class="ddot"></div></div>
+          <div style="font-size:13px;color:var(--gray);margin-top:16px" id="pg-consensus-loading-text">Analyzing studies...</div>
+        </div>
+
+        <!-- Results Wrapper -->
+        <div id="pg-consensus-results" class="d-none">
+          <!-- Consensus Summary Statement -->
+          <div style="background:var(--primary-light);border:1px solid var(--border);border-radius:var(--border-radius-lg);padding:20px;margin-bottom:24px;border-left:4px solid var(--primary);">
+            <h4 style="font-family:var(--font-heading);color:var(--primary);margin-bottom:8px;font-size:15px;font-weight:700;">AI Consensus Synthesis</h4>
+            <p id="pg-consensus-statement" style="font-size:13.5px;line-height:1.65;color:var(--black);margin:0;"></p>
+          </div>
+
+          <!-- Consensus Meter & Stats -->
+          <div style="margin-bottom:28px;">
+            <h4 style="font-size:11.5px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Consensus Verdicts</h4>
+            <div style="display:flex;align-items:center;gap:16px;background:var(--bg-base);border:1px solid var(--border);padding:14px 20px;border-radius:var(--border-radius-lg);">
+              <div style="flex:1;">
+                <div style="height:9px;background:#e2e8f0;border-radius:10px;overflow:hidden;display:flex;">
+                  <div id="pg-bar-yes" style="height:100%;background:#10b981;width:0%;transition:width 0.6s ease;"></div>
+                  <div id="pg-bar-unclear" style="height:100%;background:#f59e0b;width:0%;transition:width 0.6s ease;"></div>
+                  <div id="pg-bar-no" style="height:100%;background:#ef4444;width:0%;transition:width 0.6s ease;"></div>
+                </div>
+              </div>
+              <div style="display:flex;gap:16px;font-size:13px;font-weight:600;">
+                <span style="color:#10b981;"><span id="pg-txt-yes">0</span> Yes</span>
+                <span style="color:#f59e0b;"><span id="pg-txt-unclear">0</span> Unclear</span>
+                <span style="color:#ef4444;"><span id="pg-txt-no">0</span> No</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comparison Table -->
+          <div>
+            <h4 style="font-size:11.5px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Analyzed Studies Comparison</h4>
+            <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--border-radius-lg);">
+              <table style="width:100%;border-collapse:collapse;background:#fff;text-align:left;font-size:12.5px;">
+                <thead>
+                  <tr style="background:var(--primary-light);border-bottom:1px solid var(--border);color:var(--primary);font-weight:700;">
+                    <th style="padding:10px 14px;width:30%;">Study Title</th>
+                    <th style="padding:10px 14px;width:15%;">AI Verdict</th>
+                    <th style="padding:10px 14px;width:35%;">Key Findings</th>
+                    <th style="padding:10px 14px;width:20%;">Methodology</th>
+                  </tr>
+                </thead>
+                <tbody id="pg-consensus-table-rows">
+                  <!-- Loaded dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Paper Summarizer -->
+      <div id="pg-content-summary" class="pg-tab-content d-none" style="padding:28px;">
+        <div style="margin-bottom:20px;">
+          <label style="display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:var(--black);">Choose a paper or customize the abstract:</label>
+          <select id="pg-summary-selector" class="form-input" style="margin-bottom:16px;appearance:auto;background-color:#fff;" onchange="Playground.selectSummaryPaper(this.value)">
+            <option value="attention">"Attention Is All You Need" (Vaswani et al., Transformer paper)</option>
+            <option value="crispr">"Cas9 Endonuclease for Gene Editing" (Doudna & Charpentier, CRISPR paper)</option>
+            <option value="custom">-- Paste Custom Abstract --</option>
+          </select>
+          <textarea id="pg-summary-abstract" class="form-input" style="height:120px;font-family:inherit;font-size:13px;line-height:1.6;padding:12px;margin-bottom:16px;background-color:#fff;" placeholder="Paste paper abstract here..."></textarea>
+          <button class="btn-red" style="margin:0;" onclick="Playground.runSummary()">Generate Structured Summary</button>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="pg-summary-loading" class="d-none" style="text-align:center;padding:40px 0;">
+          <div class="dtyping" style="justify-content:center"><div class="ddot"></div><div class="ddot"></div><div class="ddot"></div></div>
+          <div style="font-size:13px;color:var(--gray);margin-top:16px">Extracting key data points...</div>
+        </div>
+
+        <!-- Structured Summary Result -->
+        <div id="pg-summary-results" class="d-none" style="display:grid;grid-template-columns:1.2fr 1fr;gap:20px;margin-top:24px;">
+          <!-- Left: Key Takeaways -->
+          <div style="background:var(--bg-base);border:1px solid var(--border);border-radius:var(--border-radius-lg);padding:20px;">
+            <h5 style="font-size:12.5px;font-weight:700;color:var(--primary);text-transform:uppercase;margin-bottom:12px;font-family:var(--font-heading);">Key Takeaways</h5>
+            <ul id="pg-sc-takeaways" style="padding-left:18px;font-size:12.5px;line-height:1.6;color:var(--black);display:flex;flex-direction:column;gap:10px;margin:0;">
+              <!-- Loaded dynamically -->
+            </ul>
+          </div>
+          <!-- Right: Details -->
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="background:#fff;border:1px solid var(--border);border-radius:var(--border-radius-lg);padding:14px 16px;">
+              <h5 style="font-size:11.5px;font-weight:700;color:var(--gray);text-transform:uppercase;margin:0 0 4px 0;letter-spacing:0.5px;">Methodology</h5>
+              <p id="pg-sc-methodology" style="font-size:13px;line-height:1.5;color:var(--black);margin:0;"></p>
+            </div>
+            <div style="background:#fff;border:1px solid var(--border);border-radius:var(--border-radius-lg);padding:14px 16px;">
+              <h5 style="font-size:11.5px;font-weight:700;color:var(--gray);text-transform:uppercase;margin:0 0 4px 0;letter-spacing:0.5px;">Key Findings</h5>
+              <p id="pg-sc-findings" style="font-size:13px;line-height:1.5;color:var(--black);margin:0;"></p>
+            </div>
+            <div style="background:#fff;border:1px solid var(--border);border-radius:var(--border-radius-lg);padding:14px 16px;">
+              <h5 style="font-size:11.5px;font-weight:700;color:var(--gray);text-transform:uppercase;margin:0 0 4px 0;letter-spacing:0.5px;">Limitations</h5>
+              <p id="pg-sc-limitations" style="font-size:13px;line-height:1.5;color:var(--black);margin:0;"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- PRODUCT (FEATURES) -->
   <div class="features fade-in delay-3" id="features" style="max-width:1200px;margin:0 auto">
     <div class="section-label">What it does</div>

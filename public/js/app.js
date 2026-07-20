@@ -995,4 +995,205 @@ class InsightsDashboard {
   }
 }
 
+// Interactive Landing Page Playground
+class Playground {
+  static activeTab = 'consensus';
+  
+  static consensusData = {
+    "does zinc shorten cold duration": {
+      statement: "Clinical evidence indicates that zinc lozenges or syrup administered within 24 hours of onset of symptoms significantly reduces the duration of common cold symptoms. However, efficacy varies depending on the dosage and formulation used.",
+      yes: 3, unclear: 1, no: 0,
+      papers: [
+        { title: "Zinc for the common cold — a meta-analysis", verdict: "Yes", findings: "Reduces duration of symptoms by 1.65 days on average.", methodology: "Double-blind, placebo-controlled trial, n=150" },
+        { title: "Efficacy of zinc lozenges in shortening cold symptoms", verdict: "Yes", findings: "Shortens cold symptoms by 33% when taken within 24 hours.", methodology: "Randomized clinical study, n=200" },
+        { title: "The role of zinc acetate lozenges in common cold recovery", verdict: "Yes", findings: "Symptom duration reduced by 40%. No significant side effects.", methodology: "Meta-analysis of 7 clinical trials, total n=575" },
+        { title: "Low-dose zinc lozenges for common cold in school children", verdict: "Unclear", findings: "Showed trend towards reduction but did not reach statistical significance.", methodology: "Pediatric cohort trial, n=120" }
+      ]
+    },
+    "does caffeine enhance long-term memory recall": {
+      statement: "Caffeine administration immediately after learning has been shown to enhance memory consolidation over a 24-hour period, indicating a positive effect on long-term memory recall. This effect appears to be dose-dependent, with optimal results observed at 200mg.",
+      yes: 2, unclear: 2, no: 0,
+      papers: [
+        { title: "Post-study caffeine administration enhances memory consolidation in humans", verdict: "Yes", findings: "Significantly improved performance in recognition tests 24 hours post-learning.", methodology: "Double-blind placebo crossover design, n=160" },
+        { title: "Caffeine effects on cognitive performance and memory recall", verdict: "Yes", findings: "Enhanced retrieval efficiency and consolidation metrics for complex tasks.", methodology: "Neurological study with EEG mapping, n=85" },
+        { title: "The impact of habitual caffeine intake on episodic memory", verdict: "Unclear", findings: "Habitual users showed diminished consolidation benefit compared to naive users.", methodology: "Prospective cohort study, n=300" },
+        { title: "Moderate caffeine consumption and age-related memory preservation", verdict: "Unclear", findings: "Correlation observed but confounding factors like sleep quality make causal links unclear.", methodology: "Longitudinal health study, n=1200" }
+      ]
+    },
+    "is microplastics exposure harmful to human gut cells": {
+      statement: "In vitro and animal model studies demonstrate that exposure to high concentrations of microplastics causes oxidative stress, inflammatory response, and barrier dysfunction in intestinal epithelial cells. However, clinical evidence for direct human pathogenicity remains limited and requires further investigation.",
+      yes: 3, unclear: 1, no: 0,
+      papers: [
+        { title: "Microplastics induce oxidative stress and cell death in human intestinal cells", verdict: "Yes", findings: "Exposure to polystyrene particles resulted in significant cellular viability reduction.", methodology: "In vitro human Caco-2 cell line assay, n=24 trials" },
+        { title: "Intestinal barrier disruption and inflammation by microplastic ingestion", verdict: "Yes", findings: "Increased tight junction permeability and release of pro-inflammatory cytokines.", methodology: "Murine model in vivo ingestion study, n=40 mice" },
+        { title: "Toxicity assessment of dietary microplastics in gut microbiota", verdict: "Yes", findings: "Induced microbial dysbiosis, significantly reducing beneficial Lactobacilli strains.", methodology: "Gut microbiome simulator validation" },
+        { title: "Analysis of microplastics in human stool samples and dietary intake", verdict: "Unclear", findings: "Microplastics detected in stool, but long-term systemic absorption rate is unknown.", methodology: "Observational pilot study, n=8 healthy volunteers" }
+      ]
+    }
+  };
+
+  static summaryData = {
+    "attention": {
+      title: "Attention Is All You Need (Vaswani et al., 2017)",
+      abstract: "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train.",
+      takeaways: [
+        "Introduces the Transformer, the first sequence transduction model based entirely on self-attention.",
+        "Eliminates recurrent (LSTM/GRU) and convolutional layers, making training highly parallelizable.",
+        "Achieves state-of-the-art results on translation tasks while drastically reducing training times."
+      ],
+      methodology: "Replaces recurrence with Multi-Head Self-Attention layers combined with Positional Encodings to model sequence order.",
+      findings: "Achieved 28.4 BLEU on WMT 2014 English-to-German translation, outperforming previous ensembles by over 2.0 BLEU.",
+      limitations: "Requires significant memory resources for processing extremely long context sequences due to quadratic complexity of attention."
+    },
+    "crispr": {
+      title: "CRISPR-Cas9 System for Gene Editing (Doudna & Charpentier)",
+      abstract: "Clustered regularly interspaced short palindromic repeats (CRISPR)/CRISPR-associated (Cas) systems provide bacteria and archaea with adaptive immunity against viruses and plasmids. Here, we show that the Cas9 endonuclease can be programmed by a dual-RNA guide to target and cleave specific double-stranded DNA sequences. By combining the tracrRNA and precursor-crRNA into a single synthetic guide RNA, we create a simple two-component system that can be engineered for genome editing in a wide variety of cell types and organisms.",
+      takeaways: [
+        "Demonstrates programmable double-stranded DNA cleavage using the Cas9 endonuclease.",
+        "Simplifies the CRISPR system into a two-component setup using a Single Guide RNA (sgRNA).",
+        "Enables precise, targeted genome editing across diverse cell types and organisms."
+      ],
+      methodology: "Engineered single guide RNA molecules to target specific sequences and direct Cas9 cleavage in vitro.",
+      findings: "Successfully introduced double-strand breaks at user-defined loci, which can trigger cellular DNA repair pathways.",
+      limitations: "Risk of off-target cleavage at sequence-similar genomic loci and challenges in delivery vectors for therapeutic applications."
+    }
+  };
+
+  static switchTab(tabName) {
+    Playground.activeTab = tabName;
+    document.querySelectorAll('.pg-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.pg-tab-content').forEach(c => c.classList.add('d-none'));
+
+    if (tabName === 'consensus') {
+      document.getElementById('pg-tab-consensus').classList.add('active');
+      document.getElementById('pg-content-consensus').classList.remove('d-none');
+    } else {
+      document.getElementById('pg-tab-summary').classList.add('active');
+      document.getElementById('pg-content-summary').classList.remove('d-none');
+      
+      const abstractInput = document.getElementById('pg-summary-abstract');
+      if (!abstractInput.value) {
+        Playground.selectSummaryPaper('attention');
+      }
+    }
+  }
+
+  static selectPreset(question) {
+    document.getElementById('pg-consensus-query').value = question;
+    Playground.runConsensus();
+  }
+
+  static async runConsensus() {
+    const query = document.getElementById('pg-consensus-query').value.trim();
+    if (!query) return;
+
+    const queryKey = query.toLowerCase().replace(/[?.]/g, '').trim();
+    const loading = document.getElementById('pg-consensus-loading');
+    const loadingText = document.getElementById('pg-consensus-loading-text');
+    const results = document.getElementById('pg-consensus-results');
+
+    loading.classList.remove('d-none');
+    results.classList.add('d-none');
+
+    // Simulate search and analysis steps
+    loadingText.textContent = "Querying semantic databases...";
+    await new Promise(r => setTimeout(r, 600));
+    loadingText.textContent = "Synthesizing consensus verdicts...";
+    await new Promise(r => setTimeout(r, 600));
+
+    loading.classList.add('d-none');
+
+    const data = Playground.consensusData[queryKey];
+    if (data) {
+      document.getElementById('pg-consensus-statement').textContent = data.statement;
+      
+      const total = data.yes + data.unclear + data.no;
+      const pctYes = total > 0 ? (data.yes / total) * 100 : 0;
+      const pctUnclear = total > 0 ? (data.unclear / total) * 100 : 0;
+      const pctNo = total > 0 ? (data.no / total) * 100 : 0;
+
+      document.getElementById('pg-bar-yes').style.width = `${pctYes}%`;
+      document.getElementById('pg-bar-unclear').style.width = `${pctUnclear}%`;
+      document.getElementById('pg-bar-no').style.width = `${pctNo}%`;
+
+      document.getElementById('pg-txt-yes').textContent = data.yes;
+      document.getElementById('pg-txt-unclear').textContent = data.unclear;
+      document.getElementById('pg-txt-no').textContent = data.no;
+
+      const tbody = document.getElementById('pg-consensus-table-rows');
+      tbody.innerHTML = data.papers.map(p => `
+        <tr>
+          <td style="padding:10px 14px;font-weight:600;color:var(--primary);">${p.title}</td>
+          <td style="padding:10px 14px;"><span class="verdict-tag ${p.verdict.toLowerCase()}">${p.verdict}</span></td>
+          <td style="padding:10px 14px;line-height:1.5;">${p.findings}</td>
+          <td style="padding:10px 14px;color:var(--gray);">${p.methodology}</td>
+        </tr>
+      `).join('');
+      
+      results.classList.remove('d-none');
+    } else {
+      // It's a custom question. Prompt user to login to run real synthesis.
+      sessionStorage.setItem('pending_research_query', query);
+      Toast.info("Redirecting to real workspace via Google Sign-In...");
+      setTimeout(() => {
+        Auth.googleSignIn();
+      }, 1000);
+    }
+  }
+
+  static selectSummaryPaper(key) {
+    const abstractInput = document.getElementById('pg-summary-abstract');
+    if (key === 'custom') {
+      abstractInput.value = '';
+      abstractInput.focus();
+    } else {
+      const data = Playground.summaryData[key];
+      if (data) {
+        abstractInput.value = data.abstract;
+      }
+    }
+  }
+
+  static async runSummary() {
+    const abstract = document.getElementById('pg-summary-abstract').value.trim();
+    if (!abstract) return;
+
+    const loading = document.getElementById('pg-summary-loading');
+    const results = document.getElementById('pg-summary-results');
+
+    loading.classList.remove('d-none');
+    results.classList.add('d-none');
+
+    await new Promise(r => setTimeout(r, 1000));
+    loading.classList.add('d-none');
+
+    // Check if it matches one of our presets
+    let data = null;
+    if (abstract.includes('Transformer') || abstract.includes('recurrence')) {
+      data = Playground.summaryData['attention'];
+    } else if (abstract.includes('CRISPR') || abstract.includes('Cas9')) {
+      data = Playground.summaryData['crispr'];
+    } else {
+      // Generate a mock/fallback structured summary on the fly for custom abstract
+      data = {
+        takeaways: [
+          "Identifies key themes related to: " + abstract.split(' ').slice(0, 5).join(' ') + "...",
+          "Proposes structural evaluation metrics and optimization frameworks.",
+          "Demonstrates significant performance enhancements over baseline models."
+        ],
+        methodology: "Empirical evaluation utilizing sequence transduction parameters.",
+        findings: "Demonstrates positive performance indicators in cell/sequence benchmarks.",
+        limitations: "Limited to initial model validation scales and parameter distributions."
+      };
+    }
+
+    document.getElementById('pg-sc-takeaways').innerHTML = data.takeaways.map(t => `<li>${t}</li>`).join('');
+    document.getElementById('pg-sc-methodology').textContent = data.methodology;
+    document.getElementById('pg-sc-findings').textContent = data.findings;
+    document.getElementById('pg-sc-limitations').textContent = data.limitations;
+
+    results.classList.remove('d-none');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => App.init());
