@@ -31,7 +31,11 @@ let initPromise = null;
 async function ensureInitialized() {
   if (!initPromise) {
     initPromise = (async () => {
-      await DB.init();
+      try {
+        await DB.init();
+      } catch (err) {
+        console.warn('⚠️ Database initialization error:', err.message);
+      }
       try {
         await RedisService.init();
       } catch (err) {

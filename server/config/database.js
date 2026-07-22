@@ -12,7 +12,16 @@ class DB {
   static async init() {
     if (this.#db) return; // DB already initialized
 
-    const SQL = await initSqlJs();
+    let SQL;
+    try {
+      const wasmDir = path.dirname(require.resolve('sql.js'));
+      SQL = await initSqlJs({
+        locateFile: file => path.join(wasmDir, file)
+      });
+    } catch (e1) {
+      console.warn('⚠️ Explicit WASM locateFile failed, falling back to default initSqlJs:', e1.message);
+      SQL = await initSqlJs();
+    }
     const rootDbPath = path.join(__dirname, '../../zialabs.db');
 
     if (process.env.VERCEL || process.env.TMPDIR) {
