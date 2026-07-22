@@ -46,6 +46,21 @@ class ApiClient {
   static del(url) {
     return ApiClient.request(url, { method: 'DELETE' });
   }
+
+  static async uploadFile(url, formData) {
+    const headers = {};
+    if (ApiClient.#token) headers['Authorization'] = `Bearer ${ApiClient.#token}`;
+
+    const res = await fetch(`${API_BASE}${url}`, {
+      method: 'POST',
+      headers,
+      body: formData
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `Upload failed (${res.status})`);
+    return data;
+  }
 }
 
 // toast notifications (the little popups in the top-right corner)
@@ -330,6 +345,41 @@ class Dashboard {
           }
         }
       }, 100);
+    }
+  }
+
+  static async uploadPaper(inputEl) {
+    if (!inputEl || !inputEl.files || inputEl.files.length === 0) return;
+
+    const file = inputEl.files[0];
+    if (!file) return;
+
+    if (!Auth.isLoggedIn()) {
+      Toast.info('Please sign in to upload research papers.');
+      App.showPage('pg-signin');
+      return;
+    }
+
+    try {
+      Toast.info(`Uploading & parsing "${file.name}"...`);
+
+      const formData = new FormData();
+      formData.append('paper', file);
+
+      const res = await ApiClient.uploadFile('/upload', formData);
+
+      Toast.success(`Paper "${file.name}" parsed & saved to library!`);
+      inputEl.value = '';
+
+      Dashboard.loadStats();
+      const myPapersItem = Array.from(document.querySelectorAll('.sb-item')).find(item => item.textContent.includes('My Papers'));
+      if (myPapersItem) {
+        Dashboard.setSidebar(myPapersItem);
+      }
+    } catch (err) {
+      console.error('Upload error:', err);
+      Toast.error(err.message || 'PDF Upload failed');
+      inputEl.value = '';
     }
   }
 

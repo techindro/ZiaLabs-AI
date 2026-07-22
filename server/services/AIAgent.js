@@ -238,6 +238,20 @@ JSON schema:
     }
   }
 
+  async summarizePaper(paperText) {
+    if (!this.#model) {
+      return paperText ? paperText.substring(0, 800) + '...' : 'Uploaded paper text.';
+    }
+    try {
+      const prompt = `Summarize the following scientific paper text into a concise 2-3 paragraph abstract highlighting methodology, findings, and key takeaways:\n\n${paperText.substring(0, 10000)}`;
+      const res = await this.#model.generateContent(prompt);
+      return res.response.text();
+    } catch (err) {
+      console.warn('Paper summarization fallback:', err.message);
+      return paperText ? paperText.substring(0, 800) + '...' : 'Uploaded paper content.';
+    }
+  }
+
   // simple keyword-based responses for when there's no api key
   #fallback(message) {
     const m = message.toLowerCase();

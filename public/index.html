@@ -1343,6 +1343,9 @@
                 </div>
               </div>
 
+              <!-- Hidden File Input for PDF Uploading -->
+              <input type="file" id="upload-paper-input-chat" accept=".pdf,.txt" style="display:none;" onchange="Dashboard.uploadPaper(this)">
+
               <!-- Action 3: Upload PDF -->
               <div onclick="document.getElementById('upload-paper-input-chat').click()" style="background: #fff; border: 1px solid var(--border); border-radius: var(--border-radius-lg); padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); display: flex; gap: 14px; align-items: flex-start; cursor: pointer; transition: transform 0.2s, border-color 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.borderColor='var(--primary)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='var(--border)';">
                 <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--primary); flex-shrink: 0;">
