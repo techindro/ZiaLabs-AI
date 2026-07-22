@@ -468,28 +468,36 @@
 
 
 
-    <!-- RESEARCH -->
+    <!-- RESEARCH (Elicit AI Literature Review Assistant Console) -->
     <div class="features" id="research" style="max-width:1100px;margin:0 auto;padding-top:40px">
-    <div class="section-label">How it works</div>
-    <div class="section-title">It actually reads the papers</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
-      <div>
-        <p style="font-size:16px;color:var(--gray);line-height:1.7;margin-bottom:24px">ZiaLabs doesn't just match keywords — it understands what you're looking for and finds papers that actually answer your question.</p>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:12px">
-          <li style="display:flex;gap:12px;font-size:14px;color:var(--black);font-weight:500"><svg viewBox="0 0 24 24" style="width:18px;fill:var(--red)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Connects related papers together</li>
-          <li style="display:flex;gap:12px;font-size:14px;color:var(--black);font-weight:500"><svg viewBox="0 0 24 24" style="width:18px;fill:var(--red)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Writes lit reviews for you</li>
-          <li style="display:flex;gap:12px;font-size:14px;color:var(--black);font-weight:500"><svg viewBox="0 0 24 24" style="width:18px;fill:var(--red)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Shows which papers are cited most</li>
-        </ul>
-      </div>
-      <div class="research-img-box">
-        <img src="/img/advanced_research.jpg" alt="Advanced Research Laboratory">
-        <div class="img-overlay-badge">
-          <div class="pulse"></div>
-          <span>Working on it</span>
+      <div class="section-label">Research Assistant</div>
+      <div class="section-title">Synthesize Literature & Extract Evidence</div>
+      <p style="font-size:16px;color:var(--gray);line-height:1.7;max-width:700px;margin:0 0 28px 0;">
+        ZiaLabs doesn't just match keywords — it analyzes 200M+ open-access papers, extracts methodology, sample sizes, and synthesizes structured evidence matrices.
+      </p>
+
+      <!-- Interactive Elicit Research Console -->
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:28px;box-shadow:var(--shadow-md);margin-bottom:40px;">
+        <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+          <input type="text" id="nav-research-input" placeholder="Ask a research question (e.g., Energy-latency trade-offs in gesture models)..." style="flex:1;min-width:280px;padding:14px 18px;border:1.5px solid var(--border);border-radius:12px;font-size:15px;outline:none;font-family:var(--font-body);" onkeypress="if(event.key==='Enter')ResearchService.runLiteratureReview(this.value)">
+          <button class="btn-red" onclick="ResearchService.runLiteratureReview(document.getElementById('nav-research-input').value)" style="padding:14px 24px;font-size:14.5px;font-weight:700;display:inline-flex;align-items:center;gap:8px;border-radius:12px;">
+            <span>Run Literature Review</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
         </div>
+
+        <!-- Elicit Prompt Presets -->
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--gray);">
+          <span style="font-weight:700;color:var(--black);">Sample Queries:</span>
+          <button class="preset-btn" onclick="document.getElementById('nav-research-input').value='Energy-latency trade-offs in gesture recognition models';ResearchService.runLiteratureReview('Energy-latency trade-offs in gesture recognition models')">⚡ Gesture Recognition Energy-Latency</button>
+          <button class="preset-btn" onclick="document.getElementById('nav-research-input').value='Mitigating Temperature Drift in MEMS Sensors';ResearchService.runLiteratureReview('Mitigating Temperature Drift in MEMS Sensors')">🔬 MEMS Sensor Temperature Drift</button>
+          <button class="preset-btn" onclick="document.getElementById('nav-research-input').value='Clinical efficacy of GLP-1 in NASH';ResearchService.runLiteratureReview('Clinical efficacy of GLP-1 in NASH')">🧬 GLP-1 Efficacy in NASH</button>
+        </div>
+
+        <!-- Live Research Output Box -->
+        <div id="consensus-output-content" style="margin-top:24px;"></div>
       </div>
     </div>
-  </div>
 
   <!-- INTEGRATIONS & WORKFLOW -->
   <div class="features fade-in delay-3" id="integrations" style="max-width:1100px;margin:0 auto;padding-top:80px;">

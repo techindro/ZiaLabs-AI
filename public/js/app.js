@@ -2223,6 +2223,93 @@ class Industries {
   }
 }
 
+class ResearchService {
+  static async runLiteratureReview(query) {
+    if (!query || !query.trim()) {
+      Toast.error('Please enter a research question or topic.');
+      return;
+    }
+    if (!Auth.isLoggedIn()) {
+      Toast.info('Please sign in to run AI literature review synthesis.');
+      App.showPage('pg-signin');
+      return;
+    }
+
+    try {
+      Toast.info('Searching 200M+ papers & synthesizing literature review...');
+      const res = await ApiClient.post('/research/literature-review', { query: query.trim() });
+      
+      Toast.success(`Literature Review Complete! Analyzed ${res.totalPapersAnalyzed || 0} papers.`);
+      
+      // Update playground/dashboard output if visible
+      const outputBox = document.getElementById('consensus-output-content');
+      if (outputBox) {
+        outputBox.innerHTML = `
+          <div style="background:var(--primary-light);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;">
+            <h4 style="font-family:var(--font-heading);font-size:18px;color:var(--primary);margin:0 0 8px 0;">Executive Literature Synthesis</h4>
+            <p style="font-size:14px;color:var(--black);line-height:1.6;margin:0;">${res.executiveSummary || 'Synthesis generated.'}</p>
+          </div>
+          ${res.keyTakeaways && res.keyTakeaways.length ? `
+            <div style="margin-bottom:20px;">
+              <h5 style="font-size:14px;font-weight:700;color:var(--black);margin-bottom:8px;">Key Research Takeaways:</h5>
+              <ul style="padding-left:20px;font-size:13.5px;color:var(--gray);line-height:1.6;">
+                ${res.keyTakeaways.map(t => `<li>${t}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+          ${res.evidenceMatrix && res.evidenceMatrix.length ? `
+            <div style="overflow-x:auto;">
+              <h5 style="font-size:14px;font-weight:700;color:var(--black);margin-bottom:8px;">Elicit Evidence Matrix (${res.evidenceMatrix.length} Papers):</h5>
+              <table style="width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+                <thead>
+                  <tr style="background:var(--primary-light);color:var(--primary);text-align:left;">
+                    <th style="padding:10px;">Paper Title</th>
+                    <th style="padding:10px;">Key Finding</th>
+                    <th style="padding:10px;">Methodology</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${res.evidenceMatrix.map(row => `
+                    <tr style="border-bottom:1px solid var(--border);">
+                      <td style="padding:10px;font-weight:600;"><a href="${row.url || '#'}" target="_blank" style="color:var(--primary);">${row.title}</a> (${row.year || ''})</td>
+                      <td style="padding:10px;">${row.keyFinding || ''}</td>
+                      <td style="padding:10px;">${row.methodology || ''}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          ` : ''}
+        `;
+      }
+      return res;
+    } catch (err) {
+      Toast.error(err.message || 'Literature review synthesis failed');
+    }
+  }
+
+  static async extractData(papers, columns) {
+    try {
+      Toast.info('Extracting structured scientific data columns...');
+      const res = await ApiClient.post('/research/extract-data', { papers, columns });
+      Toast.success('Data extraction complete!');
+      return res;
+    } catch (err) {
+      Toast.error(err.message);
+    }
+  }
+
+  static async loadWorkflows() {
+    try {
+      const res = await ApiClient.get('/research/workflows');
+      return res.workflows || [];
+    } catch (err) {
+      console.warn('Failed to load research workflows:', err.message);
+      return [];
+    }
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
   PWAInstaller.init();

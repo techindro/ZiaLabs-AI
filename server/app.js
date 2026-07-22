@@ -24,6 +24,7 @@ const paymentRoutes = require('./routes/payment');
 const uploadRoutes  = require('./routes/upload');
 const newsRoutes    = require('./routes/news');
 const blogRoutes    = require('./routes/blog');
+const researchRoutes = require('./routes/research');
 
 const app = express();
 
@@ -82,6 +83,7 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/upload',  uploadRoutes);
 app.use('/api/news',    newsRoutes);
 app.use('/api/blog',    blogRoutes);
+app.use('/api/research', researchRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({
