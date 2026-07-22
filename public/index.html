@@ -542,108 +542,160 @@
     </div>
   </div>
 
-  <!-- INDUSTRIES & SCIENTIFIC DOMAINS (Elicit AI style) -->
+  <!-- INDUSTRIES & SCIENTIFIC DOMAINS (Elicit AI Exact Match) -->
   <div class="features fade-in" id="industries" style="max-width:1100px;margin:80px auto;padding:60px 20px;">
-    <div class="section-label" style="text-align:center;">Industries & Research Domains</div>
+    <div style="text-align:center;margin-bottom:12px;">
+      <span class="section-label" style="display:inline-block;padding:4px 12px;border-radius:20px;background:rgba(4,120,87,0.08);color:var(--primary);font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Industries</span>
+    </div>
     <h2 class="section-title" style="text-align:center;max-width:800px;margin:0 auto 12px;font-size:36px;font-weight:800;color:var(--black);">
       We live in a scientific world
     </h2>
     <p style="text-align:center;font-size:16px;color:var(--gray);max-width:680px;margin:0 auto 48px;line-height:1.7;">
-      ZiaLabs supports researchers, scientists, and analysts across many domains and industries to accelerate literature synthesis, data extraction, and evidence analysis.
+      ZiaLabs supports researchers across many domains and industries
     </p>
 
-    <!-- Industry Cards Grid -->
+    <!-- Industry Cards Grid (7 Cards + Example Reports) -->
     <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:24px;">
-      <!-- Industry 1: Biomedicine & Healthcare -->
-      <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:32px;transition:all 0.25s ease;box-shadow:0 4px 6px -1px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='var(--primary)';this.style.boxShadow='0 12px 24px -5px rgba(4,120,87,0.1)'" onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.02)'">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(4,120,87,0.08);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+      
+      <!-- 1. Pharmaceuticals -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:28px;display:flex;flex-direction:column;justify-content:space-between;transition:all 0.25s ease;box-shadow:0 4px 6px -1px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='var(--primary)';this.style.boxShadow='0 12px 24px -5px rgba(4,120,87,0.1)'" onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.02)'">
+        <div>
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(4,120,87,0.08);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.5 20.5l10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7z"></path><path d="M8.5 8.5l7 7"></path></svg>
+          </div>
+          <h4 style="font-family:var(--font-heading);font-size:18px;font-weight:800;color:var(--black);margin-bottom:8px;">Pharmaceuticals</h4>
+          <p style="font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:24px;">
+            Bring novel drugs to patients faster
+          </p>
         </div>
-        <h4 style="font-family:var(--font-heading);font-size:18px;font-weight:700;color:var(--black);margin-bottom:10px;">Biomedicine & Medicine</h4>
-        <p style="font-size:13.5px;color:var(--gray);line-height:1.65;margin-bottom:16px;">
-          Synthesize clinical trials, meta-analyses, and PubMed literature to evaluate treatment efficacy, drug interactions, and patient outcomes.
-        </p>
-        <div style="font-size:12px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:6px;">
-          <span>PubMed & BioRxiv ready</span>
+        <button onclick="App.showPage('pg-signup')" style="background:none;border:none;color:var(--primary);font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px;cursor:pointer;padding:0;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+          <span>Learn more</span>
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+
+      <!-- 2. Academia -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:28px;display:flex;flex-direction:column;justify-content:space-between;transition:all 0.25s ease;box-shadow:0 4px 6px -1px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='var(--primary)';this.style.boxShadow='0 12px 24px -5px rgba(4,120,87,0.1)'" onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.02)'">
+        <div>
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(4,120,87,0.08);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+          </div>
+          <h4 style="font-family:var(--font-heading);font-size:18px;font-weight:800;color:var(--black);margin-bottom:8px;">Academia</h4>
+          <p style="font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:24px;">
+            Push the frontier of science forward
+          </p>
+        </div>
+        <button onclick="App.showPage('pg-signup')" style="background:none;border:none;color:var(--primary);font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px;cursor:pointer;padding:0;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+          <span>Learn more</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+
+      <!-- 3. Medical devices & technology -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:28px;display:flex;flex-direction:column;justify-content:space-between;transition:all 0.25s ease;box-shadow:0 4px 6px -1px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='var(--primary)';this.style.boxShadow='0 12px 24px -5px rgba(4,120,87,0.1)'" onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.02)'">
+        <div>
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(4,120,87,0.08);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+          </div>
+          <h4 style="font-family:var(--font-heading);font-size:18px;font-weight:800;color:var(--black);margin-bottom:8px;">Medical devices & technology</h4>
+          <p style="font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:24px;">
+            Design safe and effective products for patients
+          </p>
+        </div>
+        <button onclick="App.showPage('pg-signup')" style="background:none;border:none;color:var(--primary);font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px;cursor:pointer;padding:0;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+          <span>Learn more</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+
+      <!-- 4. Policy & government -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:28px;display:flex;flex-direction:column;justify-content:space-between;transition:all 0.25s ease;box-shadow:0 4px 6px -1px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='var(--primary)';this.style.boxShadow='0 12px 24px -5px rgba(4,120,87,0.1)'" onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.02)'">
+        <div>
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(4,120,87,0.08);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <h4 style="font-family:var(--font-heading);font-size:18px;font-weight:800;color:var(--black);margin-bottom:8px;">Policy & government</h4>
+          <p style="font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:24px;">
+            Make evidence-based policies
+          </p>
+        </div>
+        <button onclick="App.showPage('pg-signup')" style="background:none;border:none;color:var(--primary);font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px;cursor:pointer;padding:0;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+          <span>Learn more</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+
+      <!-- 5. Consumer goods -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:28px;display:flex;flex-direction:column;justify-content:space-between;transition:all 0.25s ease;box-shadow:0 4px 6px -1px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='var(--primary)';this.style.boxShadow='0 12px 24px -5px rgba(4,120,87,0.1)'" onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.02)'">
+        <div>
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(4,120,87,0.08);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+          </div>
+          <h4 style="font-family:var(--font-heading);font-size:18px;font-weight:800;color:var(--black);margin-bottom:8px;">Consumer goods</h4>
+          <p style="font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:24px;">
+            Improve products that billions rely on every day
+          </p>
+        </div>
+        <button onclick="App.showPage('pg-signup')" style="background:none;border:none;color:var(--primary);font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px;cursor:pointer;padding:0;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+          <span>Learn more</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+
+      <!-- 6. Industrials -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:28px;display:flex;flex-direction:column;justify-content:space-between;transition:all 0.25s ease;box-shadow:0 4px 6px -1px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='var(--primary)';this.style.boxShadow='0 12px 24px -5px rgba(4,120,87,0.1)'" onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.02)'">
+        <div>
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(4,120,87,0.08);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31L4.75 20.5a2 2 0 0 0 1.75 3h11a2 2 0 0 0 1.75-3L14 9.31V2"></path></svg>
+          </div>
+          <h4 style="font-family:var(--font-heading);font-size:18px;font-weight:800;color:var(--black);margin-bottom:8px;">Industrials</h4>
+          <p style="font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:20px;">
+            Discover new materials and engineer them at scale
+          </p>
+        </div>
+        <div style="background:var(--primary-light);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+          <div style="font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Example report</div>
+          <div style="font-size:12.5px;font-weight:600;color:var(--black);line-height:1.4;">
+            📄 Mitigating Temperature Drift in MEMS Sensors
+          </div>
         </div>
       </div>
 
-      <!-- Industry 2: Biotech & Life Sciences -->
-      <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:32px;transition:all 0.25s ease;box-shadow:0 4px 6px -1px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='var(--primary)';this.style.boxShadow='0 12px 24px -5px rgba(4,120,87,0.1)'" onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.02)'">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(4,120,87,0.08);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-        </div>
-        <h4 style="font-family:var(--font-heading);font-size:18px;font-weight:700;color:var(--black);margin-bottom:10px;">Biotech & Pharma</h4>
-        <p style="font-size:13.5px;color:var(--gray);line-height:1.65;margin-bottom:16px;">
-          Extract experimental protocols, cell lineage findings, and therapeutic candidate data directly from full-text PDFs and patents.
-        </p>
-        <div style="font-size:12px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:6px;">
-          <span>Target Discovery</span>
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </div>
-      </div>
-
-      <!-- Industry 3: Materials & Chemistry -->
-      <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:32px;transition:all 0.25s ease;box-shadow:0 4px 6px -1px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='var(--primary)';this.style.boxShadow='0 12px 24px -5px rgba(4,120,87,0.1)'" onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.02)'">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(4,120,87,0.08);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31L4.75 20.5a2 2 0 0 0 1.75 3h11a2 2 0 0 0 1.75-3L14 9.31V2"></path></svg>
-        </div>
-        <h4 style="font-family:var(--font-heading);font-size:18px;font-weight:700;color:var(--black);margin-bottom:10px;">Materials Science & Energy</h4>
-        <p style="font-size:13.5px;color:var(--gray);line-height:1.65;margin-bottom:16px;">
-          Compare battery chemistry efficiency, semiconductor bandgaps, and renewable energy storage materials across thousands of journal articles.
-        </p>
-        <div style="font-size:12px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:6px;">
-          <span>Material Property Extraction</span>
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      <!-- 7. Software & technology -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:28px;display:flex;flex-direction:column;justify-content:space-between;grid-column: span 3;transition:all 0.25s ease;box-shadow:0 4px 6px -1px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='var(--primary)';this.style.boxShadow='0 12px 24px -5px rgba(4,120,87,0.1)'" onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.02)'">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;">
+          <div style="max-width:550px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:rgba(4,120,87,0.08);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            </div>
+            <h4 style="font-family:var(--font-heading);font-size:18px;font-weight:800;color:var(--black);margin-bottom:8px;">Software & technology</h4>
+            <p style="font-size:14px;color:var(--gray);line-height:1.6;margin:0;">
+              Innovate on user experience, algorithmic performance, and more
+            </p>
+          </div>
+          <div style="background:var(--primary-light);border:1px solid var(--border);border-radius:10px;padding:14px 18px;min-width:320px;flex:1;max-width:400px;">
+            <div style="font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Example report</div>
+            <div style="font-size:12.5px;font-weight:600;color:var(--black);line-height:1.4;">
+              ⚡ Energy-Latency Trade-offs in Gesture Recognition Models
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Industry 4: Academia & Higher Ed -->
-      <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:32px;transition:all 0.25s ease;box-shadow:0 4px 6px -1px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='var(--primary)';this.style.boxShadow='0 12px 24px -5px rgba(4,120,87,0.1)'" onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.02)'">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(4,120,87,0.08);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-        </div>
-        <h4 style="font-family:var(--font-heading);font-size:18px;font-weight:700;color:var(--black);margin-bottom:10px;">Academic Research & Universities</h4>
-        <p style="font-size:13.5px;color:var(--gray);line-height:1.65;margin-bottom:16px;">
-          Help PhD scholars, postdocs, and professors write comprehensive literature reviews, draft grant proposals, and organize reference libraries.
-        </p>
-        <div style="font-size:12px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:6px;">
-          <span>Zotero & BibTeX Sync</span>
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </div>
-      </div>
-
-      <!-- Industry 5: Computer Science & AI -->
-      <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:32px;transition:all 0.25s ease;box-shadow:0 4px 6px -1px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='var(--primary)';this.style.boxShadow='0 12px 24px -5px rgba(4,120,87,0.1)'" onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.02)'">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(4,120,87,0.08);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-        </div>
-        <h4 style="font-family:var(--font-heading);font-size:18px;font-weight:700;color:var(--black);margin-bottom:10px;">Computer Science & AI</h4>
-        <p style="font-size:13.5px;color:var(--gray);line-height:1.65;margin-bottom:16px;">
-          Track machine learning benchmarks, novel neural architectures, and algorithm performance metrics across arXiv and OpenReview papers.
-        </p>
-        <div style="font-size:12px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:6px;">
-          <span>arXiv & IEEE indexing</span>
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </div>
-      </div>
-
-      <!-- Industry 6: Policy, Law & Economics -->
-      <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:32px;transition:all 0.25s ease;box-shadow:0 4px 6px -1px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='var(--primary)';this.style.boxShadow='0 12px 24px -5px rgba(4,120,87,0.1)'" onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.02)'">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(4,120,87,0.08);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><line x1="2" y1="12" x2="22" y2="12"></line></svg>
-        </div>
-        <h4 style="font-family:var(--font-heading);font-size:18px;font-weight:700;color:var(--black);margin-bottom:10px;">Public Policy & Economics</h4>
-        <p style="font-size:13.5px;color:var(--gray);line-height:1.65;margin-bottom:16px;">
-          Evaluate socio-economic impact studies, regulatory whitepapers, and public health policies with evidence-backed consensus matrix.
-        </p>
-        <div style="font-size:12px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:6px;">
-          <span>Systematic Evidence Review</span>
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </div>
-      </div>
     </div>
+
+    <!-- NEW FEATURES / LATEST RELEASES CALLOUT BANNER -->
+    <div style="margin-top:40px;background:linear-gradient(135deg, rgba(4,120,87,0.04) 0%, rgba(16,185,129,0.08) 100%);border:1px solid rgba(4,120,87,0.18);border-radius:16px;padding:20px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="font-size:11px;font-weight:800;background:var(--primary);color:#fff;padding:4px 10px;border-radius:20px;letter-spacing:0.5px;text-transform:uppercase;">New features</span>
+        <span style="font-size:14px;font-weight:700;color:var(--black);">Latest releases & platform updates</span>
+      </div>
+      <button onclick="App.showPage('pg-blog')" style="background:var(--primary);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+        <span>Explore Changelog</span>
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+    </div>
+
   </div>
 
 
