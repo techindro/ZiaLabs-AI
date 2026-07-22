@@ -675,10 +675,8 @@ class Payment {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature
             });
-            if (verifyRes.user) {
-              Auth.user = verifyRes.user;
-              localStorage.setItem('zl_user', JSON.stringify(verifyRes.user));
-            }
+            Auth.user = { ...(Auth.user || {}), ...verifyRes.user };
+            localStorage.setItem('zl_user', JSON.stringify(Auth.user));
             Payment.closeModal();
             Toast.success('<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> Razorpay Payment Verified! Welcome to ZiaLabs Pro.');
             Dashboard.init();
@@ -720,8 +718,8 @@ class Payment {
       Toast.info('Verifying UPI Payment reference...');
       const res = await ApiClient.post('/payment/verify-upi', { utr });
       if (res.user) {
-        Auth.user = res.user;
-        localStorage.setItem('zl_user', JSON.stringify(res.user));
+        Auth.user = { ...(Auth.user || {}), ...res.user };
+        localStorage.setItem('zl_user', JSON.stringify(Auth.user));
       }
       Payment.closeModal();
       Toast.success('<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> UPI Payment Verified! Pro Plan Activated.');
@@ -736,8 +734,8 @@ class Payment {
     try {
       const res = await ApiClient.post('/payment/upgrade-demo');
       if (res.user) {
-        Auth.user = res.user;
-        localStorage.setItem('zl_user', JSON.stringify(res.user));
+        Auth.user = { ...(Auth.user || {}), ...res.user };
+        localStorage.setItem('zl_user', JSON.stringify(Auth.user));
       }
       Payment.closeModal();
       Toast.success('<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> Pro Plan Activated! Unlimited paper search & AI synthesis unlocked.');

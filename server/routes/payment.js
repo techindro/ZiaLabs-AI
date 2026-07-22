@@ -96,7 +96,7 @@ router.post('/verify-razorpay', authMiddleware, async (req, res) => {
     res.json({
       success: true,
       message: 'Payment verified! Pro Plan activated successfully.',
-      user: updatedUser ? updatedUser.toJSON() : { id: userId, plan: 'pro' }
+      user: updatedUser ? updatedUser.toJSON() : { ...(req.user || {}), plan: 'pro' }
     });
   } catch (err) {
     console.error('Razorpay verification error:', err);
@@ -126,7 +126,7 @@ router.post('/verify-upi', authMiddleware, (req, res) => {
     res.json({
       success: true,
       message: 'UPI Payment Reference Verified! Pro Plan Activated.',
-      user: updatedUser ? updatedUser.toJSON() : { id: userId, plan: 'pro' }
+      user: updatedUser ? updatedUser.toJSON() : { ...(req.user || {}), plan: 'pro' }
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -144,7 +144,7 @@ router.post('/upgrade-demo', authMiddleware, (req, res) => {
     res.json({
       success: true,
       message: 'Plan upgraded to Pro successfully!',
-      user: user ? user.toJSON() : { id: req.user.id, plan: 'pro' }
+      user: user ? user.toJSON() : { ...(req.user || {}), plan: 'pro' }
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -158,7 +158,7 @@ router.post('/upgrade', authMiddleware, (req, res) => {
     res.json({
       success: true,
       message: 'Plan upgraded to Pro successfully!',
-      user: user ? user.toJSON() : { id: req.user.id, plan: 'pro' }
+      user: user ? user.toJSON() : { ...(req.user || {}), plan: 'pro' }
     });
   } catch (err) {
     res.status(500).json({ error: err.message });

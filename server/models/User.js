@@ -44,7 +44,8 @@ class User {
   }
 
   static findById(id) {
-    const res = DB.exec('SELECT * FROM users WHERE id = ?', [id]);
+    const numId = Number(id);
+    const res = DB.exec('SELECT * FROM users WHERE id = ? OR id = ?', [id, isNaN(numId) ? id : numId]);
     return res.length ? new User(res[0]) : null;
   }
 
