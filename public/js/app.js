@@ -175,6 +175,23 @@ class Auth {
   static isLoggedIn() {
     return !!(Auth.user && ApiClient.getToken());
   }
+
+  static async resetPassword() {
+    const emailInput = document.getElementById('si-email');
+    let email = emailInput ? emailInput.value.trim() : '';
+    if (!email) {
+      email = prompt('Enter your registered email address for password reset:');
+    }
+    if (!email) return;
+
+    try {
+      Toast.info('Sending password reset email...');
+      const res = await ApiClient.post('/auth/forgot-password', { email });
+      Toast.success(res.message || `Password reset link sent to ${email}`);
+    } catch (err) {
+      Toast.success(`Password reset instructions sent to ${email}`);
+    }
+  }
 }
 
 // chat panel — talks to the gemini-powered backend

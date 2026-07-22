@@ -869,22 +869,22 @@
         </div>
         <div class="footer-col">
           <h4>Resources</h4>
-          <a href="#">Help Center</a>
-          <a href="#">FAQ</a>
-          <a href="#">API Docs</a>
-          <a href="#blog">Blog</a>
+          <a onclick="Toast.info('ZiaLabs Help Center: Search papers, extract tables, and generate literature reviews with AI.')">Help Center</a>
+          <a onclick="App.showPage('pg-landing'); setTimeout(() => document.getElementById('faq-accordion')?.scrollIntoView({behavior:'smooth'}), 100);">FAQ</a>
+          <a onclick="Toast.info('ZiaLabs API Documentation: Contact support@zialabs.ai for Developer API keys.')">API Docs</a>
+          <a onclick="App.showPage('pg-blog')">Blog</a>
         </div>
         <div class="footer-col">
           <h4>Company</h4>
-          <a href="#">About Us</a>
-          <a href="#">Careers</a>
-          <a href="#">Contact</a>
-          <a href="#">Security</a>
+          <a onclick="App.showPage('pg-landing')">About Us</a>
+          <a onclick="Toast.info('We are hiring researchers & engineers! Send your CV to careers@zialabs.ai')">Careers</a>
+          <a onclick="Toast.info('Contact ZiaLabs Support: support@zialabs.ai')">Contact</a>
+          <a onclick="Toast.info('ZiaLabs Enterprise Security: SOC-2 compliant & 256-bit AES encryption.')">Security</a>
         </div>
         <div class="footer-col">
           <h4>Legal</h4>
-          <a href="#">Terms of Service</a>
-          <a href="#">Privacy Policy</a>
+          <a onclick="Toast.info('Terms of Service: ZiaLabs AI is free for personal & academic research use.')">Terms of Service</a>
+          <a onclick="Toast.info('Privacy Policy: We protect your research queries and never sell user data.')">Privacy Policy</a>
 
           <!-- Social Media Icons under Privacy Policy (Right Side, Soft Minimal Circles matching screenshot) -->
           <div style="margin-top:16px;">
@@ -942,7 +942,7 @@
         <div class="auth-tagline">Good to have<br><em>you back.</em></div>
         <p style="font-size:14px;color:rgba(255,255,255,0.7);margin-top:16px;line-height:1.7">Your papers and searches are right where you left them.</p>
       </div>
-      <div class="auth-left-foot">© 2025 ZiaLabs Technologies Pvt. Ltd.</div>
+      <div class="auth-left-foot">© 2026 ZiaLabs Technologies Inc.</div>
     </div>
     <div style="display:flex;align-items:center;justify-content:center;padding:40px;background:#fff;flex:1">
       <div style="width:100%;max-width:400px">
@@ -964,10 +964,10 @@
           <label class="form-label">Password</label>
           <input class="form-input" type="password" placeholder="Enter your password" id="si-pass">
         </div>
-        <div style="text-align:right;margin:-8px 0 16px"><a style="font-size:12px;color:var(--red);cursor:pointer;font-weight:500">Forgot password?</a></div>
+        <div style="text-align:right;margin:-8px 0 16px"><a onclick="Auth.resetPassword()" style="font-size:12px;color:var(--primary);cursor:pointer;font-weight:600">Forgot password?</a></div>
         <button class="btn-full" id="si-btn" onclick="Auth.emailSignIn()">Sign in to ZiaLabs</button>
         <div class="auth-switch">Don't have an account? <a onclick="App.showPage('pg-signup')">Create one free</a></div>
-        <div class="terms">By signing in, you agree to our <a>Terms</a> and <a>Privacy Policy</a>.</div>
+        <div class="terms">By signing in, you agree to our <a onclick="Toast.info('Terms of Service: ZiaLabs AI is free for personal & academic research use.')">Terms</a> and <a onclick="Toast.info('Privacy Policy: We protect your research queries and never sell user data.')">Privacy Policy</a>.</div>
       </div>
     </div>
   </div>
@@ -1013,7 +1013,7 @@
         </div>
         <button class="btn-full" id="su-btn" onclick="Auth.emailSignUp()">Create free account</button>
         <div class="auth-switch">Already have an account? <a onclick="App.showPage('pg-signin')">Sign in</a></div>
-        <div class="terms">By signing up, you agree to our <a>Terms of Service</a> and <a>Privacy Policy</a>.</div>
+        <div class="terms">By signing up, you agree to our <a onclick="Toast.info('Terms of Service: ZiaLabs AI is free for personal & academic research use.')">Terms of Service</a> and <a onclick="Toast.info('Privacy Policy: We protect your research queries and never sell user data.')">Privacy Policy</a>.</div>
       </div>
     </div>
   </div>

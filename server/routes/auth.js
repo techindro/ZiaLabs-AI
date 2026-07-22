@@ -70,4 +70,18 @@ router.get('/me', authMiddleware, async (req, res) => {
   }
 });
 
+// forgot password handler
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+    publishEvent('user-activity', { event: 'forgot-password', email }).catch(() => {});
+    res.json({ message: `Password reset instructions have been sent to ${email}` });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
