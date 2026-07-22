@@ -2,7 +2,7 @@
   "name": "zialabs-ai",
   "version": "1.0.0",
   "description": "AI-Powered Research Assistant — Search millions of academic papers, extract insights, generate code.",
-  "main": "server/index.js",
+  "main": "api/index.js",
   "scripts": {
     "start": "node server/index.js",
     "dev": "nodemon server/index.js",
