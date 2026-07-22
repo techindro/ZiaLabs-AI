@@ -83,23 +83,26 @@ nav{
   font-size:21px;
   font-weight:800;
   color: var(--primary);
-  background: linear-gradient(135deg, var(--primary) 30%, #1a1a1a 100%);
+  background: linear-gradient(135deg, #c8102e 0%, #e63946 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing:-0.8px;
 }
 .nl-super{
-  font-size:9px;
+  font-size:10px;
   font-weight:800;
-  color:#fff;
+  color:#ffffff !important;
   background:var(--primary);
-  padding: 1px 4px;
+  padding: 2px 6px;
   border-radius: 4px;
   letter-spacing:0.5px;
   text-transform:uppercase;
   margin-left:5px;
-  box-shadow: 0 2px 4px rgba(200,16,46,0.15);
-  vertical-align:super;
+  box-shadow: 0 2px 6px rgba(200,16,46,0.3);
+  vertical-align: middle;
+  display: inline-block;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 .nav-links{display:flex;gap:36px}
 .nav-links a{
