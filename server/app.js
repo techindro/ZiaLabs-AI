@@ -1,5 +1,14 @@
 require('dotenv').config();
 
+// Polyfill browser globals needed by PDF parsing libraries in Node serverless environment
+if (typeof globalThis.DOMMatrix === 'undefined') {
+  globalThis.DOMMatrix = class DOMMatrix {
+    constructor() {
+      this.a = 1; this.b = 0; this.c = 0; this.d = 1; this.e = 0; this.f = 0;
+    }
+  };
+}
+
 const express = require('express');
 const cors    = require('cors');
 const path    = require('path');

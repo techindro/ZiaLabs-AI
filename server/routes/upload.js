@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const pdfParse = require('pdf-parse');
 const path = require('path');
 const fs = require('fs');
 const authMiddleware = require('../middleware/auth');
@@ -10,12 +9,18 @@ const Paper = require('../models/Paper');
 const AIAgent = require('../services/AIAgent');
 const ai = new AIAgent();
 
-// Setup multer for PDF uploads
+// Setup multer for PDF uploads with serverless /tmp fallback
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadDir = path.join(__dirname, '..', '..', 'uploads');
+    const uploadDir = process.env.VERCEL
+      ? path.join('/tmp', 'uploads')
+      : path.join(__dirname, '..', '..', 'uploads');
     if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+      try {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      } catch (err) {
+        console.warn('⚠️ Could not create upload directory:', err.message);
+      }
     }
     cb(null, uploadDir);
   },
@@ -39,6 +44,7 @@ router.post('/', authMiddleware, upload.single('paper'), async (req, res) => {
     
     if (req.file.mimetype === 'application/pdf' || req.file.originalname.toLowerCase().endsWith('.pdf')) {
       try {
+        const pdfParse = require('pdf-parse');
         const pdfData = await pdfParse(dataBuffer);
         const fullText = pdfData.text;
         
