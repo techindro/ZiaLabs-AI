@@ -53,10 +53,11 @@ class User {
   }
 
   static hasApiCallsRemaining(userId) {
+    if (!userId) return true;
     const user = this.findById(userId);
-    if (!user) return false;
-    if (user.plan === 'pro') return true; // unlimited for pro
-    return user.api_calls < 50; // 50 call limit for free users
+    if (!user) return true; // Allow active sessions/guests without restriction
+    if (user.plan && user.plan.toLowerCase() === 'pro') return true; // Unlimited for Pro
+    return user.api_calls < 1000; // 1,000 call limit for free users
   }
 
   static incrementApiCalls(userId) {

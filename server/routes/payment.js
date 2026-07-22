@@ -26,7 +26,7 @@ router.post('/create-checkout-session', authMiddleware, async (req, res) => {
     const userId = req.user.id;
     const user = User.findById(userId);
 
-    if (user.plan && user.plan.toLowerCase() === 'pro') {
+    if (user && user.plan && user.plan.toLowerCase() === 'pro') {
       return res.status(400).json({ error: 'You are already on the Pro plan' });
     }
 
@@ -41,7 +41,7 @@ router.post('/create-checkout-session', authMiddleware, async (req, res) => {
       mode: 'subscription',
       success_url: `${req.protocol}://${req.get('host')}/?upgrade=success`,
       cancel_url: `${req.protocol}://${req.get('host')}/?upgrade=cancel`,
-      customer_email: user.email,
+      customer_email: user ? user.email : req.user.email,
       metadata: {
         userId: userId.toString(),
       },
@@ -89,6 +89,38 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
   }
 
   res.json({ received: true });
+});
+
+/**
+ * POST /api/payment/upgrade-demo
+ * Instant Pro plan upgrade endpoint for demo testing
+ */
+router.post('/upgrade-demo', authMiddleware, (req, res) => {
+  try {
+    User.upgradeToPro(req.user.id);
+    const user = User.findById(req.user.id);
+    res.json({
+      success: true,
+      message: 'Plan upgraded to Pro successfully!',
+      user: user ? user.toJSON() : { id: req.user.id, plan: 'pro' }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.post('/upgrade', authMiddleware, (req, res) => {
+  try {
+    User.upgradeToPro(req.user.id);
+    const user = User.findById(req.user.id);
+    res.json({
+      success: true,
+      message: 'Plan upgraded to Pro successfully!',
+      user: user ? user.toJSON() : { id: req.user.id, plan: 'pro' }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;
