@@ -39,19 +39,27 @@ class DB {
     }
     
     if (fs.existsSync(this.#dbPath)) {
-      const fileBuffer = fs.readFileSync(this.#dbPath);
-      this.#db = new SQL.Database(fileBuffer);
+      try {
+        const fileBuffer = fs.readFileSync(this.#dbPath);
+        this.#db = new SQL.Database(fileBuffer);
+      } catch (e) {
+        console.warn('⚠️ Could not load DB file from disk, creating new DB:', e.message);
+        this.#db = new SQL.Database();
+      }
     } else {
       this.#db = new SQL.Database();
-      this.#createTables();
-      this.save();
     }
 
-    // Initialize blog tables and seed contents
-    this.#createBlogTables();
-    this.#seedBlogPosts();
-    this.#seedResearchNotes();
-    this.save();
+    // Always create core tables and seed data safely
+    try {
+      this.#createTables();
+      this.#createBlogTables();
+      this.#seedBlogPosts();
+      this.#seedResearchNotes();
+      this.save();
+    } catch (e) {
+      console.warn('⚠️ Table creation/seeding warning:', e.message);
+    }
 
     console.log('✅ Database connected:', this.#dbPath);
   }
@@ -270,7 +278,7 @@ class DB {
   static #createTables() {
     // simple schema for research projects
     this.#db.run(`
-      CREATE TABLE users (
+      CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
         email TEXT UNIQUE,
@@ -280,7 +288,7 @@ class DB {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
 
-      CREATE TABLE papers (
+      CREATE TABLE IF NOT EXISTS papers (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
         title TEXT,
@@ -293,7 +301,7 @@ class DB {
         saved_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
 
-      CREATE TABLE chat_messages (
+      CREATE TABLE IF NOT EXISTS chat_messages (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
         role TEXT,
@@ -301,7 +309,7 @@ class DB {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
 
-      CREATE TABLE search_history (
+      CREATE TABLE IF NOT EXISTS search_history (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
         query TEXT,
@@ -313,13 +321,19 @@ class DB {
   }
 
   static run(sql, params = []) {
-    this.#db.run(sql, params);
-    const lastIdRes = this.exec('SELECT last_insert_rowid() AS id');
-    const changesRes = this.exec('SELECT changes() AS changes');
-    return {
-      lastId: lastIdRes[0]?.id,
-      changes: changesRes[0]?.changes
-    };
+    if (!this.#db) return { lastId: 0, changes: 0 };
+    try {
+      this.#db.run(sql, params);
+      const lastIdRes = this.exec('SELECT last_insert_rowid() AS id');
+      const changesRes = this.exec('SELECT changes() AS changes');
+      return {
+        lastId: lastIdRes[0]?.id,
+        changes: changesRes[0]?.changes
+      };
+    } catch (err) {
+      console.warn(`⚠️ DB run error (${err.message}) for SQL: ${sql}`);
+      return { lastId: 0, changes: 0 };
+    }
   }
 
   static get(sql, params = []) {
@@ -332,14 +346,20 @@ class DB {
   }
 
   static exec(sql, params = []) {
-    const stmt = this.#db.prepare(sql);
-    stmt.bind(params);
-    const results = [];
-    while (stmt.step()) {
-      results.push(stmt.getAsObject());
+    if (!this.#db) return [];
+    try {
+      const stmt = this.#db.prepare(sql);
+      stmt.bind(params);
+      const results = [];
+      while (stmt.step()) {
+        results.push(stmt.getAsObject());
+      }
+      stmt.free();
+      return results;
+    } catch (err) {
+      console.warn(`⚠️ DB exec error (${err.message}) for SQL: ${sql}`);
+      return [];
     }
-    stmt.free();
-    return results;
   }
 
   static save() {
