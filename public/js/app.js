@@ -622,26 +622,26 @@ class Payment {
 
     if (tab === 'razorpay') {
       rzpBtn.style.color = 'var(--primary)';
-      rzpBtn.style.borderBottom = '2px solid var(--primary)';
       rzpBtn.style.background = '#fff';
+      rzpBtn.style.boxShadow = 'var(--shadow-sm)';
       rzpBtn.style.fontWeight = '700';
 
       qrBtn.style.color = 'var(--gray)';
-      qrBtn.style.borderBottom = 'none';
       qrBtn.style.background = 'transparent';
+      qrBtn.style.boxShadow = 'none';
       qrBtn.style.fontWeight = '600';
 
       rzpContent.classList.remove('d-none');
       qrContent.classList.add('d-none');
     } else {
       qrBtn.style.color = 'var(--primary)';
-      qrBtn.style.borderBottom = '2px solid var(--primary)';
       qrBtn.style.background = '#fff';
+      qrBtn.style.boxShadow = 'var(--shadow-sm)';
       qrBtn.style.fontWeight = '700';
 
       rzpBtn.style.color = 'var(--gray)';
-      rzpBtn.style.borderBottom = 'none';
       rzpBtn.style.background = 'transparent';
+      rzpBtn.style.boxShadow = 'none';
       rzpBtn.style.fontWeight = '600';
 
       qrContent.classList.remove('d-none');
