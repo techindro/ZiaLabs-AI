@@ -1947,4 +1947,47 @@ class MathRenderer {
   }
 }
 
+class CommandPalette {
+  static isOpen = false;
+
+  static toggle() {
+    const overlay = document.getElementById('cmd-palette-overlay');
+    if (!overlay) return;
+    CommandPalette.isOpen = !CommandPalette.isOpen;
+    if (CommandPalette.isOpen) {
+      overlay.classList.remove('d-none');
+      const input = document.getElementById('cmd-palette-input');
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+    } else {
+      overlay.classList.add('d-none');
+    }
+  }
+
+  static execute(action) {
+    CommandPalette.toggle();
+    if (action === 'search') {
+      if (Auth.isLoggedIn()) App.showPage('pg-dash');
+      else App.showPage('pg-signup');
+    } else if (action === 'blog') {
+      App.showPage('pg-blog');
+    } else if (action === 'pricing') {
+      App.showLandingSection('pricing');
+    } else if (action === 'enterprise') {
+      App.showLandingSection('enterprise');
+    }
+  }
+}
+
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    CommandPalette.toggle();
+  } else if (e.key === 'Escape' && CommandPalette.isOpen) {
+    CommandPalette.toggle();
+  }
+});
+
 document.addEventListener('DOMContentLoaded', () => App.init());
