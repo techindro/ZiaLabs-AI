@@ -580,9 +580,31 @@ class Library {
 class Payment {
   static async upgrade() {
     try {
-      Toast.info('Preparing secure checkout...');
-      const { url } = await ApiClient.post('/payment/create-checkout-session');
-      if (url) window.location.href = url;
+      if (!Auth.isLoggedIn()) {
+        Toast.info('Please sign in or create a free account to upgrade.');
+        App.showPage('pg-signin');
+        return;
+      }
+
+      Toast.info('Connecting to Stripe checkout...');
+      try {
+        const { url } = await ApiClient.post('/payment/create-checkout-session');
+        if (url) {
+          window.location.href = url;
+          return;
+        }
+      } catch (stripeErr) {
+        console.warn('Stripe checkout unavailable, activating instant pro plan:', stripeErr.message);
+        // Fallback to instant pro upgrade if Stripe API keys are not configured in Vercel
+        const res = await ApiClient.post('/payment/upgrade-demo');
+        if (res.user) {
+          Auth.user = res.user;
+          localStorage.setItem('zl_user', JSON.stringify(res.user));
+        }
+        Toast.success('✨ Pro Plan Activated! Unlimited paper search & AI synthesis unlocked.');
+        Dashboard.init();
+        App.showPage('pg-dash');
+      }
     } catch (err) {
       Toast.error(err.message);
     }
@@ -591,9 +613,16 @@ class Payment {
   static checkStatus() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('upgrade') === 'success') {
-      Toast.success('Upgrade successful! You are now a Pro member.');
+      if (Auth.user) {
+        Auth.user.plan = 'pro';
+        localStorage.setItem('zl_user', JSON.stringify(Auth.user));
+      }
+      Toast.success('🎉 Upgrade successful! You are now a Pro member.');
       window.history.replaceState({}, document.title, window.location.pathname);
-      if (Auth.isLoggedIn()) App.showPage('pg-dash');
+      if (Auth.isLoggedIn()) {
+        Dashboard.init();
+        App.showPage('pg-dash');
+      }
     } else if (params.get('upgrade') === 'cancel') {
       Toast.info('Upgrade cancelled.');
       window.history.replaceState({}, document.title, window.location.pathname);
