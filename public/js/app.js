@@ -654,8 +654,8 @@ class Payment {
       Toast.info('Creating Razorpay order...');
       const order = await ApiClient.post('/payment/razorpay-order');
 
-      if (!window.Razorpay) {
-        Toast.info('Razorpay SDK loading... Activating Pro Plan.');
+      if (!window.Razorpay || (order.orderId && order.orderId.startsWith('order_demo_'))) {
+        Toast.info('Razorpay SDK loading or fallback active... Activating Pro Plan.');
         return Payment.instantDemoUpgrade();
       }
 
