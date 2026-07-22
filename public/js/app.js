@@ -185,15 +185,21 @@ class Chat {
       chatEl.innerHTML = '';
       if (!messages.length) {
         Chat.#addBot('Hello! 👋 I am the ZiaLabs AI Research Agent. How can I help with your research today?');
+        document.getElementById('chatbot-welcome').style.display = '';
+        document.getElementById('chatbot-thread').style.display = 'none';
       } else {
         messages.forEach(m => {
           if (m.role === 'user') Chat.#addUser(m.content);
           else Chat.#addBot(m.content);
         });
+        document.getElementById('chatbot-welcome').style.display = 'none';
+        document.getElementById('chatbot-thread').style.display = 'flex';
       }
     } catch {
       // if history load fails just show greeting
       Chat.#addBot('Hello! 👋 I am the ZiaLabs AI Research Agent. How can I help with your research today?');
+      document.getElementById('chatbot-welcome').style.display = '';
+      document.getElementById('chatbot-thread').style.display = 'none';
     }
   }
 
@@ -315,14 +321,27 @@ class Dashboard {
   static async loadStats() {
     try {
       const { stats } = await ApiClient.get('/papers/stats');
-      document.getElementById('m-searches').textContent = stats.searches;
-      document.getElementById('m-searches-sub').textContent = `+${stats.searchesThisWeek} this week`;
-      document.getElementById('m-papers').textContent = stats.papersSaved;
-      document.getElementById('m-insights').textContent = stats.insightsGenerated;
+      
+      const elSearches = document.getElementById('m-searches');
+      if (elSearches) elSearches.textContent = stats.searches;
+      
+      const elSearchesSub = document.getElementById('m-searches-sub');
+      if (elSearchesSub) elSearchesSub.textContent = `+${stats.searchesThisWeek} this week`;
+      
+      const elPapers = document.getElementById('m-papers');
+      if (elPapers) elPapers.textContent = stats.papersSaved;
+      
+      const elInsights = document.getElementById('m-insights');
+      if (elInsights) elInsights.textContent = stats.insightsGenerated;
 
-      const left = stats.apiCallsLimit - stats.apiCallsUsed;
-      document.getElementById('m-api').textContent = left;
-      document.getElementById('m-api-sub').textContent = `${stats.apiCallsLimit} limit / mo`;
+      const elApi = document.getElementById('m-api');
+      if (elApi) {
+        const left = stats.apiCallsLimit - stats.apiCallsUsed;
+        elApi.textContent = left;
+      }
+      
+      const elApiSub = document.getElementById('m-api-sub');
+      if (elApiSub) elApiSub.textContent = `${stats.apiCallsLimit} limit / mo`;
     } catch {
       // default numbers already in html
     }
@@ -332,6 +351,7 @@ class Dashboard {
     try {
       const { searches } = await ApiClient.get('/search/history?limit=5');
       const box = document.getElementById('recent-searches');
+      if (!box) return;
 
       if (!searches || !searches.length) {
         box.innerHTML = '<div style="padding:16px 0;text-align:center;font-size:12px;color:#9ca3af">No searches yet</div>';
@@ -580,10 +600,26 @@ class App {
     }
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+    
+    // Scroll to top immediately on page change
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
     if (id === 'pg-dash') Dashboard.init();
+    if (id === 'pg-blog') {
+      Blog.switchTab('articles');
+      Blog.loadPosts();
+      Blog.loadTrendingNews();
+    }
     
     // ensure sidebar is hidden on page switch if we were on mobile
     document.getElementById('dash-sidebar')?.classList.remove('open');
+  }
+
+  static showLandingSection(sectionId) {
+    App.showPage('pg-landing');
+    setTimeout(() => {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    }, 150);
   }
 
   static toggleMobileMenu() {
@@ -650,6 +686,16 @@ class App {
     Auth.googleSignIn();
   }
 
+  static quickPrompt(text) {
+    const inp = document.getElementById('dinp');
+    if (inp) {
+      inp.value = text;
+      document.getElementById('chatbot-welcome').style.display = 'none';
+      document.getElementById('chatbot-thread').style.display = 'flex';
+      Chat.send();
+    }
+  }
+
   static async init() {
     try {
       Payment.checkStatus();
@@ -669,6 +715,9 @@ class App {
       }
 
       if (document.getElementById('blog-grid')) News.load();
+      if (document.getElementById('m-paper-tab-overfit')) {
+        LandingShowcase.select('overfit');
+      }
     } catch (err) {
       console.error('Init failed:', err);
     }
@@ -682,31 +731,25 @@ class News {
     if (!box) return;
 
     try {
-      const { news } = await ApiClient.get('/news');
-      if (!news?.length) return;
+      const { posts } = await ApiClient.get('/blog');
+      if (!posts?.length) return;
 
-      // Map RSS items to cards.
-      // NOTE: Using fallback images blog1/2/3 for now.
-      box.innerHTML = news.slice(0, 3).map((item, idx) => {
-        const source = item.source || 'Lab Update';
-        
+      box.innerHTML = posts.slice(0, 3).map((item, idx) => {
         return `
-          <div class="blog-card" onclick="window.open('${item.link}', '_blank')">
+          <div class="blog-card" onclick="Blog.loadArticle('${item.slug}')">
             <div class="blog-img-wrap">
               <img src="/img/blog${idx+1}.png" alt="Research Update">
             </div>
             <div style="font-size:12px;color:var(--red);font-weight:600;margin-bottom:8px">
-              ${source.toUpperCase()} • LATEST
+              ${item.tag.toUpperCase()} • LATEST
             </div>
             <div style="font-size:16px;font-weight:700;margin-bottom:8px">${item.title}</div>
-            <p style="font-size:13px;color:var(--gray);line-height:1.5">
-              ${item.description.replace(/<[^>]*>?/gm, '').slice(0, 110)}...
-            </p>
+            <p style="font-size:13px;color:var(--gray);line-height:1.5">${item.excerpt}</p>
           </div>
         `;
       }).join('');
     } catch (err) {
-      console.warn('News failed to load:', err.message);
+      console.warn('Local blog posts failed to load on homepage:', err.message);
     }
   }
 }
@@ -1204,6 +1247,694 @@ class Playground {
     document.getElementById('ent-confirm-email').textContent = email;
     document.getElementById('ent-success').classList.remove('d-none');
     Toast.success("Enterprise inquiry submitted!");
+  }
+}
+
+class Blog {
+  static currentArticle = null;
+  static activeTag = '';
+  static searchTerm = '';
+  static searchTimeout = null;
+
+  static async loadPosts() {
+    const listContainer = document.getElementById('blog-posts-view');
+    if (!listContainer) return;
+
+    listContainer.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--gray);">Loading research insights...</div>';
+
+    try {
+      const url = `/blog?tag=${encodeURIComponent(Blog.activeTag)}&q=${encodeURIComponent(Blog.searchTerm)}`;
+      const { posts } = await ApiClient.get(url);
+
+      // Render tags navigation
+      Blog.renderTags(posts);
+
+      if (!posts || !posts.length) {
+        listContainer.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--gray);">No articles found matching your criteria.</div>';
+        return;
+      }
+
+      listContainer.innerHTML = posts.map((post, idx) => {
+        const imageIndex = (idx % 3) + 1;
+        return `
+          <div class="blog-card" onclick="Blog.loadArticle('${post.slug}')">
+            <div class="blog-img-wrap">
+              <img src="/img/blog${imageIndex}.png" alt="${post.title}">
+            </div>
+            <div class="blog-card-tag">${post.tag.toUpperCase()}</div>
+            <div class="blog-card-title">${post.title}</div>
+            <p class="blog-card-excerpt">${post.excerpt}</p>
+            <div class="blog-card-footer">
+              <span>Read Article &rarr;</span>
+              <span>${post.read_time}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      MathRenderer.render(listContainer);
+    } catch (err) {
+      listContainer.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:red;">Error: ${err.message}</div>`;
+    }
+  }
+
+  static renderTags(posts = []) {
+    const tagsContainer = document.getElementById('blog-tags-list');
+    if (!tagsContainer) return;
+
+    const categories = ['All', 'AI & ML', 'Privacy', 'Research Guide', 'Education'];
+    
+    tagsContainer.innerHTML = categories.map(cat => {
+      const value = cat === 'All' ? '' : cat;
+      const isActive = Blog.activeTag === value;
+      return `
+        <button class="tag-pill ${isActive ? 'active' : ''}" onclick="Blog.filterByTag('${value}')">
+          ${cat}
+        </button>
+      `;
+    }).join('');
+  }
+
+  static filterByTag(tag) {
+    Blog.activeTag = tag;
+    Blog.loadPosts();
+  }
+
+  static handleSearch(value) {
+    Blog.searchTerm = value.trim();
+    if (Blog.searchTimeout) clearTimeout(Blog.searchTimeout);
+    Blog.searchTimeout = setTimeout(() => {
+      Blog.loadPosts();
+    }, 250);
+  }
+
+  static async loadArticle(slug) {
+    App.showPage('pg-blog-article');
+    
+    // Clear comment inputs
+    const nameInp = document.getElementById('comment-name-input');
+    const contentInp = document.getElementById('comment-content-input');
+    if (nameInp) nameInp.value = Auth.user ? Auth.user.name : '';
+    if (contentInp) contentInp.value = '';
+
+    const titleEl = document.getElementById('article-detail-title');
+    const bodyEl = document.getElementById('article-detail-body');
+    const tagEl = document.getElementById('article-badge-tag');
+    const avatarEl = document.getElementById('article-detail-avatar');
+    const authorEl = document.getElementById('article-detail-author');
+    const dateEl = document.getElementById('article-detail-date');
+    const readTimeEl = document.getElementById('article-detail-read-time');
+    const likesEl = document.getElementById('article-likes-val');
+    const commentsCountEl = document.getElementById('article-comments-val');
+    const commentsListEl = document.getElementById('article-comments-thread');
+
+    titleEl.textContent = 'Loading article content...';
+    bodyEl.innerHTML = '';
+    commentsListEl.innerHTML = 'Loading discussion...';
+
+    try {
+      const { post } = await ApiClient.get(`/blog/${slug}`);
+      Blog.currentArticle = post;
+
+      titleEl.textContent = post.title;
+      bodyEl.innerHTML = post.content;
+      tagEl.textContent = post.tag;
+      avatarEl.textContent = post.author_avatar || post.author_name.slice(0,2).toUpperCase();
+      authorEl.textContent = post.author_name;
+      dateEl.textContent = new Date(post.published_at).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      readTimeEl.textContent = post.read_time;
+      likesEl.textContent = post.likes || 0;
+      commentsCountEl.textContent = post.comments ? post.comments.length : 0;
+
+      const editBtn = document.getElementById('btn-edit-article-trigger');
+      if (editBtn) {
+        editBtn.onclick = () => Blog.openPublishModal(post.slug);
+      }
+
+      Blog.initProgressScroll();
+      Blog.renderComments(post.comments || []);
+
+      MathRenderer.render(bodyEl);
+      MathRenderer.render(commentsListEl);
+    } catch (err) {
+      titleEl.textContent = 'Failed to load article';
+      bodyEl.innerHTML = `<p style="color:red;text-align:center;">Error: ${err.message}</p>`;
+      Toast.error(err.message);
+    }
+  }
+
+  static initProgressScroll() {
+    const bar = document.getElementById('blog-reading-bar');
+    if (!bar) return;
+
+    bar.style.width = '0%';
+    window.onscroll = () => {
+      const page = document.getElementById('pg-blog-article');
+      if (!page || !page.classList.contains('active')) return;
+
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+      bar.style.width = scrolled + '%';
+    };
+  }
+
+  static async likeCurrentArticle() {
+    if (!Blog.currentArticle) return;
+    const slug = Blog.currentArticle.slug;
+
+    try {
+      const res = await ApiClient.post(`/blog/${slug}/like`);
+      document.getElementById('article-likes-val').textContent = res.likes;
+      Blog.currentArticle.likes = res.likes;
+      
+      const likeBtn = document.getElementById('article-like-button');
+      likeBtn.classList.add('liked');
+      setTimeout(() => likeBtn.classList.remove('liked'), 400);
+
+      Toast.success('Article upvoted!');
+    } catch (err) {
+      Toast.error(err.message);
+    }
+  }
+
+  static shareCurrentArticle() {
+    if (!Blog.currentArticle) return;
+    const shareUrl = window.location.origin + `/blog/${Blog.currentArticle.slug}`;
+    
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      Toast.success('Article link copied to clipboard!');
+    }).catch(() => {
+      Toast.error('Could not copy link.');
+    });
+  }
+
+  static discussWithAI() {
+    if (!Blog.currentArticle) return;
+    sessionStorage.setItem('pending_research_query', `I'm reading your blog article titled "${Blog.currentArticle.title}" about ${Blog.currentArticle.tag}. Can you provide a summary and explain the primary takeaways?`);
+    App.showPage('pg-dash');
+  }
+
+  static renderComments(comments = []) {
+    const thread = document.getElementById('article-comments-thread');
+    if (!thread) return;
+
+    if (!comments.length) {
+      thread.innerHTML = '<div style="text-align:center;padding:24px 0;color:var(--gray);font-style:italic;">No comments yet. Be the first to start the discussion!</div>';
+      return;
+    }
+
+    thread.innerHTML = comments.map(c => {
+      const initials = c.user_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'AN';
+      const time = new Date(c.created_at).toLocaleString();
+      return `
+        <div class="comment-bubble">
+          <div class="comment-avatar">${initials}</div>
+          <div class="comment-details">
+            <div class="comment-meta">
+              <span class="comment-author">${c.user_name}</span>
+              <span class="comment-time">${time}</span>
+            </div>
+            <div class="comment-body">${c.content}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  static async submitComment(event) {
+    event.preventDefault();
+    if (!Blog.currentArticle) return;
+
+    const slug = Blog.currentArticle.slug;
+    const nameInp = document.getElementById('comment-name-input');
+    const contentInp = document.getElementById('comment-content-input');
+    
+    const userName = nameInp.value.trim();
+    const content = contentInp.value.trim();
+
+    if (!userName || !content) return;
+
+    try {
+      const { comment } = await ApiClient.post(`/blog/${slug}/comment`, {
+        user_name: userName,
+        content: content
+      });
+
+      if (!Blog.currentArticle.comments) Blog.currentArticle.comments = [];
+      Blog.currentArticle.comments.push(comment);
+
+      Blog.renderComments(Blog.currentArticle.comments);
+      document.getElementById('article-comments-val').textContent = Blog.currentArticle.comments.length;
+      contentInp.value = '';
+      
+      Toast.success('Comment added successfully!');
+    } catch (err) {
+      Toast.error(err.message);
+    }
+  }
+
+  static currentTab = 'articles';
+
+  static async switchTab(tab) {
+    Blog.currentTab = tab;
+
+    // Toggle tab buttons active class
+    ['articles', 'notes', 'news'].forEach(t => {
+      const btn = document.getElementById(`blog-tab-${t}`);
+      const content = document.getElementById(`blog-tab-${t}-content`);
+      if (btn) {
+        if (t === tab) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      }
+      if (content) {
+        if (t === tab) {
+          content.classList.remove('d-none');
+        } else {
+          content.classList.add('d-none');
+        }
+      }
+    });
+
+    if (tab === 'notes') {
+      await Blog.loadNotes();
+    } else if (tab === 'news') {
+      await Blog.loadTrendingNews();
+    }
+  }
+
+  static async loadNotes() {
+    const feed = document.getElementById('blog-notes-feed');
+    if (!feed) return;
+
+    feed.innerHTML = '<div style="text-align:center;padding:40px;color:var(--gray);">Loading research notes...</div>';
+
+    try {
+      const { notes } = await ApiClient.get('/blog/notes');
+      if (!notes || !notes.length) {
+        feed.innerHTML = '<div style="text-align:center;padding:40px;color:var(--gray);font-style:italic;">No suggestions or notes yet. Be the first to share!</div>';
+        return;
+      }
+
+      feed.innerHTML = notes.map(note => {
+        const initials = note.author_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'AN';
+        const time = new Date(note.created_at).toLocaleString();
+        return `
+          <div class="comment-bubble" style="background:#fff;border:1px solid var(--border);border-radius:var(--border-radius-lg);padding:20px;box-shadow:0 4px 10px rgba(0,0,0,0.005);">
+            <div class="comment-avatar" style="background:var(--primary-light);color:var(--primary);">${initials}</div>
+            <div class="comment-details" style="border:none;padding:0;box-shadow:none;max-width:100%;">
+              <div class="comment-meta" style="margin-bottom:8px;">
+                <span class="comment-author" style="font-size:14px;font-weight:700;color:var(--primary);">${note.author_name}</span>
+                <span class="comment-time" style="font-size:11px;color:var(--gray-light);">${time}</span>
+              </div>
+              <div class="comment-body" style="font-size:14px;color:var(--black);line-height:1.6;margin-bottom:12px;">${note.content}</div>
+              <div style="display:flex;gap:16px;align-items:center;">
+                <button class="btn-like" onclick="Blog.likeNote(${note.id})" id="note-like-${note.id}" style="width:auto;padding:4px 12px;font-size:11px;font-weight:600;border-radius:12px;gap:4px;margin:0;">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="fill:${note.likes > 0 ? 'currentColor' : 'none'};"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                  <span>Upvote</span>
+                  <span class="like-badge" style="font-size:10px;padding:0 4px;">${note.likes || 0}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      MathRenderer.render(feed);
+    } catch (err) {
+      feed.innerHTML = `<div style="text-align:center;padding:40px;color:red;">Error: ${err.message}</div>`;
+    }
+  }
+
+  static async submitNote() {
+    const authorInp = document.getElementById('note-author-input');
+    const contentInp = document.getElementById('note-content-input');
+    if (!authorInp || !contentInp) return;
+
+    const author = authorInp.value.trim();
+    const content = contentInp.value.trim();
+
+    if (!author || !content) {
+      Toast.error('Please enter your name and a note.');
+      return;
+    }
+
+    try {
+      await ApiClient.post('/blog/notes', {
+        author_name: author,
+        content: content
+      });
+      
+      contentInp.value = '';
+      document.getElementById('note-char-count').textContent = '280 characters remaining';
+      Toast.success('Note posted successfully!');
+      await Blog.loadNotes();
+    } catch (err) {
+      Toast.error(err.message);
+    }
+  }
+
+  static async likeNote(id) {
+    try {
+      const res = await ApiClient.post(`/blog/notes/${id}/like`);
+      await Blog.loadNotes(); // Refresh to update count
+      Toast.success('Note upvoted!');
+    } catch (err) {
+      Toast.error(err.message);
+    }
+  }
+
+  static openPublishModal(editSlug = '') {
+    const overlay = document.getElementById('publish-modal-overlay');
+    const form = document.getElementById('publish-article-form');
+    const titleInp = document.getElementById('publish-title-input');
+    const excerptInp = document.getElementById('publish-excerpt-input');
+    const contentInp = document.getElementById('publish-content-input');
+    const tagInp = document.getElementById('publish-tag-input');
+    const authorInp = document.getElementById('publish-author-input');
+    const authorField = document.getElementById('publish-author-field');
+    const titleEl = document.getElementById('publish-modal-title');
+    const submitBtn = document.getElementById('publish-modal-submit-btn');
+    const slugInp = document.getElementById('edit-article-slug');
+
+    if (!overlay || !form) return;
+
+    form.reset();
+    overlay.classList.remove('d-none');
+
+    if (editSlug) {
+      slugInp.value = editSlug;
+      titleEl.textContent = 'Edit Research Article';
+      submitBtn.textContent = 'Save Changes';
+      authorField.style.display = 'none';
+      authorInp.removeAttribute('required');
+
+      if (Blog.currentArticle && Blog.currentArticle.slug === editSlug) {
+        titleInp.value = Blog.currentArticle.title;
+        excerptInp.value = Blog.currentArticle.excerpt;
+        contentInp.value = Blog.currentArticle.content;
+        tagInp.value = Blog.currentArticle.tag;
+      }
+    } else {
+      slugInp.value = '';
+      titleEl.textContent = 'Publish Research Article';
+      submitBtn.textContent = 'Publish Article';
+      authorField.style.display = 'block';
+      authorInp.setAttribute('required', 'required');
+      if (Auth.user) {
+        authorInp.value = Auth.user.name;
+      }
+    }
+  }
+
+  static closePublishModal() {
+    const overlay = document.getElementById('publish-modal-overlay');
+    if (overlay) overlay.classList.add('d-none');
+  }
+
+  static async submitArticle(event) {
+    event.preventDefault();
+    const slug = document.getElementById('edit-article-slug').value;
+    const title = document.getElementById('publish-title-input').value.trim();
+    const excerpt = document.getElementById('publish-excerpt-input').value.trim();
+    const content = document.getElementById('publish-content-input').value.trim();
+    const tag = document.getElementById('publish-tag-input').value;
+    const author_name = document.getElementById('publish-author-input').value.trim();
+
+    if (!title || !content || !excerpt) return;
+
+    try {
+      if (slug) {
+        await ApiClient.put(`/blog/${slug}`, { title, excerpt, content, tag });
+        Toast.success('Article updated successfully!');
+        Blog.closePublishModal();
+        await Blog.loadArticle(slug);
+      } else {
+        await ApiClient.post('/blog', { title, excerpt, content, tag, author_name });
+        Toast.success('Article published successfully!');
+        Blog.closePublishModal();
+        await Blog.loadPosts();
+      }
+    } catch (err) {
+      Toast.error(err.message);
+    }
+  }
+
+  static async loadTrendingNews() {
+    const feed = document.getElementById('blog-news-feed');
+    const sidebar = document.getElementById('blog-sidebar-news');
+    if (!feed && !sidebar) return;
+
+    try {
+      const { news } = await ApiClient.get('/news');
+      if (!news || !news.length) {
+        if (feed) feed.innerHTML = '<div style="text-align:center;color:var(--gray);">No global trending news active right now.</div>';
+        if (sidebar) sidebar.innerHTML = '<div style="color:var(--gray-light);">No active news.</div>';
+        return;
+      }
+
+      if (sidebar) {
+        sidebar.innerHTML = news.slice(0, 3).map(item => `
+          <div style="border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:8px;text-align:left;">
+            <a href="${item.link}" target="_blank" style="font-weight:600;color:var(--primary);text-decoration:none;line-height:1.4;display:block;">${item.title}</a>
+            <div style="font-size:11px;color:var(--gray-light);margin-top:4px;display:flex;justify-content:space-between;">
+              <span>${item.source}</span>
+              <span>${new Date(item.pubDate).toLocaleDateString()}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      if (feed) {
+        feed.innerHTML = news.map(item => `
+          <div style="border-bottom:1.5px solid var(--border);padding-bottom:20px;margin-bottom:20px;text-align:left;">
+            <h4 style="font-family:var(--font-heading);font-size:17px;font-weight:600;margin-bottom:8px;">
+              <a href="${item.link}" target="_blank" style="color:var(--primary);text-decoration:none;">${item.title}</a>
+            </h4>
+            <p style="font-size:13.5px;color:var(--gray);line-height:1.6;margin-bottom:12px;">${item.contentSnippet || 'Click below to read the full report on the publisher\'s site.'}</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--gray-light);">
+              <span>Source: <strong>${item.source}</strong></span>
+              <span>Published: ${new Date(item.pubDate).toLocaleDateString()}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    } catch (err) {
+      console.error('Error loading trending news:', err);
+    }
+  }
+}
+
+class MiniChatbot {
+  static isOpen = false;
+
+  static toggle() {
+    const card = document.getElementById('mini-chatbot-card');
+    if (!card) return;
+
+    MiniChatbot.isOpen = !MiniChatbot.isOpen;
+    if (MiniChatbot.isOpen) {
+      card.classList.remove('d-none');
+      document.getElementById('mini-chatbot-text')?.focus();
+    } else {
+      card.classList.add('d-none');
+    }
+  }
+
+  static askPreset(question) {
+    MiniChatbot.appendUser(question);
+    MiniChatbot.showTyping();
+
+    setTimeout(() => {
+      document.getElementById('mini-chatbot-typing')?.remove();
+      let response = '';
+      if (question.includes('search')) {
+        response = 'To search papers, log in or sign up first. Then head to the **Search Papers** tab in the sidebar, input your keywords or query, and click Search! We query ArXiv and Semantic Scholar.';
+      } else if (question.includes('Synthesis') || question.includes('Consensus')) {
+        response = 'Our **Consensus Engine** and **Literature Synthesis** tool compiles multiple studies, reads their abstracts, and aggregates results. It will show you a verdict breakdown (Yes / No / Unclear) and tabular methodology comparison.';
+      } else if (question.includes('cost') || question.includes('Pricing')) {
+        response = 'ZiaLabs Pro plan is available for just $3/month (or $2/month billed annually). It gives you unlimited search queries, unlimited PDF uploads/chats, and auto Zotero/Notion syncing!';
+      } else {
+        response = "That is a great question. You can access our full AI chat agent by creating a free account. ZiaLabs speaks English, Hindi, Tamil, and Bhojpuri natively!";
+      }
+      MiniChatbot.appendBot(response);
+    }, 800);
+  }
+
+  static send() {
+    const input = document.getElementById('mini-chatbot-text');
+    if (!input) return;
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = '';
+    MiniChatbot.appendUser(text);
+    MiniChatbot.showTyping();
+
+    setTimeout(() => {
+      document.getElementById('mini-chatbot-typing')?.remove();
+      let response = `ZiaLabs: "I've received your query: '${text}'. To analyze research papers or chat dynamically with our full Gemini models, please sign up or log in to the Workspace!"`;
+      MiniChatbot.appendBot(response);
+    }, 1000);
+  }
+
+  static appendUser(text) {
+    const thread = document.getElementById('mini-chatbot-msgs-thread');
+    const el = document.createElement('div');
+    el.className = 'mini-chatbot-bubble user';
+    el.textContent = text;
+    thread.appendChild(el);
+    thread.scrollTop = thread.scrollHeight;
+  }
+
+  static appendBot(text) {
+    const thread = document.getElementById('mini-chatbot-msgs-thread');
+    const el = document.createElement('div');
+    el.className = 'mini-chatbot-bubble bot';
+    el.innerHTML = text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
+    thread.appendChild(el);
+    thread.scrollTop = thread.scrollHeight;
+    
+    MathRenderer.render(el);
+  }
+
+  static showTyping() {
+    const thread = document.getElementById('mini-chatbot-msgs-thread');
+    const el = document.createElement('div');
+    el.className = 'mini-chatbot-bubble bot';
+    el.id = 'mini-chatbot-typing';
+    el.innerHTML = `<div class="dtyping"><div class="ddot"></div><div class="ddot"></div><div class="ddot"></div></div>`;
+    thread.appendChild(el);
+    thread.scrollTop = thread.scrollHeight;
+  }
+}
+
+class LandingShowcase {
+  static papers = {
+    overfit: {
+      accuracy: 'ACCURACY 98%',
+      title: 'Benign Overfitting in Token Selection of Attention Mechanisms',
+      findings: 'Attention mechanisms achieve benign overfitting in token selection, maintaining high generalization even with noisy training labels.',
+      methodology: 'Analyzes training dynamics and classification error using a mathematical framework based on Signal-to-Noise Ratio (SNR).',
+      question: 'What is the sample size or validation dataset?',
+      answer: 'The study validates theoretical bounds using both synthetic datasets and real-world classification benchmarks.',
+      placeholder: 'Ask about sample size...'
+    },
+    attention: {
+      accuracy: 'CITATIONS 145K+',
+      title: 'Attention Is All You Need',
+      findings: 'Replaces recurrent layers with self-attention, achieving superior translation quality and speed during training.',
+      methodology: 'Evaluates Transformer networks on WMT 2014 English-to-German and English-to-French translation datasets.',
+      question: 'Why is parallelization improved?',
+      answer: 'By removing sequential recurrences, self-attention layers process all sequence tokens simultaneously during training.',
+      placeholder: 'Ask about parallelization...'
+    },
+    crispr: {
+      accuracy: 'NOBEL PRIZE WORK',
+      title: 'Programmable Cas9 Endonuclease for Gene Editing',
+      findings: 'Shows Cas9 can be programmed with single guide RNAs to target and cut specific double-stranded DNA sequences.',
+      methodology: 'In vitro cleavage assays analyzing target sequence mutations using engineered CRISPR RNA structures.',
+      question: 'What does Cas9 require to bind?',
+      answer: 'Cas9 requires a target sequence complementary to the guide RNA, adjacent to a Protospacer Adjacent Motif (PAM).',
+      placeholder: 'Ask about Cas9 binding requirements...'
+    }
+  };
+
+  static select(key) {
+    const data = LandingShowcase.papers[key];
+    if (!data) return;
+
+    // Toggle active class on tabs
+    document.querySelectorAll('.mock-paper-tab').forEach(tab => {
+      tab.classList.remove('active');
+      tab.style.background = '#fff';
+      tab.style.color = 'var(--gray)';
+      tab.style.fontWeight = '500';
+      tab.style.borderColor = 'var(--border)';
+    });
+
+    const activeTab = document.getElementById(`m-paper-tab-${key}`);
+    if (activeTab) {
+      activeTab.classList.add('active');
+      activeTab.style.background = 'var(--primary-light)';
+      activeTab.style.color = 'var(--primary)';
+      activeTab.style.fontWeight = '600';
+      activeTab.style.borderColor = 'rgba(0,64,64,0.15)';
+    }
+
+    // Update insights panel
+    document.getElementById('m-paper-accuracy').textContent = data.accuracy;
+    document.getElementById('m-paper-title').textContent = data.title;
+    document.getElementById('m-paper-findings').textContent = data.findings;
+    document.getElementById('m-paper-methodology').textContent = data.methodology;
+
+    // Render LaTeX equations in central panel
+    MathRenderer.render(document.getElementById('m-paper-findings'));
+    MathRenderer.render(document.getElementById('m-paper-methodology'));
+
+    // Trigger typewriter animation for chat
+    const qEl = document.getElementById('m-chat-question');
+    const aEl = document.getElementById('m-chat-answer');
+    const inpEl = document.getElementById('m-chat-input');
+
+    if (!qEl || !aEl) return;
+
+    qEl.textContent = '';
+    aEl.textContent = '';
+    if (inpEl) inpEl.placeholder = data.placeholder;
+
+    // Animate typing question
+    let qIdx = 0;
+    const typeQ = () => {
+      if (qIdx < data.question.length) {
+        qEl.textContent += data.question[qIdx++];
+        setTimeout(typeQ, 20);
+      } else {
+        // Render LaTeX in the question bubble
+        MathRenderer.render(qEl);
+
+        // Start answer after brief pause
+        setTimeout(() => {
+          let aIdx = 0;
+          const typeA = () => {
+            if (aIdx < data.answer.length) {
+              aEl.textContent += data.answer[aIdx++];
+              setTimeout(typeA, 12);
+            } else {
+              // Render LaTeX in the answer bubble when complete
+              MathRenderer.render(aEl);
+            }
+          };
+          typeA();
+        }, 300);
+      }
+    };
+    typeQ();
+  }
+}
+
+class MathRenderer {
+  static render(element) {
+    if (window.renderMathInElement) {
+      window.renderMathInElement(element, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false
+      });
+    }
   }
 }
 

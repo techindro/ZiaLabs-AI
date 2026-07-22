@@ -3,6 +3,16 @@ const bcrypt = require('bcryptjs');
 
 // Simple User model with basic CRUD and bcrypt auth
 class User {
+  constructor(row) {
+    this.id = row.id;
+    this.name = row.name;
+    this.email = row.email;
+    this.password = row.password;
+    this.plan = row.plan;
+    this.api_calls = row.api_calls;
+    this.created_at = row.created_at;
+  }
+
   static create({ name, email, password }) {
     const salt = bcrypt.genSaltSync(10);
     const hashed = bcrypt.hashSync(password, salt);
@@ -14,12 +24,12 @@ class User {
 
   static findByEmail(email) {
     const res = DB.exec('SELECT * FROM users WHERE email = ?', [email]);
-    return res.length ? res[0] : null;
+    return res.length ? new User(res[0]) : null;
   }
 
   static findById(id) {
     const res = DB.exec('SELECT * FROM users WHERE id = ?', [id]);
-    return res.length ? res[0] : null;
+    return res.length ? new User(res[0]) : null;
   }
 
   static verifyPassword(user, password) {
@@ -41,6 +51,17 @@ class User {
   static upgradeToPro(userId) {
     DB.run("UPDATE users SET plan = 'pro' WHERE id = ?", [userId]);
     DB.save();
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      name: this.name,
+      email: this.email,
+      plan: this.plan,
+      api_calls: this.api_calls,
+      created_at: this.created_at
+    };
   }
 }
 

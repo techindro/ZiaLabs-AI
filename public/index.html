@@ -4,9 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="ZiaLabs AI — Search papers, pull out key data, and get answers to your research questions faster.">
-  <title>ZiaLabs AI — Research Co-Pilot</title>
+  <title>ZiaLabs AI — Research Assistant</title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23C8102E'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='12' font-weight='bold' font-family='sans-serif'>ZL</text></svg>">
+  
+  <!-- KaTeX for LaTeX rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
 
@@ -16,7 +21,12 @@
 <!-- ════════════════ LANDING PAGE ════════════════ -->
 <div class="page active" id="pg-landing">
 
-  <nav>
+  <!-- Floating Ambient Glow Blobs -->
+  <div class="glow-blob blob-1"></div>
+  <div class="glow-blob blob-2"></div>
+  <div class="glow-blob blob-3"></div>
+
+  <nav class="glass-nav">
     <div class="nav-logo" onclick="App.showPage('pg-landing')">
       <div class="nl-box">ZL</div>
       <div class="nl-name">ZiaLabs<span class="nl-super">AI</span></div>
@@ -26,12 +36,16 @@
       <a href="#research">Research</a>
       <a href="#pricing">Pricing</a>
       <a href="#enterprise">Enterprise</a>
-      <a href="#blog">Blog</a>
+      <a onclick="App.showPage('pg-blog')">Blog</a>
     </div>
     <div class="nav-cta">
-      <button class="btn-ghost" onclick="App.showPage('pg-signin')">Sign in</button>
-      <button class="btn-red" onclick="App.showPage('pg-signup')">Get started free</button>
+      <button class="btn-ghost nav-cta-btn" onclick="App.showPage('pg-signin')">Sign in</button>
+      <button class="btn-red nav-cta-btn" onclick="App.showPage('pg-signup')">Get started free</button>
     </div>
+    <!-- Mobile Hamburger -->
+    <button class="hamburger" id="hamburger-btn" onclick="document.querySelector('.glass-nav').classList.toggle('nav-open')" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
   <div style="max-width:1200px;margin:0 auto">
@@ -64,12 +78,25 @@
         <img src="/img/hero_illustration.png" alt="University student reading research paper 3D illustration" style="max-width:100%;object-fit:contain;height:450px;width:100%;mix-blend-mode:multiply;transform:translate(30px, 30px);">
       </div>
     </div>
+  </div>
 
-    <div class="stats-row fade-in delay-2">
-      <div class="stat-item"><div class="stat-num">200<span>M+</span></div><div class="stat-desc">Papers you can search</div></div>
-      <div class="stat-item"><div class="stat-num">98<span>%</span></div><div class="stat-desc">Relevant results</div></div>
-      <div class="stat-item"><div class="stat-num">12<span>K+</span></div><div class="stat-desc">People use it</div></div>
-      <div class="stat-item"><div class="stat-num">5<span>x</span></div><div class="stat-desc">Quicker than doing it yourself</div></div>
+  <!-- LANDING PAGE STATS COUNTERS -->
+  <div class="stats-row fade-in delay-3" style="margin: 40px auto; max-width: 1100px;">
+    <div class="stat-item">
+      <div class="stat-num">200M+</div>
+      <div class="stat-desc">Academic Papers Indexed</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">98.2%</div>
+      <div class="stat-desc">Data Extraction Accuracy</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">12,000+</div>
+      <div class="stat-desc">Active Researchers</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">15+</div>
+      <div class="stat-desc">Partner Labs & Inst.</div>
     </div>
   </div>
 
@@ -347,45 +374,67 @@
       </div>
 
       <!-- Window Workspace Area -->
-      <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:20px;padding:24px;background:var(--bg-base);min-height:360px;">
-        <!-- Left: Literature Card / Summary Preview -->
-        <div style="background:#fff;border:1px solid var(--border);border-radius:var(--border-radius-md);padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.01);">
-          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:8px;">
-            <span style="font-size:12px;font-weight:700;color:var(--primary);text-transform:uppercase;">Structured Insights</span>
-            <span style="font-size:11px;color:#10b981;background:#def7ec;padding:2px 8px;border-radius:10px;font-weight:700;">ACCURACY 98%</span>
-          </div>
-          <h4 style="font-size:15px;font-weight:700;color:var(--black);margin:0;">Benign Overfitting in Token Selection of Attention Mechanisms</h4>
+      <div class="mock-workspace-grid" style="display:grid;grid-template-columns:180px 1.2fr 1fr;gap:20px;padding:20px;background:var(--bg-base);min-height:380px;">
+        <!-- Left: Paper List Sidebar -->
+        <div style="background:#fff;border:1px solid var(--border);border-radius:var(--border-radius-md);padding:12px;display:flex;flex-direction:column;gap:8px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.01);">
+          <div style="font-size:11px;font-weight:700;color:var(--gray-light);text-transform:uppercase;margin-bottom:6px;padding-left:4px;text-align:left;">Selected Literature</div>
           
-          <div style="background:var(--primary-light);padding:12px;border-radius:6px;font-size:12px;line-height:1.6;color:var(--black);border-left:3px solid var(--primary);">
-            <strong>Key Finding:</strong> Attention mechanisms achieve benign overfitting in token selection, maintaining high generalization even with noisy training labels.
+          <div class="mock-paper-tab active" id="m-paper-tab-overfit" onclick="LandingShowcase.select('overfit')" style="padding:10px 12px;border-radius:6px;font-size:12px;font-weight:600;color:var(--primary);background:var(--primary-light);cursor:pointer;border:1px solid rgba(0,64,64,0.08);line-height:1.35;transition:all 0.2s;text-align:left;">
+            Benign Overfitting in Attention...
           </div>
-          <div style="font-size:12px;color:var(--gray);line-height:1.6;">
-            <strong>Methodology:</strong> Analyzes training dynamics and classification error using a mathematical framework based on Signal-to-Noise Ratio (SNR).
+          <div class="mock-paper-tab" id="m-paper-tab-attention" onclick="LandingShowcase.select('attention')" style="padding:10px 12px;border-radius:6px;font-size:12px;font-weight:500;color:var(--gray);background:#fff;cursor:pointer;border:1px solid var(--border);line-height:1.35;transition:all 0.2s;text-align:left;">
+            Attention Is All You Need...
+          </div>
+          <div class="mock-paper-tab" id="m-paper-tab-crispr" onclick="LandingShowcase.select('crispr')" style="padding:10px 12px;border-radius:6px;font-size:12px;font-weight:500;color:var(--gray);background:#fff;cursor:pointer;border:1px solid var(--border);line-height:1.35;transition:all 0.2s;text-align:left;">
+            Cas9 Endonuclease for Gene...
           </div>
         </div>
 
-        <!-- Right: Humata Chat Mock -->
-        <div style="background:#fff;border:1px solid var(--border);border-radius:var(--border-radius-md);display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 4px 6px -1px rgba(0,0,0,0.01);overflow:hidden;">
-          <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;color:var(--black);background:var(--primary-light);display:flex;align-items:center;gap:6px;">
+        <!-- Center: Paper Insights (Updates dynamically!) -->
+        <div style="background:#fff;border:1px solid var(--border);border-radius:var(--border-radius-md);padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.01);text-align:left;">
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:8px;">
+            <span style="font-size:12px;font-weight:700;color:var(--primary);text-transform:uppercase;">Structured Insights</span>
+            <span style="font-size:11px;color:#10b981;background:#def7ec;padding:2px 8px;border-radius:10px;font-weight:700;" id="m-paper-accuracy">ACCURACY 98%</span>
+          </div>
+          <h4 style="font-size:15px;font-weight:700;color:var(--black);margin:0;line-height:1.4;" id="m-paper-title">Benign Overfitting in Token Selection of Attention Mechanisms</h4>
+          
+          <div style="background:var(--primary-light);padding:12px;border-radius:6px;font-size:12.5px;line-height:1.6;color:var(--black);border-left:3px solid var(--primary);">
+            <strong>Key Finding:</strong> <span id="m-paper-findings">Attention mechanisms achieve benign overfitting in token selection, maintaining high generalization even with noisy training labels.</span>
+          </div>
+          <div style="font-size:12.5px;color:var(--gray);line-height:1.6;">
+            <strong>Methodology:</strong> <span id="m-paper-methodology">Analyzes training dynamics and classification error using a mathematical framework based on Signal-to-Noise Ratio (SNR).</span>
+          </div>
+        </div>
+
+        <!-- Right: AI Chat Pane -->
+        <div style="background:#fff;border:1px solid var(--border);border-radius:var(--border-radius-md);display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 4px 6px -1px rgba(0,0,0,0.01);overflow:hidden;min-height:320px;">
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;color:var(--black);background:var(--primary-light);display:flex;align-items:center;gap:6px;text-align:left;">
             <svg viewBox="0 0 24 24" width="14" height="14" style="fill:none; stroke:var(--black); stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round;">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
             AI Research Assistant
           </div>
-          <div style="padding:16px;display:flex;flex-direction:column;gap:12px;font-size:12px;">
-            <div style="align-self:flex-start;background:var(--primary-light);padding:10px 12px;border-radius:12px;max-width:85%;line-height:1.5;">
+          
+          <div style="padding:16px;display:flex;flex-direction:column;gap:12px;font-size:12px;flex:1;overflow-y:auto;" id="m-chat-messages">
+            <div style="align-self:flex-start;background:var(--primary-light);padding:10px 12px;border-radius:12px;max-width:85%;line-height:1.5;text-align:left;">
               How can I help with this paper?
             </div>
-            <div style="align-self:flex-end;background:var(--primary);color:#fff;padding:10px 12px;border-radius:12px;max-width:85%;line-height:1.5;">
+            <div style="align-self:flex-end;background:var(--primary);color:#fff;padding:10px 12px;border-radius:12px;max-width:85%;line-height:1.5;text-align:left;min-height:18px;" id="m-chat-question">
               What is the sample size or validation dataset?
             </div>
-            <div style="align-self:flex-start;background:var(--primary-light);padding:10px 12px;border-radius:12px;max-width:85%;line-height:1.5;">
+            <div style="align-self:flex-start;background:var(--primary-light);padding:10px 12px;border-radius:12px;max-width:85%;line-height:1.5;text-align:left;min-height:18px;" id="m-chat-answer">
               The study validates theoretical bounds using both synthetic datasets and real-world classification benchmarks.
             </div>
           </div>
-          <div style="border-top:1px solid var(--border);padding:10px;background:var(--bg-base);display:flex;gap:8px;">
-            <div style="flex:1;background:#fff;border:1px solid var(--border);border-radius:20px;height:28px;"></div>
-            <div style="width:28px;height:28px;background:var(--primary);border-radius:50%;"></div>
+          
+          <div style="border-top:1px solid var(--border);padding:10px;background:var(--bg-base);display:flex;gap:8px;align-items:center;">
+            <input type="text" id="m-chat-input" readonly placeholder="Ask about sample size..." style="flex:1;background:#fff;border:1px solid var(--border);border-radius:20px;height:30px;font-size:11px;padding:0 12px;outline:none;">
+            <div style="width:30px;height:30px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </div>
           </div>
         </div>
       </div>
@@ -568,7 +617,7 @@
     <div class="section-label">Enterprise & Labs</div>
     <div class="section-title" style="text-align:center;">ZiaLabs for R&D Teams and Universities</div>
     <p style="text-align:center;font-size:15px;color:var(--gray);max-width:600px;margin:0 auto 40px;line-height:1.7;">
-      Empower your team of scientists, clinicians, or engineers with secure, custom-trained research co-pilots and shared literature workspaces.
+      Empower your team of scientists, clinicians, or engineers with secure, custom-trained research assistants and shared literature workspaces.
     </p>
 
     <!-- Enterprise Features Grid -->
@@ -688,7 +737,7 @@
           </svg>
         </button>
         <div class="d-none" style="padding:0 24px 20px 24px;font-size:14px;line-height:1.65;color:var(--gray);border-top:1px solid var(--border);padding-top:16px;">
-          No. ZiaLabs is a search metadata co-pilot. We index public open-access databases and present structured abstracts, citations, and metadata. Any PDF uploaded by a user is processed privately under strict encryption for prompt generation and is never shared, hosted, or made public.
+          No. ZiaLabs is a search metadata assistant. We index public open-access databases and present structured abstracts, citations, and metadata. Any PDF uploaded by a user is processed privately under strict encryption for prompt generation and is never shared, hosted, or made public.
         </div>
       </div>
 
@@ -1008,9 +1057,112 @@
           </div>
         </div>
 
-        <!-- Center: heading only (visible before first message) -->
-        <div class="cb-center" id="chatbot-welcome">
-          <h1 class="cb-heading">Where should we begin?</h1>
+        <!-- Center: heading + stats + actions + suggestions (visible before first message) -->
+        <div class="cb-center" id="chatbot-welcome" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 32px; width: 100%; max-width: 800px; margin: 0 auto; padding: 40px 24px 20px; overflow-y: auto;">
+          <div style="text-align: center; max-width: 600px;">
+            <h1 class="cb-heading" style="font-size: 32px; margin-bottom: 8px; font-weight: 700;">Where should we begin?</h1>
+            <p style="font-size: 14px; color: var(--gray); line-height: 1.5; margin: 0;">Search papers, synthesize research consensus, analyze PDFs, or ask the AI assistant details about methodology and findings.</p>
+          </div>
+
+          <!-- QUICK STATS OVERVIEW -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; width: 100%;">
+            <!-- Stat 1: Searches Run -->
+            <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--border-radius-lg); padding: 18px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); display: flex; flex-direction: column; text-align: left;">
+              <span style="font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px;">Searches Run</span>
+              <span id="m-searches" style="font-family: var(--font-heading); font-size: 32px; font-weight: 700; color: var(--primary); margin: 6px 0 2px 0;">0</span>
+              <span id="m-searches-sub" style="font-size: 11px; color: #10b981; font-weight: 600;">+0 this week</span>
+            </div>
+            <!-- Stat 2: Saved Papers -->
+            <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--border-radius-lg); padding: 18px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); display: flex; flex-direction: column; text-align: left;">
+              <span style="font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px;">Saved Papers</span>
+              <span id="m-papers" style="font-family: var(--font-heading); font-size: 32px; font-weight: 700; color: var(--primary); margin: 6px 0 2px 0;">0</span>
+              <span style="font-size: 11px; color: var(--gray-light);">In your library</span>
+            </div>
+            <!-- Stat 3: Synthesized Insights -->
+            <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--border-radius-lg); padding: 18px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); display: flex; flex-direction: column; text-align: left;">
+              <span style="font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px;">AI Syntheses</span>
+              <span id="m-insights" style="font-family: var(--font-heading); font-size: 32px; font-weight: 700; color: var(--primary); margin: 6px 0 2px 0;">0</span>
+              <span style="font-size: 11px; color: var(--gray-light);">Insights generated</span>
+            </div>
+            <!-- Stat 4: Remaining API Calls -->
+            <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--border-radius-lg); padding: 18px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); display: flex; flex-direction: column; text-align: left;">
+              <span style="font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px;">AI Credits</span>
+              <span id="m-api" style="font-family: var(--font-heading); font-size: 32px; font-weight: 700; color: var(--primary); margin: 6px 0 2px 0;">0</span>
+              <span id="m-api-sub" style="font-size: 11px; color: var(--gray-light);">0 limit / mo</span>
+            </div>
+          </div>
+
+          <!-- QUICK ACTION GRID -->
+          <div style="width: 100%;">
+            <h4 style="font-size: 12px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; text-align: left; width: 100%;">Quick Research Tasks</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; width: 100%;">
+              <!-- Action 1: Search Database -->
+              <div onclick="Dashboard.setSidebar(document.querySelectorAll('.sb-item')[1])" style="background: #fff; border: 1px solid var(--border); border-radius: var(--border-radius-lg); padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); display: flex; gap: 14px; align-items: flex-start; cursor: pointer; transition: transform 0.2s, border-color 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.borderColor='var(--primary)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='var(--border)';">
+                <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--primary); flex-shrink: 0;">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </div>
+                <div style="text-align: left;">
+                  <h5 style="font-size: 13.5px; font-weight: 700; color: var(--black); margin: 0 0 4px 0;">Search Papers</h5>
+                  <p style="font-size: 12px; color: var(--gray); margin: 0; line-height: 1.4;">Scan millions of papers on ArXiv and Semantic Scholar.</p>
+                </div>
+              </div>
+
+              <!-- Action 2: Consensus Engine -->
+              <div onclick="Dashboard.setSidebar(document.querySelectorAll('.sb-item')[2])" style="background: #fff; border: 1px solid var(--border); border-radius: var(--border-radius-lg); padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); display: flex; gap: 14px; align-items: flex-start; cursor: pointer; transition: transform 0.2s, border-color 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.borderColor='var(--primary)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='var(--border)';">
+                <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--primary); flex-shrink: 0;">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                  </svg>
+                </div>
+                <div style="text-align: left;">
+                  <h5 style="font-size: 13.5px; font-weight: 700; color: var(--black); margin: 0 0 4px 0;">Consensus Engine</h5>
+                  <p style="font-size: 12px; color: var(--gray); margin: 0; line-height: 1.4;">Synthesize literature reviews and verdicts for any question.</p>
+                </div>
+              </div>
+
+              <!-- Action 3: Upload PDF -->
+              <div onclick="document.getElementById('upload-paper-input-chat').click()" style="background: #fff; border: 1px solid var(--border); border-radius: var(--border-radius-lg); padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); display: flex; gap: 14px; align-items: flex-start; cursor: pointer; transition: transform 0.2s, border-color 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.borderColor='var(--primary)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='var(--border)';">
+                <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--primary); flex-shrink: 0;">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                  </svg>
+                </div>
+                <div style="text-align: left;">
+                  <h5 style="font-size: 13.5px; font-weight: 700; color: var(--black); margin: 0 0 4px 0;">Upload PDF Paper</h5>
+                  <p style="font-size: 12px; color: var(--gray); margin: 0; line-height: 1.4;">Extract methodology, datasets and formulas from your PDF files.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUGGESTED RESEARCH PROMPTS -->
+          <div style="width: 100%;">
+            <h4 style="font-size: 12px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; text-align: left; width: 100%;">Suggested Prompts</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; width: 100%;">
+              <div onclick="App.quickPrompt('Does zinc shorten common cold duration?')" style="background: #fff; border: 1px solid var(--border); border-radius: var(--border-radius-md); padding: 12px 14px; font-size: 12.5px; font-weight: 600; color: var(--primary); text-align: left; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='var(--primary-light)'; this.style.borderColor='var(--primary)';" onmouseout="this.style.background='#fff'; this.style.borderColor='var(--border)';">
+                ❓ Does zinc shorten common cold duration?
+              </div>
+              <div onclick="App.quickPrompt('What are the limitations of CRISPR Cas9 editing?')" style="background: #fff; border: 1px solid var(--border); border-radius: var(--border-radius-md); padding: 12px 14px; font-size: 12.5px; font-weight: 600; color: var(--primary); text-align: left; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='var(--primary-light)'; this.style.borderColor='var(--primary)';" onmouseout="this.style.background='#fff'; this.style.borderColor='var(--border)';">
+                🧬 What are the limitations of CRISPR Cas9?
+              </div>
+              <div onclick="App.quickPrompt('Does caffeine improve long-term memory recall?')" style="background: #fff; border: 1px solid var(--border); border-radius: var(--border-radius-md); padding: 12px 14px; font-size: 12.5px; font-weight: 600; color: var(--primary); text-align: left; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='var(--primary-light)'; this.style.borderColor='var(--primary)';" onmouseout="this.style.background='#fff'; this.style.borderColor='var(--border)';">
+                🧠 Does caffeine improve long-term memory?
+              </div>
+            </div>
+          </div>
+
+          <!-- RECENT SEARCHES -->
+          <div style="width: 100%;">
+            <h4 style="font-size: 12px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; text-align: left; width: 100%;">Recent Search Queries</h4>
+            <div style="background: #fff; border: 1px solid var(--border); border-radius: var(--border-radius-lg); overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.01);">
+              <div class="recent-searches" id="recent-searches" style="padding: 12px 18px;">
+                <div style="padding: 10px 0; text-align: center; font-size: 12px; color: var(--gray-light);">Loading recent searches...</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Chat thread (hidden until first message) -->
@@ -1273,6 +1425,332 @@
     </div><!-- end dash-main -->
   </div><!-- end dash-layout -->
 </div><!-- end pg-dash -->
+
+<!-- ════════════════ DEDICATED BLOG VIEW ════════════════ -->
+<div class="page" id="pg-blog">
+  <!-- Glowing Background Blobs for Blog -->
+  <div class="glow-blob blob-1"></div>
+  <div class="glow-blob blob-2"></div>
+
+  <nav class="glass-nav">
+    <div class="nav-logo" onclick="App.showPage('pg-landing')">
+      <div class="nl-box">ZL</div>
+      <div class="nl-name">ZiaLabs<span class="nl-super">AI</span></div>
+    </div>
+    <div class="nav-links">
+      <a onclick="App.showLandingSection('features')">Product</a>
+      <a onclick="App.showLandingSection('research')">Research</a>
+      <a onclick="App.showLandingSection('pricing')">Pricing</a>
+      <a onclick="App.showLandingSection('enterprise')">Enterprise</a>
+      <a class="active-link" onclick="App.showPage('pg-blog')">Blog</a>
+    </div>
+    <div class="nav-cta">
+      <button class="btn-ghost" onclick="App.showPage('pg-signin')">Sign in</button>
+      <button class="btn-red" onclick="App.showPage('pg-signup')">Get started free</button>
+    </div>
+  </nav>
+
+  <div class="blog-hero">
+    <span class="blog-eyebrow">ZiaLabs Insights</span>
+    <h1>Research & Intelligence</h1>
+    <p>In-depth analyses, theoretical insights, and practical methodologies written by researchers for researchers.</p>
+    
+    <div class="blog-search-container">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" id="blog-search-input" placeholder="Search research articles..." oninput="Blog.handleSearch(this.value)">
+    </div>
+  </div>
+
+  <div class="blog-container">
+    <!-- Tab Bar -->
+    <div style="display:flex;justify-content:center;gap:24px;margin:-10px 0 40px;border-bottom:1.5px solid var(--border);padding-bottom:12px;">
+      <button class="pg-tab active" id="blog-tab-articles" onclick="Blog.switchTab('articles')">Publications</button>
+      <button class="pg-tab" id="blog-tab-notes" onclick="Blog.switchTab('notes')">Research Notes</button>
+      <button class="pg-tab" id="blog-tab-news" onclick="Blog.switchTab('news')">Global News</button>
+    </div>
+
+    <div class="blog-content-grid" style="display:grid;grid-template-columns:1fr 300px;gap:40px;align-items:start;">
+      <!-- Main Content Column -->
+      <div class="blog-main-col">
+        <!-- 1. Articles Tab -->
+        <div id="blog-tab-articles-content">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+            <h3 style="font-family:var(--font-heading);font-size:22px;color:var(--primary);font-weight:600;margin:0;">Publications Feed</h3>
+            <button class="btn-ghost" onclick="Blog.openPublishModal()" style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:8px 16px;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+              Publish Article
+            </button>
+          </div>
+          <div class="blog-tags" id="blog-tags-list" style="margin-bottom:24px;justify-content:flex-start;">
+            <!-- Dynamic tags -->
+          </div>
+          <div class="blog-grid-view" id="blog-posts-view" style="grid-template-columns: repeat(2, 1fr); gap: 24px;">
+            <!-- Dynamic blog cards -->
+          </div>
+        </div>
+
+        <!-- 2. Notes Tab (Microblog) -->
+        <div id="blog-tab-notes-content" class="d-none">
+          <div style="background:#fff;border:1px solid var(--border);border-radius:var(--border-radius-lg);padding:24px;margin-bottom:32px;box-shadow:0 4px 12px rgba(0,0,0,0.01);">
+            <h4 style="font-family:var(--font-heading);font-size:16px;color:var(--primary);margin-bottom:12px;font-weight:600;">Share a suggestion or research note</h4>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <input type="text" id="note-author-input" placeholder="Your name (e.g. Dr. Ray)" style="width:100%;max-width:240px;padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--border-radius-md);font-size:13px;outline:none;" required>
+              <textarea id="note-content-input" placeholder="What suggestions or ideas do you want to share with the research community? (Max 280 chars)" maxlength="280" oninput="document.getElementById('note-char-count').textContent=(280-this.value.length)+' characters remaining'" style="width:100%;height:80px;padding:12px;border:1.5px solid var(--border);border-radius:var(--border-radius-md);font-size:13.5px;font-family:inherit;outline:none;resize:none;" required></textarea>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:11px;color:var(--gray-light);" id="note-char-count">280 characters remaining</span>
+                <button class="btn-red" onclick="Blog.submitNote()" style="padding:6px 16px;font-size:12.5px;margin:0;">Post Note</button>
+              </div>
+            </div>
+          </div>
+          <div class="comments-list" id="blog-notes-feed">
+            <!-- Dynamic notes -->
+          </div>
+        </div>
+
+        <!-- 3. News Tab -->
+        <div id="blog-tab-news-content" class="d-none">
+          <div style="background:#fff;border:1px solid var(--border);border-radius:var(--border-radius-lg);padding:32px;box-shadow:0 4px 12px rgba(0,0,0,0.01);">
+            <h3 style="font-family:var(--font-heading);font-size:20px;color:var(--primary);margin-bottom:8px;font-weight:600;">Global Trending News</h3>
+            <p style="font-size:14px;color:var(--gray);margin-bottom:24px;line-height:1.6;">Aggregated in real-time from partner research labs, MIT, Berkeley, and major technology news wires.</p>
+            <div id="blog-news-feed" style="display:flex;flex-direction:column;gap:20px;">
+              <!-- Dynamic global headlines -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Blog Sidebar Column -->
+      <aside class="blog-sidebar-col" style="display:flex;flex-direction:column;gap:24px;">
+        <!-- Trending Sidebar Widget -->
+        <div class="sidebar-card" style="padding:20px;">
+          <h4 style="font-family:var(--font-heading);font-size:15px;font-weight:600;color:var(--primary);margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 22 22 22"></polygon><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            Live Research News
+          </h4>
+          <div id="blog-sidebar-news" style="display:flex;flex-direction:column;gap:12px;font-size:13px;">
+            <!-- Loaded from RSS -->
+            <div style="color:var(--gray-light);">Loading live news...</div>
+          </div>
+          <button class="btn-share" onclick="Blog.switchTab('news')" style="width:100%;margin-top:12px;font-size:12px;padding:6px 12px;">View All News</button>
+        </div>
+
+        <!-- Suggestion / Guidelines Widget -->
+        <div class="sidebar-card" style="padding:20px;background:var(--primary-light);border-color:var(--primary);">
+          <h4 style="font-family:var(--font-heading);font-size:15px;font-weight:600;color:var(--primary);margin-bottom:8px;">Collaborative Hub</h4>
+          <p style="font-size:12px;color:var(--primary-dark);line-height:1.6;">ZiaLabs is a collaborative space. Feel free to publish your technical reviews, suggest platform enhancements, or post comments to start discussion threads.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ DEDICATED BLOG ARTICLE DETAIL VIEW ════════════════ -->
+<div class="page" id="pg-blog-article">
+  <!-- Glowing Background Blobs for Article -->
+  <div class="glow-blob blob-3"></div>
+
+  <nav class="glass-nav">
+    <div class="nav-logo" onclick="App.showPage('pg-landing')">
+      <div class="nl-box">ZL</div>
+      <div class="nl-name">ZiaLabs<span class="nl-super">AI</span></div>
+    </div>
+    <div class="nav-links">
+      <a onclick="App.showLandingSection('features')">Product</a>
+      <a onclick="App.showLandingSection('research')">Research</a>
+      <a onclick="App.showLandingSection('pricing')">Pricing</a>
+      <a onclick="App.showLandingSection('enterprise')">Enterprise</a>
+      <a onclick="App.showPage('pg-blog')">Blog</a>
+    </div>
+    <div class="nav-cta">
+      <button class="btn-ghost" onclick="App.showPage('pg-signin')">Sign in</button>
+      <button class="btn-red" onclick="App.showPage('pg-signup')">Get started free</button>
+    </div>
+  </nav>
+
+  <!-- Reading progress bar -->
+  <div class="reading-progress"><div class="reading-bar" id="blog-reading-bar"></div></div>
+
+  <div class="article-layout">
+    <div class="article-back" onclick="App.showPage('pg-blog')">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Back to Insights
+    </div>
+
+    <div class="article-grid">
+      <!-- Main Content Column -->
+      <article class="article-main">
+        <header class="article-header">
+          <span class="article-badge" id="article-badge-tag">AI & ML</span>
+          <h1 id="article-detail-title">Loading Article...</h1>
+          <div class="article-author">
+            <div class="article-avatar" id="article-detail-avatar">ZL</div>
+            <div>
+              <div class="article-author-name" id="article-detail-author">Author</div>
+              <div class="article-date-row"><span id="article-detail-date">Date</span> &middot; <span id="article-detail-read-time">Read Time</span></div>
+            </div>
+          </div>
+        </header>
+
+        <div class="article-body" id="article-detail-body">
+          <!-- Body content loaded dynamically -->
+        </div>
+      </article>
+
+      <!-- Sidebar Column -->
+      <aside class="article-sidebar">
+        <!-- Interactive Widget: Likes & Share -->
+        <div class="sidebar-card interaction-card">
+          <button class="btn-like" id="article-like-button" onclick="Blog.likeCurrentArticle()">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <span>Like Post</span>
+            <span class="like-badge" id="article-likes-val">0</span>
+          </button>
+          <button class="btn-share" onclick="Blog.shareCurrentArticle()">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+              <polyline points="16 6 12 2 8 6"></polyline>
+              <line x1="12" y1="2" x2="12" y2="15"></line>
+            </svg>
+            Share Link
+          </button>
+        </div>
+
+        <!-- Interactive Widget: Discuss with AI -->
+        <div class="sidebar-card ai-discuss-card">
+          <h4>Ask ZiaLabs AI</h4>
+          <p>Have questions about the topics or mathematical concepts in this paper? Ask our research model directly.</p>
+          <button class="btn-red" style="width:100%;margin-top:12px;font-size:13px;" onclick="Blog.discussWithAI()">Discuss Article</button>
+        </div>
+
+        <!-- Edit Article Card -->
+        <div class="sidebar-card" id="article-edit-sidebar-card">
+          <h4 style="font-family:var(--font-heading);font-size:15px;font-weight:600;color:var(--primary);margin-bottom:8px;">Manage Article</h4>
+          <p style="font-size:12.5px;color:var(--gray);line-height:1.6;margin-bottom:12px;">Are you the author? Update this article content, tags, or excerpt.</p>
+          <button class="btn-share" style="width:100%;font-size:13px;" id="btn-edit-article-trigger">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            Edit Publication
+          </button>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Comments / Discussion -->
+    <section class="article-comments">
+      <h3>Discussion Thread (<span id="article-comments-val">0</span>)</h3>
+      
+      <!-- Comment Form -->
+      <form class="comment-form" onsubmit="Blog.submitComment(event)">
+        <div class="comment-name-row">
+          <input type="text" id="comment-name-input" placeholder="Display name (e.g. Dr. Vance)" required>
+        </div>
+        <textarea id="comment-content-input" placeholder="Join the scientific discourse... Ask questions or comment on the methodology." required></textarea>
+        <button type="submit" class="btn-red" style="align-self:flex-end;margin:0;font-size:13px;padding:8px 20px;">Submit Comment</button>
+      </form>
+
+      <!-- Comments List -->
+      <div class="comments-list" id="article-comments-thread">
+        <!-- comments appended here -->
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ════════════════ FLOATING MINI-CHATBOT WIDGET ════════════════ -->
+<div class="mini-chatbot" id="mini-chatbot">
+  <div class="mini-chatbot-trigger" onclick="MiniChatbot.toggle()" title="ZiaLabs AI Assistant">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+    <div class="mini-chatbot-pulse"></div>
+  </div>
+
+  <div class="mini-chatbot-card d-none" id="mini-chatbot-card">
+    <div class="mini-chatbot-head">
+      <div class="mini-chatbot-info">
+        <div class="mini-chatbot-av">ZL</div>
+        <div>
+          <div class="mini-chatbot-title">ZiaLabs AI</div>
+          <div class="mini-chatbot-status">● Online</div>
+        </div>
+      </div>
+      <div class="mini-chatbot-close" onclick="MiniChatbot.toggle()">✕</div>
+    </div>
+    
+    <div class="mini-chatbot-msgs" id="mini-chatbot-msgs-thread">
+      <div class="mini-chatbot-bubble bot">
+        Hello! 👋 I am the ZiaLabs AI assistant. Ask me a question about how our platforms work, or select a quick topic below:
+      </div>
+      <div class="mini-chatbot-chips">
+        <button onclick="MiniChatbot.askPreset('How do I search papers?')">How to search?</button>
+        <button onclick="MiniChatbot.askPreset('What is Literature Synthesis?')">Consensus Engine?</button>
+        <button onclick="MiniChatbot.askPreset('How much does Pro cost?')">Pricing plans?</button>
+      </div>
+    </div>
+    
+    <div class="mini-chatbot-input">
+      <input type="text" id="mini-chatbot-text" placeholder="Ask anything about ZiaLabs..." onkeydown="if(event.key==='Enter')MiniChatbot.send()">
+      <button onclick="MiniChatbot.send()">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PUBLISH / EDIT ARTICLE MODAL -->
+<div class="d-none" id="publish-modal-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:20000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="background:#fff;width:100%;max-width:600px;border-radius:12px;border:1.5px solid var(--border);box-shadow:0 20px 50px rgba(0,0,0,0.15);overflow:hidden;animation:chatbotEntry 0.3s ease-out;">
+    <div style="background:var(--primary);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;">
+      <h3 style="font-family:var(--font-heading);font-size:18px;margin:0;font-weight:600;" id="publish-modal-title">Publish Research Article</h3>
+      <span onclick="Blog.closePublishModal()" style="cursor:pointer;font-size:20px;font-weight:700;">&times;</span>
+    </div>
+    <form id="publish-article-form" onsubmit="Blog.submitArticle(event)" style="padding:24px;display:flex;flex-direction:column;gap:16px;">
+      <input type="hidden" id="edit-article-slug">
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label for="publish-title-input" style="font-size:12.5px;font-weight:700;color:var(--primary);text-align:left;">Article Title</label>
+        <input type="text" id="publish-title-input" placeholder="e.g. A Review of Transformer Architectures" style="padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;outline:none;" required>
+      </div>
+      <div style="display:flex;gap:16px;">
+        <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+          <label for="publish-tag-input" style="font-size:12.5px;font-weight:700;color:var(--primary);text-align:left;">Category / Tag</label>
+          <select id="publish-tag-input" style="padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:13.5px;outline:none;background:#fff;">
+            <option value="AI & ML">AI & ML</option>
+            <option value="Privacy">Privacy</option>
+            <option value="Research Guide">Research Guide</option>
+            <option value="Education">Education</option>
+            <option value="General">General</option>
+          </select>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:6px;" id="publish-author-field">
+          <label for="publish-author-input" style="font-size:12.5px;font-weight:700;color:var(--primary);text-align:left;">Author Name</label>
+          <input type="text" id="publish-author-input" placeholder="e.g. Dr. Ray" style="padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;outline:none;" required>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label for="publish-excerpt-input" style="font-size:12.5px;font-weight:700;color:var(--primary);text-align:left;">Short Summary / Excerpt</label>
+        <input type="text" id="publish-excerpt-input" placeholder="A brief one-sentence hook for the feed card" style="padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:13.5px;outline:none;" required>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label for="publish-content-input" style="font-size:12.5px;font-weight:700;color:var(--primary);text-align:left;">Article Content (Supports simple HTML or text)</label>
+        <textarea id="publish-content-input" placeholder="Write your publication body here..." style="padding:12px;border:1.5px solid var(--border);border-radius:6px;font-size:13.5px;font-family:inherit;height:180px;outline:none;resize:vertical;" required></textarea>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:10px;">
+        <button type="button" class="btn-ghost" onclick="Blog.closePublishModal()" style="padding:10px 20px;">Cancel</button>
+        <button type="submit" class="btn-red" style="padding:10px 20px;margin:0;" id="publish-modal-submit-btn">Publish Article</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <script src="/js/app.js"></script>
 </body>

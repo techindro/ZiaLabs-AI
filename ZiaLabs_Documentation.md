@@ -1,6 +1,6 @@
 # ZiaLabs AI — Project Documentation & Commands Guide
 
-Yeh document un saari cheezon ka detailed summary hai jo humne is ZiaLabs AI Research Co-Pilot project mein develop ki hain.
+Yeh document un saari cheezon ka detailed summary hai jo humne is ZiaLabs AI Research Assistant project mein develop ki hain.
 
 ---
 
@@ -73,4 +73,4 @@ Frontend bina kisi framework (React/Angular) ke Pure Vanilla JavaScript mein lik
 * **Password Hashing:** `bcryptjs` ka use kiya gaya hai taaki password text form mein save na hon.
 
 ---
-*Created by ZiaLabs AI Co-Pilot*
+*Created by ZiaLabs AI*

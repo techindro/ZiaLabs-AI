@@ -14,11 +14,10 @@ class AuthService {
     if (!email || !email.includes('@'))   throw new Error('Valid email is required');
     if (!password || password.length < 8) throw new Error('Password must be at least 8 characters');
 
-    const passwordHash = await bcrypt.hash(password, 12);
     const user = User.create({
       name: name.trim(),
       email: email.toLowerCase().trim(),
-      passwordHash,
+      password,
     });
 
     const token = AuthService.#makeToken(user);
@@ -30,9 +29,9 @@ class AuthService {
 
     const user = User.findByEmail(email.toLowerCase().trim());
     if (!user) throw new Error('Invalid email or password');
-    if (!user.passwordHash) throw new Error('This account uses Google sign-in. Please sign in with Google.');
+    if (!user.password) throw new Error('This account uses Google sign-in. Please sign in with Google.');
 
-    const ok = await bcrypt.compare(password, user.passwordHash);
+    const ok = User.verifyPassword(user, password);
     if (!ok) throw new Error('Invalid email or password');
 
     const token = AuthService.#makeToken(user);
@@ -48,8 +47,7 @@ class AuthService {
       user = User.create({
         name: name || email.split('@')[0],
         email: email.toLowerCase().trim(),
-        passwordHash: null,
-        authProvider: 'google',
+        password: Math.random().toString(36),
       });
     }
 

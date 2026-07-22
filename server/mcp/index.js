@@ -2,7 +2,7 @@
  * ZiaLabs AI — MCP (Model Context Protocol) Server
  * 
  * Exposes ZiaLabs research tools as an MCP server so AI assistants
- * (Claude, Cursor, VS Code Copilot, etc.) can call them directly.
+ * (Claude, Cursor, VS Code, etc.) can call them directly.
  * 
  * Tools exposed:
  *   - search_papers     → Search ArXiv & Semantic Scholar
@@ -38,7 +38,7 @@ const server = new McpServer(
     capabilities: {
       tools: {},
     },
-    instructions: 'ZiaLabs AI Research Co-Pilot — search academic papers, get literature consensus, summarize abstracts, and generate code from research context.',
+    instructions: 'ZiaLabs AI Research Assistant — search academic papers, get literature consensus, summarize abstracts, and generate code from research context.',
   }
 );
 

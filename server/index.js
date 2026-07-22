@@ -4,12 +4,16 @@ const express = require('express');
 const cors    = require('cors');
 const path    = require('path');
 const DB      = require('./config/database');
+const RedisService = require('./config/redis');
 const KafkaConfig   = require('./config/kafka');
 const KafkaConsumer = require('./services/KafkaConsumer');
 
 async function startServer() {
   // db has to init before anything else because sql.js loads async
   await DB.init();
+
+  // Initialize Redis Cache
+  await RedisService.init();
 
   // Initialize Kafka producer
   await KafkaConfig.initProducer();
@@ -26,6 +30,7 @@ async function startServer() {
   const paymentRoutes = require('./routes/payment');
   const uploadRoutes  = require('./routes/upload');
   const newsRoutes    = require('./routes/news');
+  const blogRoutes    = require('./routes/blog');
 
   const app  = express();
   const PORT = process.env.PORT || 3000;
@@ -50,6 +55,7 @@ async function startServer() {
   app.use('/api/payment', paymentRoutes);
   app.use('/api/upload',  uploadRoutes);
   app.use('/api/news',    newsRoutes);
+  app.use('/api/blog',    blogRoutes);
 
   app.get('/api/health', (req, res) => {
     res.json({
