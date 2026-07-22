@@ -1,0 +1,24 @@
+{
+  "packageId": "com.zialabs.ai",
+  "host": "zia-labs-ai.vercel.app",
+  "name": "ZiaLabs AI — Research Assistant",
+  "launcherName": "ZiaLabs AI",
+  "themeColor": "#047857",
+  "navigationColor": "#047857",
+  "backgroundColor": "#FFFFFF",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://zia-labs-ai.vercel.app/img/icon-512.png",
+  "maskableIconUrl": "https://zia-labs-ai.vercel.app/img/icon-512.png",
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [
+    {
+      "name": "Search Papers",
+      "shortName": "Search",
+      "url": "/#search",
+      "icon": "https://zia-labs-ai.vercel.app/img/icon-192.png"
+    }
+  ],
+  "generatorApp": "bubblewrap-cli"
+}

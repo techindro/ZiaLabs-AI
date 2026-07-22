@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.zialabs.ai",
+      "sha256_cert_fingerprints": [
+        "14:6D:E9:7D:01:DF:7B:6C:C1:22:98:C3:63:F1:C9:82:57:9B:EE:69:B2:D6:70:95:25:2A:EE:6F:E1:92:DF:37"
+      ]
+    }
+  }
+]

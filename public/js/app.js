@@ -1990,4 +1990,39 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-document.addEventListener('DOMContentLoaded', () => App.init());
+class PWAInstaller {
+  static deferredPrompt = null;
+
+  static init() {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      PWAInstaller.deferredPrompt = e;
+      const installBtns = document.querySelectorAll('.pwa-install-btn');
+      installBtns.forEach(btn => btn.style.display = 'inline-flex');
+    });
+
+    window.addEventListener('appinstalled', () => {
+      PWAInstaller.deferredPrompt = null;
+      Toast.success('ZiaLabs AI App installed successfully!');
+    });
+  }
+
+  static prompt() {
+    if (PWAInstaller.deferredPrompt) {
+      PWAInstaller.deferredPrompt.prompt();
+      PWAInstaller.deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted PWA prompt');
+        }
+        PWAInstaller.deferredPrompt = null;
+      });
+    } else {
+      Toast.info('ZiaLabs AI is ready to install! Use your browser menu "Add to Home Screen".');
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  App.init();
+  PWAInstaller.init();
+});
