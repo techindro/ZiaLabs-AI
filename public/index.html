@@ -15,6 +15,9 @@
   <link rel="stylesheet" href="/css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23C8102E'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='12' font-weight='bold' font-family='sans-serif'>ZL</text></svg>">
   
+  <!-- Razorpay Checkout SDK for India Payments (UPI, Cards, Netbanking) -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  
   <!-- KaTeX for LaTeX rendering -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
@@ -1801,6 +1804,85 @@
           <span>🏛️</span> Request Institutional / Lab Access
         </div>
         <span style="font-size:11px;color:var(--gray);">Enterprise</span>
+      </div>
+    </div>
+  </div>
+<!-- RAZORPAY & UPI QR PAYMENT MODAL -->
+<div id="payment-modal-overlay" class="modal-overlay d-none" onclick="if(event.target===this)Payment.closeModal()">
+  <div style="background:#fff;border-radius:20px;width:100%;max-width:540px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);overflow:hidden;border:1px solid var(--border);margin:60px auto;position:relative;">
+    <!-- Header -->
+    <div style="padding:20px 24px;border-bottom:1px solid var(--border);background:var(--primary-light);display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <h3 style="font-family:var(--font-heading);font-size:18px;font-weight:800;color:var(--primary);margin:0 0 4px 0;">Upgrade to ZiaLabs Pro</h3>
+        <p style="font-size:12.5px;color:var(--gray);margin:0;">₹249 / month • Unlimited Paper Search & AI Synthesis</p>
+      </div>
+      <button onclick="Payment.closeModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);">&times;</button>
+    </div>
+
+    <!-- Tabs: Razorpay vs UPI QR Code -->
+    <div style="display:flex;border-bottom:1px solid var(--border);background:var(--bg-base);">
+      <button id="pay-tab-razorpay" onclick="Payment.switchTab('razorpay')" style="flex:1;padding:12px;font-size:13px;font-weight:700;border:none;background:#fff;color:var(--primary);border-bottom:2px solid var(--primary);cursor:pointer;">
+        💳 Razorpay (UPI / Card)
+      </button>
+      <button id="pay-tab-qr" onclick="Payment.switchTab('qr')" style="flex:1;padding:12px;font-size:13px;font-weight:600;border:none;background:transparent;color:var(--gray);cursor:pointer;">
+        📱 Scan UPI QR Code
+      </button>
+    </div>
+
+    <div style="padding:24px;">
+      <!-- Tab 1: Razorpay Checkout -->
+      <div id="pay-content-razorpay">
+        <div style="text-align:center;padding:16px 0;">
+          <img src="https://cdn.razorpay.com/static/assets/logo/rzp.svg" alt="Razorpay" style="height:32px;margin-bottom:16px;">
+          <p style="font-size:13.5px;color:var(--gray);line-height:1.6;max-width:400px;margin:0 auto 20px;">
+            Pay securely with GPay, PhonePe, Paytm, BHIM, Credit/Debit Card, or Netbanking via Razorpay India.
+          </p>
+          <button class="btn-red" onclick="Payment.startRazorpayCheckout()" style="width:100%;max-width:320px;padding:14px;font-size:15px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;">
+            <span>Pay ₹249 via Razorpay</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+          <div style="font-size:11px;color:var(--gray-light);display:flex;align-items:center;justify-content:center;gap:12px;margin-top:8px;">
+            <span>🔒 256-bit Bank Encryption</span>
+            <span>⚡ Instant Activation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: UPI QR Code -->
+      <div id="pay-content-qr" class="d-none">
+        <div style="text-align:center;">
+          <div style="background:#fff;border:2px solid var(--border);border-radius:16px;padding:16px;display:inline-block;margin-bottom:16px;box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=zialabs@upi&pn=ZiaLabs%20AI&am=249&cu=INR" alt="ZiaLabs UPI QR Code" style="width:180px;height:180px;display:block;">
+            <div style="font-size:11px;font-weight:700;color:var(--primary);margin-top:8px;">Scan with GPay / PhonePe / Paytm</div>
+          </div>
+
+          <div style="background:var(--primary-light);border:1px solid var(--border);border-radius:10px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;max-width:360px;margin:0 auto 16px;">
+            <span style="font-size:12px;color:var(--gray);font-weight:600;">UPI ID:</span>
+            <code style="font-size:13px;font-weight:700;color:var(--primary);">zialabs@upi</code>
+            <button onclick="navigator.clipboard.writeText('zialabs@upi'); Toast.success('UPI ID copied!');" style="background:var(--primary);color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600;">Copy</button>
+          </div>
+
+          <!-- Mobile App Launch Buttons -->
+          <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px;">
+            <a href="upi://pay?pa=zialabs@upi&pn=ZiaLabs%20AI&am=249&cu=INR" class="btn-ghost" style="font-size:11px;padding:6px 12px;border-radius:8px;text-decoration:none;font-weight:700;">Open UPI App (GPay / PhonePe)</a>
+          </div>
+
+          <!-- Transaction Reference Verification -->
+          <div style="border-top:1px solid var(--border);padding-top:16px;text-align:left;">
+            <label style="font-size:12px;font-weight:700;color:var(--black);display:block;margin-bottom:6px;">Enter 12-Digit UPI UTR / Reference No. after payment:</label>
+            <div style="display:flex;gap:8px;">
+              <input type="text" id="upi-utr-input" placeholder="e.g. 420319854123" style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;outline:none;" maxlength="20">
+              <button class="btn-red" onclick="Payment.submitUpiVerification()" style="padding:10px 16px;font-size:12px;margin:0;">Verify & Activate</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Demo / Test Instant Upgrade Footer -->
+      <div style="border-top:1px solid var(--border);margin-top:20px;padding-top:14px;text-align:center;">
+        <button onclick="Payment.instantDemoUpgrade()" style="background:none;border:none;font-size:12px;color:var(--gray);cursor:pointer;text-decoration:underline;">
+          ⚡ Testing or Demo? Click for 1-Tap Instant Pro Activation
+        </button>
       </div>
     </div>
   </div>

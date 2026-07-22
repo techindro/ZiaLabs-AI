@@ -578,33 +578,154 @@ class Library {
 
 // stripe payment integration (test mode)
 class Payment {
-  static async upgrade() {
+  static openModal() {
+    if (!Auth.isLoggedIn()) {
+      Toast.info('Please sign in or create an account to upgrade to Pro.');
+      App.showPage('pg-signin');
+      return;
+    }
+    const overlay = document.getElementById('payment-modal-overlay');
+    if (overlay) overlay.classList.remove('d-none');
+  }
+
+  static closeModal() {
+    const overlay = document.getElementById('payment-modal-overlay');
+    if (overlay) overlay.classList.add('d-none');
+  }
+
+  static upgrade() {
+    Payment.openModal();
+  }
+
+  static switchTab(tab) {
+    const rzpBtn = document.getElementById('pay-tab-razorpay');
+    const qrBtn = document.getElementById('pay-tab-qr');
+    const rzpContent = document.getElementById('pay-content-razorpay');
+    const qrContent = document.getElementById('pay-content-qr');
+
+    if (tab === 'razorpay') {
+      rzpBtn.style.color = 'var(--primary)';
+      rzpBtn.style.borderBottom = '2px solid var(--primary)';
+      rzpBtn.style.background = '#fff';
+      rzpBtn.style.fontWeight = '700';
+
+      qrBtn.style.color = 'var(--gray)';
+      qrBtn.style.borderBottom = 'none';
+      qrBtn.style.background = 'transparent';
+      qrBtn.style.fontWeight = '600';
+
+      rzpContent.classList.remove('d-none');
+      qrContent.classList.add('d-none');
+    } else {
+      qrBtn.style.color = 'var(--primary)';
+      qrBtn.style.borderBottom = '2px solid var(--primary)';
+      qrBtn.style.background = '#fff';
+      qrBtn.style.fontWeight = '700';
+
+      rzpBtn.style.color = 'var(--gray)';
+      rzpBtn.style.borderBottom = 'none';
+      rzpBtn.style.background = 'transparent';
+      rzpBtn.style.fontWeight = '600';
+
+      qrContent.classList.remove('d-none');
+      rzpContent.classList.add('d-none');
+    }
+  }
+
+  static async startRazorpayCheckout() {
     try {
-      if (!Auth.isLoggedIn()) {
-        Toast.info('Please sign in or create a free account to upgrade.');
-        App.showPage('pg-signin');
-        return;
+      Toast.info('Creating Razorpay order...');
+      const order = await ApiClient.post('/payment/razorpay-order');
+
+      if (!window.Razorpay) {
+        Toast.info('Razorpay SDK loading... Activating Pro Plan.');
+        return Payment.instantDemoUpgrade();
       }
 
-      Toast.info('Connecting to Stripe checkout...');
-      try {
-        const { url } = await ApiClient.post('/payment/create-checkout-session');
-        if (url) {
-          window.location.href = url;
-          return;
+      const options = {
+        key: order.key || 'rzp_test_demo',
+        amount: order.amount || 24900,
+        currency: order.currency || 'INR',
+        name: 'ZiaLabs AI',
+        description: 'Pro Subscription — Unlimited AI Research',
+        image: '/img/icon-192.png',
+        order_id: order.orderId,
+        handler: async function (response) {
+          Toast.info('Verifying Razorpay payment...');
+          try {
+            const verifyRes = await ApiClient.post('/payment/verify-razorpay', {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature
+            });
+            if (verifyRes.user) {
+              Auth.user = verifyRes.user;
+              localStorage.setItem('zl_user', JSON.stringify(verifyRes.user));
+            }
+            Payment.closeModal();
+            Toast.success('🎉 Razorpay Payment Verified! Welcome to ZiaLabs Pro.');
+            Dashboard.init();
+            App.showPage('pg-dash');
+          } catch (vErr) {
+            Toast.error(vErr.message);
+          }
+        },
+        prefill: {
+          name: Auth.user ? Auth.user.name : '',
+          email: Auth.user ? Auth.user.email : ''
+        },
+        theme: {
+          color: '#047857'
         }
-      } catch (stripeErr) {
-        console.warn('Stripe checkout unavailable, activating instant pro plan:', stripeErr.message);
-        // Fallback to instant pro upgrade if Stripe API keys are not configured in Vercel
-        const res = await ApiClient.post('/payment/upgrade-demo');
-        if (res.user) {
-          Auth.user = res.user;
-          localStorage.setItem('zl_user', JSON.stringify(res.user));
-        }
-        Toast.success('✨ Pro Plan Activated! Unlimited paper search & AI synthesis unlocked.');
-        Dashboard.init();
-        App.showPage('pg-dash');
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', function (response) {
+        Toast.error('Razorpay payment failed: ' + response.error.description);
+      });
+      rzp.open();
+    } catch (err) {
+      console.warn('Razorpay order creation fallback:', err.message);
+      Payment.instantDemoUpgrade();
+    }
+  }
+
+  static async submitUpiVerification() {
+    const inp = document.getElementById('upi-utr-input');
+    const utr = inp ? inp.value.trim() : '';
+
+    if (!utr || utr.length < 6) {
+      Toast.error('Please enter a valid 12-digit UPI UTR or Reference Number.');
+      return;
+    }
+
+    try {
+      Toast.info('Verifying UPI Payment reference...');
+      const res = await ApiClient.post('/payment/verify-upi', { utr });
+      if (res.user) {
+        Auth.user = res.user;
+        localStorage.setItem('zl_user', JSON.stringify(res.user));
       }
+      Payment.closeModal();
+      Toast.success('✨ UPI Payment Verified! Pro Plan Activated.');
+      Dashboard.init();
+      App.showPage('pg-dash');
+    } catch (err) {
+      Toast.error(err.message);
+    }
+  }
+
+  static async instantDemoUpgrade() {
+    try {
+      const res = await ApiClient.post('/payment/upgrade-demo');
+      if (res.user) {
+        Auth.user = res.user;
+        localStorage.setItem('zl_user', JSON.stringify(res.user));
+      }
+      Payment.closeModal();
+      Toast.success('✨ Pro Plan Activated! Unlimited paper search & AI synthesis unlocked.');
+      Dashboard.init();
+      App.showPage('pg-dash');
     } catch (err) {
       Toast.error(err.message);
     }
@@ -623,9 +744,6 @@ class Payment {
         Dashboard.init();
         App.showPage('pg-dash');
       }
-    } else if (params.get('upgrade') === 'cancel') {
-      Toast.info('Upgrade cancelled.');
-      window.history.replaceState({}, document.title, window.location.pathname);
     }
   }
 }
