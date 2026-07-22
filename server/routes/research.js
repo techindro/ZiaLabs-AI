@@ -17,7 +17,7 @@ router.get('/workflows', (req, res) => {
       {
         id: 'lit-review',
         title: 'Literature Review Assistant',
-        description: 'Synthesize literature reviews across 200M+ open-access papers with automatic evidence tables.',
+        description: 'Synthesize literature reviews across 2.5M+ open-access papers with automatic evidence tables.',
         icon: 'book-open',
         category: 'Literature Search',
         samplePrompts: [

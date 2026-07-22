@@ -2236,7 +2236,7 @@ class ResearchService {
     }
 
     try {
-      Toast.info('Searching 200M+ papers & synthesizing literature review...');
+      Toast.info('Searching 2.5M+ papers & synthesizing literature review...');
       const res = await ApiClient.post('/research/literature-review', { query: query.trim() });
       
       Toast.success(`Literature Review Complete! Analyzed ${res.totalPapersAnalyzed || 0} papers.`);
