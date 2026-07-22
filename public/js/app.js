@@ -23,7 +23,16 @@ class ApiClient {
       headers: { ...headers, ...(opts.headers || {}) },
     });
 
-    const data = await res.json();
+    const contentType = res.headers.get('content-type') || '';
+    let data;
+    if (contentType.includes('application/json')) {
+      data = await res.json();
+    } else {
+      const text = await res.text();
+      const cleanText = text.replace(/<[^>]*>/g, '').trim();
+      throw new Error(cleanText ? `Server Error (${res.status}): ${cleanText.substring(0, 100)}` : `Server Error (${res.status})`);
+    }
+
     if (!res.ok) throw new Error(data.error || `Something went wrong (${res.status})`);
     return data;
   }

@@ -10,7 +10,24 @@ class DB {
   static #dbPath = path.join(__dirname, '../../zialabs.db');
 
   static async init() {
+    if (this.#db) return; // DB already initialized
+
     const SQL = await initSqlJs();
+    const rootDbPath = path.join(__dirname, '../../zialabs.db');
+
+    if (process.env.VERCEL || process.env.TMPDIR) {
+      const tmpPath = path.join('/tmp', 'zialabs.db');
+      if (!fs.existsSync(tmpPath) && fs.existsSync(rootDbPath)) {
+        try {
+          fs.copyFileSync(rootDbPath, tmpPath);
+        } catch (e) {
+          console.warn('⚠️ Could not copy initial DB to /tmp:', e.message);
+        }
+      }
+      this.#dbPath = fs.existsSync(tmpPath) ? tmpPath : rootDbPath;
+    } else {
+      this.#dbPath = rootDbPath;
+    }
     
     if (fs.existsSync(this.#dbPath)) {
       const fileBuffer = fs.readFileSync(this.#dbPath);
@@ -317,9 +334,14 @@ class DB {
   }
 
   static save() {
-    const data = this.#db.export();
-    const buffer = Buffer.from(data);
-    fs.writeFileSync(this.#dbPath, buffer);
+    if (!this.#db) return;
+    try {
+      const data = this.#db.export();
+      const buffer = Buffer.from(data);
+      fs.writeFileSync(this.#dbPath, buffer);
+    } catch (err) {
+      console.warn('⚠️ Could not save DB to disk (read-only environment):', err.message);
+    }
   }
 
   static close() {
