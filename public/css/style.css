@@ -82,23 +82,20 @@ nav{
   font-family: var(--font-heading);
   font-size:21px;
   font-weight:800;
-  color: #047857;
-  background: linear-gradient(135deg, #047857 0%, #10b981 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing:-0.8px;
+  color: #0f172a;
+  letter-spacing:-0.6px;
 }
 .nl-super{
   font-size:10px;
   font-weight:800;
   color:#ffffff !important;
-  background: linear-gradient(135deg, #047857 0%, #10b981 100%);
+  background: #047857;
   padding: 2px 6px;
   border-radius: 4px;
   letter-spacing:0.5px;
   text-transform:uppercase;
   margin-left:5px;
-  box-shadow: 0 2px 6px rgba(4, 120, 87, 0.35);
+  box-shadow: 0 2px 6px rgba(4, 120, 87, 0.25);
   vertical-align: middle;
   display: inline-block;
   -webkit-background-clip: initial !important;
