@@ -210,7 +210,7 @@ class Chat {
       const { messages } = await ApiClient.get('/chat/history');
       chatEl.innerHTML = '';
       if (!messages.length) {
-        Chat.#addBot('Hello! 👋 I am the ZiaLabs AI Research Agent. How can I help with your research today?');
+        Chat.#addBot('Hello! <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px;"><path d="M18 13V6a2 2 0 0 0-4 0v4"></path><path d="M14 10V4a2 2 0 0 0-4 0v6"></path><path d="M10 10V3a2 2 0 0 0-4 0v7"></path><path d="M6 10v2a6 6 0 0 0 6 6h2a6 6 0 0 0 6-6V9a2 2 0 0 0-4 0"></path></svg> I am the ZiaLabs AI Research Agent. How can I help with your research today?');
         document.getElementById('chatbot-welcome').style.display = '';
         document.getElementById('chatbot-thread').style.display = 'none';
       } else {
@@ -223,7 +223,7 @@ class Chat {
       }
     } catch {
       // if history load fails just show greeting
-      Chat.#addBot('Hello! 👋 I am the ZiaLabs AI Research Agent. How can I help with your research today?');
+      Chat.#addBot('Hello! <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px;"><path d="M18 13V6a2 2 0 0 0-4 0v4"></path><path d="M14 10V4a2 2 0 0 0-4 0v6"></path><path d="M10 10V3a2 2 0 0 0-4 0v7"></path><path d="M6 10v2a6 6 0 0 0 6 6h2a6 6 0 0 0 6-6V9a2 2 0 0 0-4 0"></path></svg> I am the ZiaLabs AI Research Agent. How can I help with your research today?');
       document.getElementById('chatbot-welcome').style.display = '';
       document.getElementById('chatbot-thread').style.display = 'none';
     }
@@ -285,7 +285,7 @@ class Chat {
     try {
       await ApiClient.del('/chat/clear');
       document.getElementById('dchat').innerHTML = '';
-      Chat.#addBot('Chat cleared! 🧹 Start a new conversation.');
+      Chat.#addBot('Chat cleared! <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px;"><path d="M3 3l18 18M15 9l-6 6"></path></svg> Start a new conversation.');
       Toast.success('Chat cleared');
     } catch (err) {
       Toast.error(err.message);
@@ -469,7 +469,7 @@ class Search {
     try {
       const { papers } = await ApiClient.get(`/search?q=${encodeURIComponent(q)}`);
       if (!papers.length) {
-        box.innerHTML = '<div style="padding:60px 0;text-align:center"><div style="font-size:40px;margin-bottom:16px">🔍</div><div style="font-size:16px;font-weight:600;color:var(--black)">No papers found</div><div style="font-size:13px;color:var(--gray);margin-top:8px">Try adjusting your keywords.</div></div>';
+        box.innerHTML = '<div style="padding:60px 0;text-align:center"><div style="font-size:40px;margin-bottom:16px"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div><div style="font-size:16px;font-weight:600;color:var(--black)">No papers found</div><div style="font-size:13px;color:var(--gray);margin-top:8px">Try adjusting your keywords.</div></div>';
         return;
       }
       box.innerHTML = papers.map(p => Search.renderCard(p)).join('');
@@ -527,7 +527,7 @@ class Library {
       document.getElementById('lib-count').textContent = papers.length;
 
       if (!papers.length) {
-        box.innerHTML = '<div style="padding:60px 0;text-align:center"><div style="font-size:40px;margin-bottom:16px">📁</div><div style="font-size:16px;font-weight:600;color:var(--black)">Your library is empty</div><div style="font-size:13px;color:var(--gray);margin-top:8px">Save papers from search results to build your collection.</div></div>';
+        box.innerHTML = '<div style="padding:60px 0;text-align:center"><div style="font-size:40px;margin-bottom:16px"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></div><div style="font-size:16px;font-weight:600;color:var(--black)">Your library is empty</div><div style="font-size:13px;color:var(--gray);margin-top:8px">Save papers from search results to build your collection.</div></div>';
         return;
       }
 
@@ -542,7 +542,7 @@ class Library {
     btn.textContent = 'Saving...';
     try {
       await ApiClient.post('/papers/save', paper);
-      btn.textContent = 'Saved ✓';
+      btn.textContent = 'Saved <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>';
       btn.classList.add('saved');
       Toast.success('Paper saved to library');
       Dashboard.loadStats();
@@ -680,7 +680,7 @@ class Payment {
               localStorage.setItem('zl_user', JSON.stringify(verifyRes.user));
             }
             Payment.closeModal();
-            Toast.success('🎉 Razorpay Payment Verified! Welcome to ZiaLabs Pro.');
+            Toast.success('<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> Razorpay Payment Verified! Welcome to ZiaLabs Pro.');
             Dashboard.init();
             App.showPage('pg-dash');
           } catch (vErr) {
@@ -724,7 +724,7 @@ class Payment {
         localStorage.setItem('zl_user', JSON.stringify(res.user));
       }
       Payment.closeModal();
-      Toast.success('✨ UPI Payment Verified! Pro Plan Activated.');
+      Toast.success('<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> UPI Payment Verified! Pro Plan Activated.');
       Dashboard.init();
       App.showPage('pg-dash');
     } catch (err) {
@@ -740,7 +740,7 @@ class Payment {
         localStorage.setItem('zl_user', JSON.stringify(res.user));
       }
       Payment.closeModal();
-      Toast.success('✨ Pro Plan Activated! Unlimited paper search & AI synthesis unlocked.');
+      Toast.success('<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> Pro Plan Activated! Unlimited paper search & AI synthesis unlocked.');
       Dashboard.init();
       App.showPage('pg-dash');
     } catch (err) {
@@ -755,7 +755,7 @@ class Payment {
         Auth.user.plan = 'pro';
         localStorage.setItem('zl_user', JSON.stringify(Auth.user));
       }
-      Toast.success('🎉 Upgrade successful! You are now a Pro member.');
+      Toast.success('<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> Upgrade successful! You are now a Pro member.');
       window.history.replaceState({}, document.title, window.location.pathname);
       if (Auth.isLoggedIn()) {
         Dashboard.init();
