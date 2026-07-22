@@ -2186,6 +2186,45 @@ class PWAInstaller {
   }
 }
 
+class Industries {
+  static domainQueries = {
+    pharmaceuticals: "What are the latest clinical breakthroughs in targeted small-molecule therapeutics for oncology?",
+    academia: "What are the key open questions and progress in quantum error correction and topological quantum computing?",
+    medtech: "What calibration models and safety standards improve accuracy for implantable medical sensors?",
+    policy: "What empirical evidence exists on carbon pricing policy effectiveness for industrial emission reduction?",
+    consumer: "What bio-based sustainable polymer packaging materials show high thermal stability and barrier properties?",
+    industrials: "How to mitigate temperature drift and thermal strain hysteresis in MEMS silicon piezoresistive sensors?",
+    software: "What are the optimal energy efficiency and latency trade-offs for deep learning gesture recognition models on edge hardware?"
+  };
+
+  static async explore(domainKey) {
+    const query = Industries.domainQueries[domainKey] || "What are the latest research advancements in this domain?";
+    Toast.info("Loading domain research sandbox...");
+    
+    const consensusInput = document.getElementById('pg-consensus-query');
+    if (consensusInput) {
+      consensusInput.value = query;
+      document.getElementById('playground')?.scrollIntoView({ behavior: 'smooth' });
+      Playground.runConsensus();
+    } else {
+      App.showPage('pg-dash');
+    }
+  }
+
+  static async loadReport(reportTitle, query) {
+    Toast.info(`Generating live AI synthesis report for: "${reportTitle}"...`);
+    
+    const consensusInput = document.getElementById('pg-consensus-query');
+    if (consensusInput) {
+      consensusInput.value = query;
+      document.getElementById('playground')?.scrollIntoView({ behavior: 'smooth' });
+      Playground.runConsensus();
+    } else {
+      App.showPage('pg-dash');
+    }
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
   PWAInstaller.init();
