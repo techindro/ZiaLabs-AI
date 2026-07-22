@@ -54,17 +54,17 @@ nav{
 .nl-box{
   width:34px;
   height:34px;
-  background: linear-gradient(135deg, var(--primary) 0%, #1a1a1a 100%);
+  background: linear-gradient(135deg, #047857 0%, #065f46 100%);
   border-radius: 8px;
   display:flex;
   align-items:center;
   justify-content:center;
-  color: var(--bg-base);
+  color: #ffffff;
   font-size:13px;
   font-weight:800;
   font-family: var(--font-heading);
-  box-shadow: 0 4px 12px rgba(200, 16, 46, 0.25);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(4, 120, 87, 0.3);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
   position: relative;
   overflow: hidden;
 }
@@ -82,8 +82,8 @@ nav{
   font-family: var(--font-heading);
   font-size:21px;
   font-weight:800;
-  color: var(--primary);
-  background: linear-gradient(135deg, #c8102e 0%, #e63946 100%);
+  color: #047857;
+  background: linear-gradient(135deg, #047857 0%, #10b981 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing:-0.8px;
@@ -92,13 +92,13 @@ nav{
   font-size:10px;
   font-weight:800;
   color:#ffffff !important;
-  background:var(--primary);
+  background: linear-gradient(135deg, #047857 0%, #10b981 100%);
   padding: 2px 6px;
   border-radius: 4px;
   letter-spacing:0.5px;
   text-transform:uppercase;
   margin-left:5px;
-  box-shadow: 0 2px 6px rgba(200,16,46,0.3);
+  box-shadow: 0 2px 6px rgba(4, 120, 87, 0.35);
   vertical-align: middle;
   display: inline-block;
   -webkit-background-clip: initial !important;
