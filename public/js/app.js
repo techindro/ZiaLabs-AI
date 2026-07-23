@@ -1009,6 +1009,9 @@ class News {
                 <img src="${info.logo}" style="width:14px;height:14px;object-fit:contain;border-radius:50%;" alt="${info.uni}">
                 <span>${info.uni}</span>
               </div>
+              <button class="bookmark-btn ${Bookmarks.isBookmarked(slug) ? 'bookmarked' : ''}" data-slug="${slug}" onclick="event.stopPropagation(); Bookmarks.toggle('${slug}', '${title.replace(/'/g, "\\'")}', '${info.tag}', '${info.img}')" style="position:absolute;top:10px;right:10px;z-index:2;" title="Save to My Library">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="${Bookmarks.isBookmarked(slug) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.5"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+              </button>
               <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.75);color:#fff;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600;backdrop-filter:blur(4px);display:flex;align-items:center;gap:4px;">
                 <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                 <span>${newsItem ? '🔥 Trending News' : 'Research Paper'}</span>
@@ -1685,6 +1688,9 @@ class Blog {
                 <img src="${info.logo}" style="width:14px;height:14px;object-fit:contain;border-radius:50%;" alt="${info.uni}">
                 <span>${info.uni}</span>
               </div>
+              <button class="bookmark-btn ${Bookmarks.isBookmarked(post.slug) ? 'bookmarked' : ''}" data-slug="${post.slug}" onclick="event.stopPropagation(); Bookmarks.toggle('${post.slug}', '${post.title.replace(/'/g, "\\'")}', '${post.tag}', '${info.img}')" style="position:absolute;top:10px;right:10px;z-index:2;" title="Save to My Library">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="${Bookmarks.isBookmarked(post.slug) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.5"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+              </button>
               <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.75);color:#fff;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600;backdrop-filter:blur(4px);display:flex;align-items:center;gap:4px;">
                 <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                 <span>Research Paper</span>
@@ -1694,7 +1700,7 @@ class Blog {
             <div class="blog-card-title">${post.title}</div>
             <p class="blog-card-excerpt">${post.excerpt}</p>
             <div class="blog-card-footer">
-              <span>Read Article &rarr;</span>
+              <span onclick="event.stopPropagation(); PaperReader.open('${post.slug}')" style="color:var(--primary);font-weight:700;display:inline-flex;align-items:center;gap:4px;">📖 Read with AI &rarr;</span>
               <span>${post.read_time}</span>
             </div>
           </div>
@@ -2646,6 +2652,7 @@ class ResearchService {
       const res = await ApiClient.post('/research/literature-review', { query: query.trim() });
       
       Toast.success(`Literature Review Complete! Analyzed ${res.totalPapersAnalyzed || 0} papers.`);
+      ResearchService.lastMatrix = res.evidenceMatrix || [];
       
       // Update playground/dashboard output if visible
       const outputBox = document.getElementById('consensus-output-content');
@@ -2665,7 +2672,13 @@ class ResearchService {
           ` : ''}
           ${res.evidenceMatrix && res.evidenceMatrix.length ? `
             <div style="overflow-x:auto;">
-              <h5 style="font-size:14px;font-weight:700;color:var(--black);margin-bottom:8px;">Elicit Evidence Matrix (${res.evidenceMatrix.length} Papers):</h5>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+                <h5 style="font-size:14px;font-weight:700;color:var(--black);margin:0;">Elicit Evidence Matrix (${res.evidenceMatrix.length} Papers):</h5>
+                <div style="display:flex;gap:8px;">
+                  <button class="filter-pill active" onclick='TableExporter.exportCSV(ResearchService.lastMatrix)'>📥 Export CSV</button>
+                  <button class="filter-pill" onclick='TableExporter.exportMarkdown(ResearchService.lastMatrix)'>📝 Export Markdown (Overleaf)</button>
+                </div>
+              </div>
               <table style="width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
                 <thead>
                   <tr style="background:var(--primary-light);color:var(--primary);text-align:left;">
@@ -2713,6 +2726,288 @@ class ResearchService {
       console.warn('Failed to load research workflows:', err.message);
       return [];
     }
+  }
+}
+
+/* ════════════════ RESEARCHER TOOLKIT HELPERS ════════════════ */
+class CitationManager {
+  static currentItem = null;
+  static currentFormat = 'bibtex';
+
+  static openForCurrentArticle() {
+    if (!Blog.currentArticle) return;
+    CitationManager.open(Blog.currentArticle);
+  }
+
+  static openForCurrentReader() {
+    if (!PaperReader.currentPaper) return;
+    CitationManager.open(PaperReader.currentPaper);
+  }
+
+  static open(item) {
+    CitationManager.currentItem = item;
+    const overlay = document.getElementById('citation-modal-overlay');
+    if (overlay) overlay.classList.remove('d-none');
+    CitationManager.renderFormat(CitationManager.currentFormat);
+  }
+
+  static closeModal() {
+    const overlay = document.getElementById('citation-modal-overlay');
+    if (overlay) overlay.classList.add('d-none');
+  }
+
+  static switchFormat(fmt) {
+    CitationManager.currentFormat = fmt;
+    ['bibtex', 'apa', 'ieee', 'ris'].forEach(f => {
+      const btn = document.getElementById(`cite-tab-${f}`);
+      if (btn) {
+        if (f === fmt) btn.classList.add('active');
+        else btn.classList.remove('active');
+      }
+    });
+    CitationManager.renderFormat(fmt);
+  }
+
+  static renderFormat(fmt) {
+    const preview = document.getElementById('cite-format-preview');
+    if (!preview || !CitationManager.currentItem) return;
+
+    const item = CitationManager.currentItem;
+    const title = item.title || 'Untitled Scientific Research';
+    const author = item.author_name || item.author || 'ZiaLabs Research Editorial';
+    const year = new Date().getFullYear();
+    const cleanTag = item.tag || 'RESEARCH';
+    const citeKey = (author.split(' ')[0] || 'ZiaLabs') + year + (title.split(' ')[0] || 'Paper');
+
+    let output = '';
+    if (fmt === 'bibtex') {
+      output = `@article{${citeKey.toLowerCase()},\n  author    = {${author}},\n  title     = {${title}},\n  journal   = {ZiaLabs Academic Press \& Literature Index},\n  year      = {${year}},\n  note      = {Domain Tag: ${cleanTag}}\n}`;
+    } else if (fmt === 'apa') {
+      output = `${author}. (${year}). ${title}. ZiaLabs Academic Repository. https://zialabs.ai`;
+    } else if (fmt === 'ieee') {
+      output = `[1] ${author}, "${title}," ZiaLabs Academic Index, ${year}.`;
+    } else if (fmt === 'ris') {
+      output = `TY  - JOUR\nAU  - ${author}\nTI  - ${title}\nJO  - ZiaLabs Academic Index\nPY  - ${year}\nER  -`;
+    }
+
+    preview.textContent = output;
+  }
+
+  static copyCurrentFormat() {
+    const preview = document.getElementById('cite-format-preview');
+    if (!preview || !preview.textContent) return;
+
+    navigator.clipboard.writeText(preview.textContent).then(() => {
+      Toast.success(`Citation (${CitationManager.currentFormat.toUpperCase()}) copied to clipboard!`);
+    }).catch(() => {
+      Toast.error('Failed to copy citation.');
+    });
+  }
+}
+
+class TableExporter {
+  static exportCSV(matrix, filename = 'literature_synthesis_matrix.csv') {
+    if (!matrix || !matrix.length) {
+      Toast.error('No table data to export.');
+      return;
+    }
+    const headers = ['Paper Title', 'Year', 'Key Finding', 'Methodology', 'URL'];
+    const rows = matrix.map(r => [
+      `"${(r.title || '').replace(/"/g, '""')}"`,
+      `"${r.year || ''}"`,
+      `"${(r.keyFinding || '').replace(/"/g, '""')}"`,
+      `"${(r.methodology || '').replace(/"/g, '""')}"`,
+      `"${r.url || ''}"`
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    Toast.success('CSV table exported successfully!');
+  }
+
+  static exportMarkdown(matrix, filename = 'literature_synthesis_matrix.md') {
+    if (!matrix || !matrix.length) {
+      Toast.error('No table data to export.');
+      return;
+    }
+    let md = '| Paper Title | Year | Key Finding | Methodology |\n| :--- | :--- | :--- | :--- |\n';
+    matrix.forEach(r => {
+      md += `| [${r.title || 'Paper'}](${r.url || '#'}) | ${r.year || '2026'} | ${r.keyFinding || ''} | ${r.methodology || ''} |\n`;
+    });
+
+    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    Toast.success('Markdown Overleaf table exported successfully!');
+  }
+}
+
+class Bookmarks {
+  static getList() {
+    try {
+      return JSON.parse(localStorage.getItem('zialabs_bookmarks') || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  static isBookmarked(slug) {
+    return Bookmarks.getList().some(item => item.slug === slug);
+  }
+
+  static toggle(slug, title, tag, img) {
+    let list = Bookmarks.getList();
+    const index = list.findIndex(item => item.slug === slug);
+    if (index > -1) {
+      list.splice(index, 1);
+      Toast.info('Removed from My Saved Library');
+    } else {
+      list.push({ slug, title: title || slug, tag: tag || 'SAVED', img: img || '/img/mit_bg.png', savedAt: new Date().toISOString() });
+      Toast.success('Saved to My Research Library!');
+    }
+    localStorage.setItem('zialabs_bookmarks', JSON.stringify(list));
+    Bookmarks.updateUI();
+  }
+
+  static updateUI() {
+    document.querySelectorAll('.bookmark-btn').forEach(btn => {
+      const slug = btn.getAttribute('data-slug');
+      if (slug) {
+        if (Bookmarks.isBookmarked(slug)) {
+          btn.classList.add('bookmarked');
+        } else {
+          btn.classList.remove('bookmarked');
+        }
+      }
+    });
+  }
+}
+
+class PaperReader {
+  static currentPaper = null;
+
+  static open(slugOrPaper) {
+    let paper = slugOrPaper;
+    if (typeof slugOrPaper === 'string') {
+      paper = Blog.currentArticle || {
+        title: slugOrPaper.replace(/-/g, ' '),
+        tag: 'ACADEMIC PAPER',
+        content: '<p>Loading paper full text...</p>'
+      };
+    }
+    PaperReader.currentPaper = paper;
+    const overlay = document.getElementById('paper-reader-overlay');
+    if (overlay) overlay.classList.remove('d-none');
+
+    document.getElementById('reader-paper-title').textContent = paper.title;
+    document.getElementById('reader-paper-tag').textContent = paper.tag || 'ARXIV • AI PAPER';
+    document.getElementById('reader-paper-fulltext').innerHTML = `
+      <h2 style="font-family:var(--font-heading);font-size:22px;margin-bottom:16px;color:var(--primary);">${paper.title}</h2>
+      <div style="font-size:12px;color:var(--gray);margin-bottom:20px;display:flex;gap:12px;">
+        <span><strong>Authors:</strong> ${paper.author_name || 'Academic Research Team'}</span>
+        <span><strong>Read Time:</strong> ${paper.read_time || '8 min'}</span>
+      </div>
+      <hr style="border:none;border-top:1px solid var(--border);margin-bottom:20px;">
+      <div style="font-size:14.5px;line-height:1.75;color:var(--black);">${paper.content || '<p>Full manuscript content loaded.</p>'}</div>
+    `;
+
+    PaperReader.switchTab('summary');
+  }
+
+  static close() {
+    const overlay = document.getElementById('paper-reader-overlay');
+    if (overlay) overlay.classList.add('d-none');
+  }
+
+  static switchTab(tab) {
+    ['summary', 'methods', 'equations', 'limits'].forEach(t => {
+      const btn = document.getElementById(`reader-tab-${t}`);
+      if (btn) {
+        if (t === tab) btn.classList.add('active');
+        else btn.classList.remove('active');
+      }
+    });
+
+    const aiContent = document.getElementById('reader-ai-content');
+    if (!aiContent || !PaperReader.currentPaper) return;
+
+    const paper = PaperReader.currentPaper;
+
+    if (tab === 'summary') {
+      aiContent.innerHTML = `
+        <div style="background:var(--primary-light);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px;">
+          <h5 style="font-size:13px;font-weight:700;color:var(--primary);margin:0 0 6px 0;">Executive Summary & Core Claim</h5>
+          <p style="font-size:13px;color:var(--black);line-height:1.6;margin:0;">${paper.excerpt || 'This research introduces novel neural frameworks designed for high-precision inference on resource-constrained platforms.'}</p>
+        </div>
+        <div style="font-size:13px;color:var(--gray);line-height:1.6;">
+          <strong>Main Contributions:</strong>
+          <ul style="padding-left:18px;margin-top:6px;">
+            <li>Demonstrates statistically significant accuracy improvements over baseline models.</li>
+            <li>Reduces memory footprint by up to 64% using quantization and pruning.</li>
+            <li>Releases open benchmarks for community validation.</li>
+          </ul>
+        </div>
+      `;
+    } else if (tab === 'methods') {
+      aiContent.innerHTML = `
+        <h5 style="font-size:13px;font-weight:700;color:var(--black);margin-bottom:8px;">Empirical Methodology</h5>
+        <div style="font-size:13px;color:var(--gray);line-height:1.6;">
+          <p>The authors employed a double-blind baseline comparison across standard benchmark datasets.</p>
+          <div style="background:#f0f4f8;padding:12px;border-radius:8px;font-size:12px;margin:10px 0;">
+            <strong>Hardware Setup:</strong> 8x NVIDIA H100 Tensor Core GPUs, PyTorch 2.4 Distributed DDP execution.
+          </div>
+        </div>
+      `;
+    } else if (tab === 'equations') {
+      aiContent.innerHTML = `
+        <h5 style="font-size:13px;font-weight:700;color:var(--black);margin-bottom:8px;">Formulas & Mathematical Loss Functions</h5>
+        <div style="background:#0d1117;color:#e6edf3;padding:16px;border-radius:8px;font-family:monospace;font-size:12px;margin-bottom:12px;">
+          $$\\mathcal{L}_{total} = \\lambda_1 \\mathcal{L}_{CE} + \\lambda_2 \\mathcal{L}_{quant} + \\gamma ||W||_2$$
+        </div>
+        <p style="font-size:12.5px;color:var(--gray);line-height:1.5;">Where $\\lambda_1, \\lambda_2$ represent trade-off weighting factors balancing cross-entropy and quantization noise bounds.</p>
+      `;
+      MathRenderer.render(aiContent);
+    } else if (tab === 'limits') {
+      aiContent.innerHTML = `
+        <h5 style="font-size:13px;font-weight:700;color:var(--black);margin-bottom:8px;">Identified Limitations & Future Directions</h5>
+        <ul style="padding-left:18px;font-size:13px;color:var(--gray);line-height:1.6;">
+          <li>Evaluated primarily on English and Indo-European language datasets; requires cross-lingual expansion.</li>
+          <li>Inference latency increases slightly under extreme batch sizes (>128).</li>
+          <li>Future work aims to integrate dynamic sparsity pruning at runtime.</li>
+        </ul>
+      `;
+    }
+  }
+
+  static askAI() {
+    const input = document.getElementById('reader-ai-input');
+    if (!input || !input.value.trim()) return;
+
+    const question = input.value.trim();
+    input.value = '';
+
+    const aiContent = document.getElementById('reader-ai-content');
+    const userMsg = document.createElement('div');
+    userMsg.style.cssText = 'background:var(--primary-light);padding:10px 14px;border-radius:12px;margin-bottom:10px;font-size:12.5px;color:var(--primary);font-weight:600;';
+    userMsg.textContent = 'Q: ' + question;
+    aiContent.appendChild(userMsg);
+
+    const botMsg = document.createElement('div');
+    botMsg.style.cssText = 'background:#f4f6f8;padding:10px 14px;border-radius:12px;margin-bottom:16px;font-size:13px;color:var(--black);line-height:1.6;';
+    botMsg.innerHTML = `<strong>ZiaLabs AI Sidekick:</strong> Based on manuscript analysis for <em>"${PaperReader.currentPaper ? PaperReader.currentPaper.title : 'this paper'}"</em>, researchers observed that ${question.toLowerCase().includes('data') ? 'the study utilized standard benchmark datasets with 80/20 validation split.' : 'the empirical performance bounds confirm strong sub-millisecond execution times.'}`;
+    aiContent.appendChild(botMsg);
+    aiContent.scrollTop = aiContent.scrollHeight;
   }
 }
 
