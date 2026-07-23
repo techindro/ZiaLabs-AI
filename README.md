@@ -1,4 +1,4 @@
-# ZiaLabs AI — Research tutor 
+# ZiaLabs AI — Research Assiatant
 
 A full-stack web application that helps researchers search, analyze, and manage academic papers using AI. Built with Node.js, Express, and the Gemini API.
 
