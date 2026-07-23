@@ -574,16 +574,44 @@ class Library {
 
     try {
       const { papers } = await ApiClient.get('/papers');
-      document.getElementById('lib-count').textContent = papers.length;
+      const bookmarked = Bookmarks.getList();
+      const totalCount = (papers ? papers.length : 0) + (bookmarked ? bookmarked.length : 0);
+      const countEl = document.getElementById('lib-count');
+      if (countEl) countEl.textContent = totalCount;
 
-      if (!papers.length) {
-        box.innerHTML = '<div style="padding:60px 0;text-align:center"><div style="font-size:40px;margin-bottom:16px"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></div><div style="font-size:16px;font-weight:600;color:var(--black)">Your library is empty</div><div style="font-size:13px;color:var(--gray);margin-top:8px">Save papers from search results to build your collection.</div></div>';
+      if (!totalCount) {
+        box.innerHTML = '<div style="padding:60px 0;text-align:center;grid-column:1/-1;"><div style="font-size:40px;margin-bottom:16px"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></div><div style="font-size:16px;font-weight:600;color:var(--black)">Your library is empty</div><div style="font-size:13px;color:var(--gray);margin-top:8px">Save papers from search results or bookmark research articles to build your collection.</div></div>';
         return;
       }
 
-      box.innerHTML = papers.map(p => Search.renderCard(p, true)).join('');
+      let html = '';
+      if (papers && papers.length) {
+        html += papers.map(p => Search.renderCard(p, true)).join('');
+      }
+      if (bookmarked && bookmarked.length) {
+        html += bookmarked.map(item => `
+          <div class="blog-card" style="margin-top:0;" onclick="Blog.loadArticle('${item.slug}')">
+            <div class="blog-img-wrap" style="position:relative;">
+              <img src="${item.img || '/img/mit_bg.png'}" alt="${item.title}">
+              <div style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.92);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;color:var(--primary);">
+                <span>${item.tag}</span>
+              </div>
+              <button class="bookmark-btn bookmarked" data-slug="${item.slug}" onclick="event.stopPropagation(); Bookmarks.toggle('${item.slug}'); Library.init();" style="position:absolute;top:10px;right:10px;z-index:2;" title="Remove Bookmark">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="currentColor" stroke-width="2.5"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+              </button>
+            </div>
+            <div style="font-size:15px;font-weight:700;margin-bottom:8px;color:var(--black);line-height:1.35;">${item.title}</div>
+            <div style="font-size:11px;color:var(--gray);display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+              <span>Saved: ${new Date(item.savedAt).toLocaleDateString()}</span>
+              <span style="color:var(--primary);font-weight:700;">Open &rarr;</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      box.innerHTML = html;
     } catch (err) {
-      Toast.error(err.message);
+      box.innerHTML = `<div style="padding:60px 0;text-align:center;color:#ef4444">${err.message}</div>`;
     }
   }
 
@@ -2891,6 +2919,42 @@ class Bookmarks {
         }
       }
     });
+  }
+
+  static renderLibrary() {
+    const container = document.getElementById('l-results');
+    if (!container) return;
+
+    const list = Bookmarks.getList();
+    if (!list.length) {
+      container.innerHTML = `
+        <div style="padding:60px 0;text-align:center;grid-column:1/-1;">
+          <div style="font-size:40px;margin-bottom:16px"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></div>
+          <div style="font-size:16px;font-weight:600;color:var(--black)">Your library is empty</div>
+          <div style="font-size:13px;color:var(--gray);margin-top:8px">Bookmark research articles or save papers to build your collection.</div>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = list.map(item => `
+      <div class="blog-card" style="margin-top:0;" onclick="Blog.loadArticle('${item.slug}')">
+        <div class="blog-img-wrap" style="position:relative;">
+          <img src="${item.img || '/img/mit_bg.png'}" alt="${item.title}">
+          <div style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.92);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;color:var(--primary);">
+            <span>${item.tag}</span>
+          </div>
+          <button class="bookmark-btn bookmarked" data-slug="${item.slug}" onclick="event.stopPropagation(); Bookmarks.toggle('${item.slug}'); Bookmarks.renderLibrary();" style="position:absolute;top:10px;right:10px;z-index:2;" title="Remove Bookmark">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="currentColor" stroke-width="2.5"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+          </button>
+        </div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:8px;color:var(--black);line-height:1.35;">${item.title}</div>
+        <div style="font-size:11px;color:var(--gray);display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+          <span>Saved: ${new Date(item.savedAt).toLocaleDateString()}</span>
+          <span style="color:var(--primary);font-weight:700;">Open &rarr;</span>
+        </div>
+      </div>
+    `).join('');
   }
 }
 
