@@ -129,6 +129,22 @@ router.put('/:slug', async (req, res) => {
   }
 });
 
+// DELETE /api/blog/:slug (Delete article)
+router.delete('/:slug', async (req, res) => {
+  try {
+    const slug = req.params.slug;
+    const result = BlogService.deletePost(slug);
+
+    // Invalidate list cache and single post cache
+    await RedisService.delPattern('blog:posts:*');
+    await RedisService.del(`blog:post:${slug}`);
+
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 // POST /api/blog/notes (Create short-form note)
 router.post('/notes', async (req, res) => {
   try {

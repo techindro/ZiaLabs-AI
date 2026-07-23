@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="nasaSpace" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#020813"/>
+      <stop offset="60%" stop-color="#0b1b36"/>
+      <stop offset="100%" stop-color="#182b4a"/>
+    </linearGradient>
+    <linearGradient id="rocketFlame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="30%" stop-color="#ffcc00"/>
+      <stop offset="70%" stop-color="#ff3300"/>
+      <stop offset="100%" stop-color="#990000"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="450" fill="url(#nasaSpace)"/>
+
+  <g fill="#ffffff" opacity="0.8">
+    <circle cx="60" cy="40" r="1.5"/><circle cx="140" cy="120" r="1"/><circle cx="230" cy="60" r="2"/>
+    <circle cx="310" cy="180" r="1.2"/><circle cx="420" cy="50" r="1.5"/><circle cx="530" cy="110" r="2"/>
+    <circle cx="670" cy="70" r="1.5"/><circle cx="740" cy="150" r="1"/><circle cx="780" cy="40" r="2"/>
+    <circle cx="90" cy="220" r="1"/><circle cx="180" cy="280" r="1.5"/><circle cx="280" cy="350" r="1"/>
+    <circle cx="620" cy="240" r="1.5"/><circle cx="710" cy="310" r="1.2"/><circle cx="760" cy="220" r="2"/>
+  </g>
+
+  <path d="M -100,450 Q 400,280 900,450 Z" fill="#0b3d91" opacity="0.5"/>
+  <path d="M -100,450 Q 400,280 900,450" stroke="#00aeef" stroke-width="4" fill="none" opacity="0.8"/>
+
+  <polygon points="400,120 380,450 420,450" fill="url(#rocketFlame)" opacity="0.95"/>
+  <ellipse cx="400" cy="400" rx="140" ry="60" fill="#ff6600" opacity="0.25"/>
+
+  <rect x="394" y="60" width="12" height="110" rx="3" fill="#ffffff"/>
+  <polygon points="400,40 394,60 406,60" fill="#fc3d21"/>
+  <rect x="384" y="90" width="7" height="80" rx="2" fill="#dddddd"/>
+  <rect x="409" y="90" width="7" height="80" rx="2" fill="#dddddd"/>
+
+  <g transform="translate(40, 30)">
+    <rect width="210" height="42" rx="21" fill="rgba(11, 61, 145, 0.85)" stroke="#00aeef" stroke-width="1.5"/>
+    <circle cx="30" cy="21" r="14" fill="#fc3d21"/>
+    <text x="120" y="26" font-family="'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">NASA ARTEMIS LAB</text>
+  </g>
+</svg>

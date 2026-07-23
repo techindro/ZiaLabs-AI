@@ -2,7 +2,7 @@ const DB = require('../config/database');
 
 class BlogService {
   static getAllPosts(tag = '', search = '') {
-    let sql = 'SELECT id, slug, title, excerpt, tag, author_name, author_avatar, read_time, likes, published_at FROM blog_posts';
+    let sql = 'SELECT id, slug, title, excerpt, tag, author_name, author_avatar, read_time, likes FROM blog_posts';
     const params = [];
     const conditions = [];
 
@@ -21,7 +21,7 @@ class BlogService {
       sql += ' WHERE ' + conditions.join(' AND ');
     }
 
-    sql += ' ORDER BY published_at DESC';
+    sql += ' ORDER BY id DESC';
     return DB.all(sql, params);
   }
 
@@ -148,6 +148,17 @@ class BlogService {
       tag: cleanTag,
       read_time: readTime
     };
+  }
+
+  static deletePost(slug) {
+    const post = DB.get('SELECT id FROM blog_posts WHERE slug = ?', [slug]);
+    if (!post) throw new Error('Blog post not found');
+
+    DB.run('DELETE FROM blog_comments WHERE post_id = ?', [post.id]);
+    DB.run('DELETE FROM blog_posts WHERE id = ?', [post.id]);
+    DB.save();
+
+    return { success: true, slug };
   }
 
   static getAllNotes() {
