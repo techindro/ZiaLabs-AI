@@ -3023,3 +3023,48 @@ button, input, select, textarea, a, .filter-pill, .preset-btn {
   }
 }
 
+/* ════════════════ MOBILE NATIVE APP BOTTOM BAR ════════════════ */
+.mobile-app-bottom-bar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-app-bottom-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #ffffff;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+    z-index: 9999;
+    align-items: center;
+    justify-content: space-around;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .mobile-app-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: var(--gray);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 1;
+    height: 100%;
+    transition: color 0.15s;
+    text-decoration: none;
+  }
+  .mobile-app-tab.active, .mobile-app-tab:hover {
+    color: var(--primary);
+  }
+  .mobile-app-tab svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
