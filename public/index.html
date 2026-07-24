@@ -364,7 +364,107 @@
 
     <!-- 6 Dynamic Research Cards Grid -->
     <div id="home-blog-posts-grid" style="display:grid;grid-template-columns:repeat(3, 1fr);gap:24px;">
-      <!-- Loaded dynamically by Blog.loadTrendingNews() -->
+      <div class="blog-card" style="margin-top:0;" onclick="Blog.loadArticle('meta-ai-llama-3-3-open-foundation-models')">
+        <div class="blog-img-wrap" style="position:relative;">
+          <img src="/img/meta_bg.png" alt="Llama 3.3 70B: Multimodal Reasoning & Open Weights Benchmarks">
+          <div style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.92);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:6px;box-shadow:0 2px 4px rgba(0,0,0,0.12);">
+            <img src="/img/meta.svg" style="width:14px;height:14px;object-fit:contain;border-radius:50%;" alt="Meta AI (FAIR)">
+            <span>Meta AI (FAIR)</span>
+          </div>
+          <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.75);color:#fff;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600;backdrop-filter:blur(4px);display:flex;align-items:center;gap:4px;">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            <span>🔥 Trending News</span>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--red);font-weight:600;margin-bottom:8px">META AI • OPEN FOUNDATION MODELS</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:8px;color:var(--black);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Llama 3.3 70B: Multimodal Reasoning & Open Weights Benchmarks</div>
+        <p style="font-size:12.5px;color:var(--gray);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0;">Meta AI Fundamental AI Research (FAIR) team releases open-weights foundation models outperforming closed proprietary architectures...</p>
+      </div>
+
+      <div class="blog-card" style="margin-top:0;" onclick="Blog.loadArticle('tesla-optimus-gen-2-humanoid-robotics-ai')">
+        <div class="blog-img-wrap" style="position:relative;">
+          <img src="/img/tesla_bg.png" alt="Tesla Optimus Gen 2: Real-Time Tactile Neural Control">
+          <div style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.92);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:6px;box-shadow:0 2px 4px rgba(0,0,0,0.12);">
+            <img src="/img/tesla.svg" style="width:14px;height:14px;object-fit:contain;border-radius:50%;" alt="Tesla AI & Robotics">
+            <span>Tesla AI & Robotics</span>
+          </div>
+          <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.75);color:#fff;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600;backdrop-filter:blur(4px);display:flex;align-items:center;gap:4px;">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            <span>🔥 Trending News</span>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--red);font-weight:600;margin-bottom:8px">TESLA • HUMANOID ROBOTICS</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:8px;color:var(--black);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Tesla Optimus Gen 2: Real-Time Tactile Neural Control & End-to-End Task Manipulation</div>
+        <p style="font-size:12.5px;color:var(--gray);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0;">Tesla AI & Robotics unveils Optimus Gen 2, featuring end-to-end neural network policy control, 11-DoF tactile hands, and autonomous fleet learning...</p>
+      </div>
+
+      <div class="blog-card" style="margin-top:0;" onclick="Blog.loadArticle('spacex-starship-autonomous-neural-trajectory-catch')">
+        <div class="blog-img-wrap" style="position:relative;">
+          <img src="/img/spacex_bg.png" alt="SpaceX Starship: Autonomous Real-Time Neural Trajectory">
+          <div style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.92);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:6px;box-shadow:0 2px 4px rgba(0,0,0,0.12);">
+            <img src="/img/spacex.svg" style="width:14px;height:14px;object-fit:contain;border-radius:50%;" alt="SpaceX Starship AI">
+            <span>SpaceX Starship AI</span>
+          </div>
+          <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.75);color:#fff;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600;backdrop-filter:blur(4px);display:flex;align-items:center;gap:4px;">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            <span>🔥 Trending News</span>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--red);font-weight:600;margin-bottom:8px">SPACEX • AUTONOMOUS AEROSPACE</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:8px;color:var(--black);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">SpaceX Starship: Autonomous Real-Time Neural Trajectory & Mechazilla Catch</div>
+        <p style="font-size:12.5px;color:var(--gray);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0;">SpaceX details real-time high-rate sensor telemetry and deep neural guidance models for autonomous Starship booster precision landing...</p>
+      </div>
+
+      <div class="blog-card" style="margin-top:0;" onclick="Blog.loadArticle('google-gemini-2-5-multimodal-reasoning-deepmind')">
+        <div class="blog-img-wrap" style="position:relative;">
+          <img src="/img/google_bg.png" alt="Google DeepMind Gemini 2.5 Multimodal Reasoning">
+          <div style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.92);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:6px;box-shadow:0 2px 4px rgba(0,0,0,0.12);">
+            <img src="/img/google.svg" style="width:14px;height:14px;object-fit:contain;border-radius:50%;" alt="Google DeepMind">
+            <span>Google DeepMind</span>
+          </div>
+          <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.75);color:#fff;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600;backdrop-filter:blur(4px);display:flex;align-items:center;gap:4px;">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            <span>🔥 Trending News</span>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--red);font-weight:600;margin-bottom:8px">GOOGLE • FOUNDATION MODELS</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:8px;color:var(--black);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Gemini 2.5: Multimodal Reasoning Across Billion-Token Contexts</div>
+        <p style="font-size:12.5px;color:var(--gray);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0;">Google DeepMind presents breakthroughs in continuous long-context memory and real-time multimodal reasoning benchmarks...</p>
+      </div>
+
+      <div class="blog-card" style="margin-top:0;" onclick="Blog.loadArticle('iit-bombay-bharat-gpt-multilingual-ai-models')">
+        <div class="blog-img-wrap" style="position:relative;">
+          <img src="/img/iitb_bg.png" alt="IIT Bombay BharatGPT: Multi-Task Indic LLMs">
+          <div style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.92);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:6px;box-shadow:0 2px 4px rgba(0,0,0,0.12);">
+            <img src="/img/iitb.svg" style="width:14px;height:14px;object-fit:contain;border-radius:50%;" alt="IIT Bombay AI">
+            <span>IIT Bombay AI</span>
+          </div>
+          <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.75);color:#fff;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600;backdrop-filter:blur(4px);display:flex;align-items:center;gap:4px;">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            <span>🔥 Trending News</span>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--red);font-weight:600;margin-bottom:8px">IIT BOMBAY • INDIC AI</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:8px;color:var(--black);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">IIT Bombay BharatGPT: Multi-Task Indic LLMs across 22 Official Indian Languages</div>
+        <p style="font-size:12.5px;color:var(--gray);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0;">IIT Bombay AI Center presents BharatGPT, advancing native speech, script, and multi-modal reasoning across all 22 official Indian languages...</p>
+      </div>
+
+      <div class="blog-card" style="margin-top:0;" onclick="Blog.loadArticle('nasa-artemis-ai-autonomous-lunar-navigation')">
+        <div class="blog-img-wrap" style="position:relative;">
+          <img src="/img/nasa_bg.png" alt="NASA Artemis IV: AI Neural Guidance & Autonomous Lunar Landing">
+          <div style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.92);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:6px;box-shadow:0 2px 4px rgba(0,0,0,0.12);">
+            <img src="/img/nasa.svg" style="width:14px;height:14px;object-fit:contain;border-radius:50%;" alt="NASA Space AI">
+            <span>NASA Space AI</span>
+          </div>
+          <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.75);color:#fff;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600;backdrop-filter:blur(4px);display:flex;align-items:center;gap:4px;">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            <span>🔥 Trending News</span>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--red);font-weight:600;margin-bottom:8px">NASA • ARTEMIS & AI</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:8px;color:var(--black);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">NASA Artemis IV: AI Neural Guidance & Autonomous Lunar Landing Systems</div>
+        <p style="font-size:12.5px;color:var(--gray);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0;">NASA Jet Propulsion Lab details real-time terrain-relative navigation AI powering autonomous precision landings on the Lunar South Pole...</p>
+      </div>
     </div>
   </div>
 
