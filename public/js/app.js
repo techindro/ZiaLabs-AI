@@ -1369,7 +1369,9 @@ class News {
         { img: '/img/tsinghua_bg.png', logo: '/img/tsinghua.png', uni: 'Tsinghua AI', tag: 'TSINGHUA • MULTIMODAL AI', defaultTitle: 'Multimodal Agent Swarms for Robotics', defaultExcerpt: 'Tsinghua AI Center presents cooperative multi-agent vision-language-action policies in complex physical environments...', slug: 'multimodal-agent-swarms-robotics' }
       ];
 
-      const featuredData = uniData.slice(0, 6);
+      // Dynamic random shuffle across all 15+ top global & Indian universities & research institutes (MIT, Stanford, IIT Bombay, IISc, NASA, etc.)
+      const shuffledUniData = [...uniData].sort(() => 0.5 - Math.random());
+      const featuredData = shuffledUniData.slice(0, 6);
 
       const htmlContent = featuredData.map((info, idx) => {
         const newsItem = newsItems[idx];
