@@ -349,6 +349,25 @@
     </div>
   </div>
 
+  <!-- FEATURED RESEARCH & AI NEWS CARDS (HOME LANDING PAGE) -->
+  <div class="features fade-in delay-3" id="home-research-feed" style="max-width:1200px;margin:60px auto 40px;padding:0 20px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px;">
+      <div>
+        <div class="section-label">Trending Intelligence</div>
+        <h2 style="font-family:var(--font-heading);font-size:26px;font-weight:700;color:var(--primary);margin:4px 0 0 0;">Latest AI & Scientific Breakthroughs</h2>
+      </div>
+      <button class="btn-ghost" onclick="App.showPage('pg-blog')" style="display:flex;align-items:center;gap:6px;font-weight:600;">
+        <span>Explore All Research</span>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
+    </div>
+
+    <!-- 6 Dynamic Research Cards Grid -->
+    <div id="home-blog-posts-grid" style="display:grid;grid-template-columns:repeat(3, 1fr);gap:24px;">
+      <!-- Loaded dynamically by Blog.loadTrendingNews() -->
+    </div>
+  </div>
+
   <!-- PRODUCT (FEATURES) -->
   <div class="features fade-in delay-3" id="features" style="max-width:1200px;margin:0 auto">
     <div class="section-label">What it does</div>

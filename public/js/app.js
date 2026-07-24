@@ -1409,6 +1409,9 @@ class News {
         `;
       }).join('');
 
+      const homeGrid = document.getElementById('home-blog-posts-grid');
+      if (homeGrid) homeGrid.innerHTML = htmlContent;
+
       if (box) box.innerHTML = htmlContent;
       if (researchBox) researchBox.innerHTML = htmlContent;
       if (insightsBox) insightsBox.innerHTML = htmlContent;
