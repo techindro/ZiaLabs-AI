@@ -64,7 +64,7 @@
         <kbd style="font-size:10px;font-weight:700;background:#fff;border:1px solid var(--border);padding:1px 5px;border-radius:4px;color:var(--gray);">Ctrl+K</kbd>
       </button>
       <button class="btn-ghost nav-cta-btn" onclick="App.showPage('pg-signin')">Sign in</button>
-      <button class="btn-red nav-cta-btn" onclick="App.getStarted()">Get started free</button>
+      <button class="btn-primary nav-cta-btn" onclick="App.getStarted()">Get started free</button>
     </div>
     <!-- Mobile Hamburger -->
     <button class="hamburger" id="hamburger-btn" onclick="document.querySelector('.glass-nav').classList.toggle('nav-open')" aria-label="Toggle navigation">
@@ -87,7 +87,7 @@
             </svg>
           </div>
           <input type="text" placeholder="e.g. Does zinc shorten cold duration?" id="hero-search-input" style="flex:1;border:none;padding:12px 6px;font-size:14px;outline:none;background:transparent;color:var(--black);font-family:inherit;" onkeydown="if(event.key==='Enter')App.handleHeroSearch()">
-          <button class="btn-red" style="padding:10px 24px;border-radius:var(--border-radius-md);margin:0;" onclick="App.handleHeroSearch()">Search</button>
+          <button class="btn-primary" style="padding:10px 24px;border-radius:var(--border-radius-md);margin:0;" onclick="App.handleHeroSearch()">Search</button>
         </div>
         
         <!-- Suggestions/Trending tags -->
@@ -1448,7 +1448,7 @@
       <div class="dash-content d-none" id="dc-search">
         <div class="search-bar-row">
           <input type="text" class="search-input" id="s-query" placeholder="Enter keywords, titles, or authors..." onkeydown="if(event.key==='Enter')Search.run()">
-          <button class="btn-red" onclick="Search.run()">Search Papers</button>
+          <button class="btn-primary" onclick="Search.run()">Search Papers</button>
         </div>
         <div class="results-grid" id="s-results">
           <div style="padding:60px 0;text-align:center">
@@ -1694,7 +1694,7 @@
     </div>
     <div class="nav-cta">
       <button class="btn-ghost" onclick="App.showPage('pg-signin')">Sign in</button>
-      <button class="btn-red" onclick="App.getStarted()">Get started free</button>
+      <button class="btn-primary" onclick="App.getStarted()">Get started free</button>
     </div>
   </nav>
 
@@ -1814,7 +1814,7 @@
     </div>
     <div class="nav-cta">
       <button class="btn-ghost" onclick="App.showPage('pg-signin')">Sign in</button>
-      <button class="btn-red" onclick="App.getStarted()">Get started free</button>
+      <button class="btn-primary" onclick="App.getStarted()">Get started free</button>
     </div>
   </nav>
 
