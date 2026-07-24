@@ -352,14 +352,61 @@ class LanguageManager {
   }
 }
 
-// chat panel — talks to the gemini-powered backend
+// chat panel — supports Google Gemini & OpenAI GPT-4o models
 class Chat {
   static #ready = false;
+  static currentModel = localStorage.getItem('zialabs_chat_model') || 'gemini';
 
   static init() {
     if (Chat.#ready) return;
     Chat.#ready = true;
+    Chat.updateModelUI();
     Chat.#fetchHistory();
+  }
+
+  static setModel(model) {
+    Chat.currentModel = model;
+    localStorage.setItem('zialabs_chat_model', model);
+    Chat.updateModelUI();
+    if (window.Toast) Toast.success(`AI Engine set to ${model === 'openai' ? 'OpenAI GPT-4o' : 'Google Gemini 2.5 Flash'}`);
+  }
+
+  static selectModelFromDropdown(model) {
+    Chat.setModel(model);
+  }
+
+  static updateDropdownLabel() {
+    const lbl = document.getElementById('lbl-model-selected');
+    if (lbl) {
+      if (Chat.currentModel === 'openai') {
+        lbl.innerHTML = 'Pro (OpenAI)';
+      } else {
+        lbl.innerHTML = 'Lite (Gemini)';
+      }
+    }
+  }
+
+  static updateModelUI() {
+    const isOpenAI = Chat.currentModel === 'openai';
+    const geminiBtns = document.querySelectorAll('.btn-model-gemini');
+    const openaiBtns = document.querySelectorAll('.btn-model-openai');
+
+    geminiBtns.forEach(btn => {
+      btn.style.background = isOpenAI ? 'transparent' : 'var(--primary)';
+      btn.style.color = isOpenAI ? 'var(--gray)' : '#fff';
+    });
+
+    openaiBtns.forEach(btn => {
+      btn.style.background = isOpenAI ? '#10a37f' : 'transparent';
+      btn.style.color = isOpenAI ? '#fff' : 'var(--gray)';
+    });
+
+    const selectEl = document.getElementById('sel-model-dropdown');
+    if (selectEl) {
+      selectEl.value = Chat.currentModel;
+    }
+
+    Chat.updateDropdownLabel();
   }
 
   static async #fetchHistory() {
@@ -409,6 +456,7 @@ class Chat {
     d.className = 'dm';
 
     let sourcesHeader = '';
+    const modelBadge = Chat.currentModel === 'openai' ? '🤖 OpenAI GPT-4o Engine' : '⚡ Google Gemini 2.5 Flash';
     if (sources && sources.length) {
       sourcesHeader = `
         <div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;">
@@ -418,14 +466,16 @@ class Chat {
               <span>📄</span> ${s.title || `Source ${idx+1}`}
             </a>
           `).join('')}
+          <span style="font-size:10px;font-weight:700;color:#10b981;background:#ecfdf5;border:1px solid rgba(16,185,129,0.2);padding:3px 8px;border-radius:12px;display:inline-flex;align-items:center;margin-left:auto;">${modelBadge}</span>
         </div>
       `;
     } else {
       sourcesHeader = `
-        <div style="display:flex;gap:6px;margin-bottom:10px;">
+        <div style="display:flex;gap:6px;margin-bottom:10px;align-items:center;">
           <span style="font-size:11.5px;font-weight:600;color:var(--primary);background:var(--primary-light);border:1px solid var(--border);padding:3px 10px;border-radius:12px;display:inline-flex;align-items:center;gap:4px;">
-            <span>🌐</span> ZiaLabs Academic Intelligence Swarm
+            <span>🌐</span> ZiaLabs Academic Swarm
           </span>
+          <span style="font-size:10px;font-weight:700;color:#10b981;background:#ecfdf5;border:1px solid rgba(16,185,129,0.2);padding:3px 8px;border-radius:12px;display:inline-flex;align-items:center;margin-left:auto;">${modelBadge}</span>
         </div>
       `;
     }
@@ -485,7 +535,8 @@ class Chat {
     const d = document.createElement('div');
     d.className = 'dm';
     d.id = 'dtyp';
-    d.innerHTML = `<div class="dav b">ZL</div><div class="dbub b" style="display:flex;align-items:center;gap:8px;"><div class="dtyping"><div class="ddot"></div><div class="ddot"></div><div class="ddot"></div></div><span style="font-size:12px;color:var(--primary);font-weight:600;" id="dtyp-status">Searching 2.5M+ academic sources...</span></div>`;
+    const activeEngine = Chat.currentModel === 'openai' ? 'OpenAI GPT-4o' : 'Google Gemini 2.5';
+    d.innerHTML = `<div class="dav b">ZL</div><div class="dbub b" style="display:flex;align-items:center;gap:8px;"><div class="dtyping"><div class="ddot"></div><div class="ddot"></div><div class="ddot"></div></div><span style="font-size:12px;color:var(--primary);font-weight:600;" id="dtyp-status">Processing query via ${activeEngine}...</span></div>`;
     c.appendChild(d);
     c.scrollTop = c.scrollHeight;
   }
@@ -502,13 +553,14 @@ class Chat {
     Chat.#showTyping();
 
     const statusEl = document.getElementById('dtyp-status');
+    const activeEngine = Chat.currentModel === 'openai' ? 'OpenAI GPT-4o' : 'Google Gemini 2.5';
     if (statusEl) {
-      setTimeout(() => { if (statusEl) statusEl.textContent = '🧠 Synthesizing consensus evidence...'; }, 400);
+      setTimeout(() => { if (statusEl) statusEl.textContent = `🧠 Synthesizing consensus via ${activeEngine}...`; }, 400);
       setTimeout(() => { if (statusEl) statusEl.textContent = '✍️ Generating Perplexity-smooth response...'; }, 900);
     }
 
     try {
-      const res = await ApiClient.post('/chat/message', { message: text, language: LanguageManager.currentLang });
+      const res = await ApiClient.post('/chat/message', { message: text, language: LanguageManager.currentLang, modelProvider: Chat.currentModel });
       document.getElementById('dtyp')?.remove();
       const answer = res.response || res.message || 'Response generated.';
       const sources = res.sources || [];
@@ -519,7 +571,7 @@ class Chat {
       if (err.message && (err.message.includes('Authentication') || err.message.includes('sign in') || err.message.includes('token') || err.message.includes('401'))) {
         try {
           await Auth.guestLogin();
-          const retryRes = await ApiClient.post('/chat/message', { message: text, language: LanguageManager.currentLang });
+          const retryRes = await ApiClient.post('/chat/message', { message: text, language: LanguageManager.currentLang, modelProvider: Chat.currentModel });
           const answer = retryRes.response || retryRes.message || 'Response generated.';
           const sources = retryRes.sources || [];
           await Chat.streamBot(answer, sources);
@@ -3565,4 +3617,9 @@ class AgentGallery {
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
   PWAInstaller.init();
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.cb-model-dropdown-wrap')) {
+      document.querySelectorAll('.cb-model-menu').forEach(m => m.classList.remove('open'));
+    }
+  });
 });

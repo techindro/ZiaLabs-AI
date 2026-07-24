@@ -3116,3 +3116,7 @@ button, input, select, textarea, a, .filter-pill, .preset-btn {
   }
 }
 
+.cb-model-menu.open {
+  display: flex !important;
+}
+

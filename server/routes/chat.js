@@ -13,7 +13,7 @@ const agent = new AIAgent();
 
 router.post('/message', authMiddleware, async (req, res) => {
   try {
-    const { message, language } = req.body;
+    const { message, language, modelProvider = 'gemini' } = req.body;
     if (!message || !message.trim()) {
       return res.status(400).json({ error: 'Message is required' });
     }
@@ -27,7 +27,7 @@ router.post('/message', authMiddleware, async (req, res) => {
     const promptWithContext = searchResult.formattedContext ? 
       `${cleanMessage}\n\n${searchResult.formattedContext}` : cleanMessage;
 
-    let response = await agent.chat(req.user.id, promptWithContext, language);
+    let response = await agent.chat(req.user.id, promptWithContext, language, modelProvider);
 
     if (detectedPaper) {
       response += PaperLinkParser.formatWidget(detectedPaper);

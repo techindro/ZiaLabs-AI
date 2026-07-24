@@ -1,4 +1,5 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const axios = require('axios');
 const ChatMessage = require('../models/ChatMessage');
 const User        = require('../models/User');
 
@@ -59,10 +60,9 @@ class AIAgent {
   }
 
   /**
-   * Main chat method. Handles context loading, quota checks, and the
-   * actual gemini call. Falls back to canned responses if no API key.
+   * Main chat method. Handles context loading, quota checks, and model choice (gemini or openai).
    */
-  async chat(userId, message, language = null) {
+  async chat(userId, message, language = null, modelProvider = 'gemini') {
     if (!User.hasApiCallsRemaining(userId)) {
       return 'You have reached your monthly usage limit. Please upgrade to Pro or wait until next month to continue.';
     }
@@ -71,29 +71,33 @@ class AIAgent {
 
     let response;
 
-    if (!this.#model) {
-      response = this.#fallback(message);
+    if (modelProvider === 'openai') {
+      response = await this.#chatOpenAI(userId, message, language);
     } else {
-      try {
-        const history = ChatMessage.getRecentContext(userId, 20);
+      if (!this.#model) {
+        response = this.#fallback(message);
+      } else {
+        try {
+          const history = ChatMessage.getRecentContext(userId, 20);
 
-        let validHistory = [];
-        let expected = 'user';
-        for (const msg of history.slice(0, -1)) {
-          const role = msg.role === 'assistant' ? 'model' : 'user';
-          if (role === expected) {
-            validHistory.push({ role, parts: [{ text: msg.content }] });
-            expected = role === 'user' ? 'model' : 'user';
+          let validHistory = [];
+          let expected = 'user';
+          for (const msg of history.slice(0, -1)) {
+            const role = msg.role === 'assistant' ? 'model' : 'user';
+            if (role === expected) {
+              validHistory.push({ role, parts: [{ text: msg.content }] });
+              expected = role === 'user' ? 'model' : 'user';
+            }
           }
-        }
 
-        const promptWithLang = language ? `[Please respond natively in ${language}]\n\n${message}` : message;
-        const chat   = this.#model.startChat({ history: validHistory });
-        const result = await chat.sendMessage(promptWithLang);
-        response     = result.response.text();
-      } catch (err) {
-        console.error('gemini error:', err.message);
-        response = `Something went wrong: ${err.message}. Please try again.`;
+          const promptWithLang = language ? `[Please respond natively in ${language}]\n\n${message}` : message;
+          const chat   = this.#model.startChat({ history: validHistory });
+          const result = await chat.sendMessage(promptWithLang);
+          response     = result.response.text();
+        } catch (err) {
+          console.error('gemini error:', err.message);
+          response = `Something went wrong with Gemini: ${err.message}. Please try again.`;
+        }
       }
     }
 
@@ -250,6 +254,49 @@ JSON schema:
     } catch (err) {
       console.warn('Paper summarization fallback:', err.message);
       return paperText ? paperText.substring(0, 800) + '...' : 'Uploaded paper content.';
+    }
+  }
+
+  async #chatOpenAI(userId, message, language) {
+    const key = process.env.OPENAI_API_KEY;
+    if (!key || key === 'your-openai-api-key-here') {
+      return `🤖 **[OpenAI GPT-4o Mode]**\n\n*Note: OPENAI_API_KEY is not configured in .env. Here is an AI response synthesis for your query:*\n\n${this.#fallback(message)}`;
+    }
+
+    try {
+      const history = ChatMessage.getRecentContext(userId, 20);
+      const messages = [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...history.slice(0, -1).map(m => ({
+          role: m.role === 'assistant' ? 'assistant' : 'user',
+          content: m.content
+        })),
+        { role: 'user', content: language ? `[Please respond natively in ${language}]\n\n${message}` : message }
+      ];
+
+      const res = await axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+          messages: messages,
+          temperature: 0.7
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${key}`,
+            'Content-Type': 'application/json'
+          },
+          timeout: 20000
+        }
+      );
+
+      return res.data?.choices?.[0]?.message?.content || 'No response generated from OpenAI.';
+    } catch (err) {
+      console.error('OpenAI chat error:', err.response?.data || err.message);
+      if (err.response?.data?.error?.message) {
+        return `OpenAI Error: ${err.response.data.error.message}`;
+      }
+      return `OpenAI error: ${err.message}. Please verify your OPENAI_API_KEY in .env.`;
     }
   }
 

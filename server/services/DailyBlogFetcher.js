@@ -1,6 +1,6 @@
 const ArxivService = require('./ArxivService');
 const BlogService = require('./BlogService');
-const RedisService = require('./RedisService');
+const RedisService = require('../config/redis');
 
 /**
  * Autonomous Daily AI Research & Blog Auto-Fetcher Service
