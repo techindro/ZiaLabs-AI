@@ -1199,23 +1199,50 @@
           <div class="m-close-btn" onclick="App.toggleMobileMenu()"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
         </div>
       <div class="sb-nav">
-        <div class="sb-section">Main</div>
+        <!-- + NEW CHAT BUTTON -->
+        <button class="btn-red" style="width:100%;margin-bottom:16px;padding:9px 16px;font-size:13px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:6px;" onclick="Chat.clear();document.getElementById('chatbot-welcome').style.display='';document.getElementById('chatbot-thread').style.display='none';">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>+ New Chat</span>
+        </button>
+
+        <div class="sb-section">Workspace</div>
         <div class="sb-item active" onclick="Dashboard.setSidebar(this)">
-          <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg> Dashboard
+          <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Home / Dashboard
         </div>
         <div class="sb-item" onclick="Dashboard.setSidebar(this)">
-          <svg viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg> Search Papers
+          <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"/></svg> Agent Gallery
+        </div>
+        <div class="sb-item" onclick="AIWriter.openModal()">
+          <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg> AI Writer & Paraphraser
+        </div>
+        <div class="sb-item" onclick="document.getElementById('upload-paper-input-chat').click()">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM13 9V3.5L18.5 9H13z"/></svg> Chat with PDF
+        </div>
+
+        <div class="sb-section">Research Suite</div>
+        <div class="sb-item" onclick="Dashboard.setSidebar(this)">
+          <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg> Literature Review
         </div>
         <div class="sb-item" onclick="Dashboard.setSidebar(this)">
-          <svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg> AI Insights
+          <svg viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3z"/></svg> Search 2.5M+ Papers
+        </div>
+        <div class="sb-item" onclick="CitationManager.openForCurrentArticle()">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> Citation Generator
+        </div>
+        <div class="sb-item" onclick="AIDetector.openModal()">
+          <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg> AI Detector & Originality
         </div>
         <div class="sb-item" onclick="Dashboard.setSidebar(this)">
-          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg> My Papers
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> Extract Scientific Data
+        </div>
+
+        <div class="sb-section">Account & Saved</div>
+        <div class="sb-item" onclick="Dashboard.setSidebar(this)">
+          <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> My Saved Library
         </div>
         <div class="sb-item" onclick="Dashboard.setSidebar(this)">
-          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg> Chat History
+          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg> Chat History
         </div>
-        <div class="sb-section">Account</div>
         <div class="sb-item" onclick="Dashboard.setSidebar(this)">
           <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg> Settings
         </div>
@@ -1395,6 +1422,14 @@
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="#fff"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg>
               </button>
             </div>
+          </div>
+          <!-- SciSpace-Style Quick Tool Pills -->
+          <div style="display:flex;gap:8px;margin-top:10px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;">
+            <button class="filter-pill active" onclick="Dashboard.setSidebar(document.querySelectorAll('.sb-item')[5])">🔍 Search Papers</button>
+            <button class="filter-pill" onclick="Dashboard.setSidebar(document.querySelectorAll('.sb-item')[4])">📚 Literature Review</button>
+            <button class="filter-pill" onclick="AIWriter.openModal()">✍️ AI Writer & Paraphraser</button>
+            <button class="filter-pill" onclick="CitationManager.openForCurrentArticle()">📜 Citation Generator</button>
+            <button class="filter-pill" onclick="AIDetector.openModal()">🛡️ AI Detector</button>
           </div>
         </div>
 
@@ -2001,6 +2036,86 @@
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           <span>Copy Citation</span>
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI WRITER & PARAPHRASER MODAL -->
+<div class="d-none" id="ai-writer-modal-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:25000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="background:#fff;width:100%;max-width:700px;border-radius:16px;border:1px solid var(--border);box-shadow:0 25px 50px rgba(0,0,0,0.25);overflow:hidden;animation:chatbotEntry 0.25s ease-out;">
+    <div style="background:var(--primary);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg>
+        <h3 style="font-family:var(--font-heading);font-size:17px;margin:0;font-weight:700;">AI Academic Writer & Paraphraser</h3>
+      </div>
+      <span onclick="AIWriter.closeModal()" style="cursor:pointer;font-size:22px;font-weight:700;">&times;</span>
+    </div>
+
+    <div style="padding:24px;">
+      <!-- Tone Selector -->
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center;">
+        <span style="font-size:12.5px;font-weight:700;color:var(--black);margin-right:4px;">Academic Tone:</span>
+        <button class="filter-pill active" id="writer-tone-formal" onclick="AIWriter.setTone('formal')">Formal Academic</button>
+        <button class="filter-pill" id="writer-tone-simplified" onclick="AIWriter.setTone('simplified')">Simplified / Clear</button>
+        <button class="filter-pill" id="writer-tone-abstract" onclick="AIWriter.setTone('abstract')">Paper Abstract</button>
+        <button class="filter-pill" id="writer-tone-exec" onclick="AIWriter.setTone('exec')">Executive Summary</button>
+      </div>
+
+      <!-- Textarea input -->
+      <div style="margin-bottom:16px;">
+        <textarea id="ai-writer-input" placeholder="Paste your research text or enter a draft topic to rephrase..." style="width:100%;height:140px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:13.5px;font-family:inherit;outline:none;resize:vertical;"></textarea>
+      </div>
+
+      <!-- Result Box -->
+      <div id="ai-writer-result-container" class="d-none" style="background:var(--primary-light);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <h5 style="font-size:13px;font-weight:700;color:var(--primary);margin:0;">Synthesized Academic Output:</h5>
+          <button class="btn-ghost" style="padding:4px 10px;font-size:11.5px;background:#fff;" onclick="AIWriter.copyResult()">Copy Text</button>
+        </div>
+        <div id="ai-writer-result-text" style="font-size:13.5px;color:var(--black);line-height:1.65;"></div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;">
+        <button class="btn-ghost" onclick="AIWriter.closeModal()">Close</button>
+        <button class="btn-red" onclick="AIWriter.runRewrite()" style="margin:0;padding:10px 22px;font-size:13px;">Rewrite & Draft with AI</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI DETECTOR & ORIGINALITY MODAL -->
+<div class="d-none" id="ai-detector-modal-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:25000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="background:#fff;width:100%;max-width:650px;border-radius:16px;border:1px solid var(--border);box-shadow:0 25px 50px rgba(0,0,0,0.25);overflow:hidden;animation:chatbotEntry 0.25s ease-out;">
+    <div style="background:var(--primary);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"></path></svg>
+        <h3 style="font-family:var(--font-heading);font-size:17px;margin:0;font-weight:700;">AI Content & Originality Detector</h3>
+      </div>
+      <span onclick="AIDetector.closeModal()" style="cursor:pointer;font-size:22px;font-weight:700;">&times;</span>
+    </div>
+
+    <div style="padding:24px;">
+      <p style="font-size:13px;color:var(--gray);margin-bottom:12px;">Analyze manuscript text for AI generation likelihood, perplexity metrics, and academic originality confidence.</p>
+      
+      <textarea id="ai-detector-input" placeholder="Paste manuscript section or abstract here to evaluate..." style="width:100%;height:130px;padding:12px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;outline:none;resize:vertical;margin-bottom:16px;"></textarea>
+
+      <div id="ai-detector-results" class="d-none" style="margin-bottom:16px;">
+        <div style="display:flex;gap:16px;background:var(--bg-base);padding:16px;border-radius:10px;border:1px solid var(--border);align-items:center;margin-bottom:12px;">
+          <div style="text-align:center;padding-right:16px;border-right:1px solid var(--border);">
+            <div id="detector-score-val" style="font-family:var(--font-heading);font-size:32px;font-weight:800;color: #10b981;">94%</div>
+            <div style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;">Originality</div>
+          </div>
+          <div>
+            <h5 id="detector-verdict-title" style="font-size:14px;font-weight:700;color:var(--black);margin:0 0 4px 0;">Highly Likely Human Written</h5>
+            <p id="detector-verdict-desc" style="font-size:12.5px;color:var(--gray);margin:0;line-height:1.5;">Low AI burstiness indicators detected. Text demonstrates natural academic stylistic variation.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;">
+        <button class="btn-ghost" onclick="AIDetector.closeModal()">Close</button>
+        <button class="btn-red" onclick="AIDetector.runScan()" style="margin:0;padding:10px 22px;font-size:13px;">Analyze Originality</button>
       </div>
     </div>
   </div>
