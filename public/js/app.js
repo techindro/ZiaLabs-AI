@@ -1375,18 +1375,14 @@ class News {
         { img: '/img/tsinghua_bg.png', logo: '/img/tsinghua.png', uni: 'Tsinghua AI', tag: 'TSINGHUA • MULTIMODAL AI', defaultTitle: 'Multimodal Agent Swarms for Robotics', defaultExcerpt: 'Tsinghua AI Center presents cooperative multi-agent vision-language-action policies in complex physical environments...', slug: 'multimodal-agent-swarms-robotics' }
       ];
 
-      // Prioritize Meta AI, Tesla AI, and SpaceX Starship AI at the top of the featured Blog grid
-      const priorityItems = uniData.filter(item => item.uni.includes('Meta') || item.uni.includes('Tesla') || item.uni.includes('SpaceX'));
-      const remainingItems = uniData.filter(item => !item.uni.includes('Meta') && !item.uni.includes('Tesla') && !item.uni.includes('SpaceX')).sort(() => 0.5 - Math.random());
-      const featuredData = [...priorityItems, ...remainingItems].slice(0, 6);
+      // Dynamic random shuffle across all top global & Indian institutes (Meta, Tesla, SpaceX, MIT, Stanford, IIT Bombay, IISc, NASA, etc.) on EVERY refresh
+      const featuredData = [...uniData].sort(() => 0.5 - Math.random()).slice(0, 6);
 
       const htmlContent = featuredData.map((info, idx) => {
-        const newsItem = newsItems[idx];
-        const dbPost   = basePosts[idx];
-
-        const title   = newsItem ? newsItem.title : (dbPost ? dbPost.title : info.defaultTitle);
-        const excerpt = newsItem ? (newsItem.description ? newsItem.description.replace(/<[^>]*>?/gm, '').slice(0, 140) + '...' : info.defaultExcerpt) : (dbPost ? dbPost.excerpt : info.defaultExcerpt);
-        const slug    = dbPost ? dbPost.slug : info.slug;
+        // Use authentic dedicated title & excerpt matching the institution
+        const title   = info.defaultTitle;
+        const excerpt = info.defaultExcerpt;
+        const slug    = info.slug;
 
         return `
           <div class="blog-card" style="margin-top:0;" onclick="Blog.loadArticle('${slug}')">
