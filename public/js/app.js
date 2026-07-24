@@ -860,8 +860,9 @@ class App {
       Blog.loadTrendingNews();
     }
     
-    // ensure sidebar is hidden on page switch if we were on mobile
+    // ensure sidebar and nav drawer are hidden on page switch if we were on mobile
     document.getElementById('dash-sidebar')?.classList.remove('open');
+    document.querySelector('.glass-nav')?.classList.remove('nav-open');
   }
 
   static showLandingSection(sectionId) {
