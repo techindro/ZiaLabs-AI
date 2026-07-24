@@ -1232,7 +1232,7 @@
         <!-- + NEW CHAT BUTTON -->
         <button class="btn-primary" style="width:100%;margin-bottom:18px;padding:10px 16px;font-size:13px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;" onclick="Chat.clear();document.getElementById('chatbot-welcome').style.display='';document.getElementById('chatbot-thread').style.display='none';">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-          <span>+ New Research Chat</span>
+          <span>New Research Chat</span>
         </button>
 
         <div class="sb-section">Core Platform</div>
@@ -1397,32 +1397,6 @@
 
           <!-- Hidden File Input for PDF Uploading -->
           <input type="file" id="upload-paper-input-chat" accept=".pdf,.txt" style="display:none;" onchange="Dashboard.uploadPaper(this)">
-
-          <!-- Workspace Stats Overview Bar (4-Col Row) -->
-          <div style="width: 100%; max-width: 720px; margin-top: 10px;">
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%;">
-              <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
-                <span style="font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase;">Searches</span>
-                <span id="m-searches" style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: var(--primary); display: block; margin: 2px 0;">0</span>
-                <span id="m-searches-sub" style="font-size: 10px; color: #10b981; font-weight: 600;">+0 this week</span>
-              </div>
-              <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
-                <span style="font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase;">Saved Papers</span>
-                <span id="m-papers" style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: var(--primary); display: block; margin: 2px 0;">0</span>
-                <span style="font-size: 10px; color: var(--gray-light);">In library</span>
-              </div>
-              <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
-                <span style="font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase;">AI Syntheses</span>
-                <span id="m-insights" style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: var(--primary); display: block; margin: 2px 0;">0</span>
-                <span style="font-size: 10px; color: var(--gray-light);">Generated</span>
-              </div>
-              <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
-                <span style="font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase;">AI Credits</span>
-                <span id="m-api" style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: var(--primary); display: block; margin: 2px 0;">0</span>
-                <span id="m-api-sub" style="font-size: 10px; color: var(--gray-light);">0 limit/mo</span>
-              </div>
-            </div>
-          </div>
 
           <!-- Suggested Research Prompts Section -->
           <div style="margin-top: 24px; width: 100%; max-width: 720px;">
