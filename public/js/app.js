@@ -491,11 +491,13 @@ class Chat {
   }
 
   static async send() {
-    const inp = document.getElementById('dinp');
-    const text = inp.value.trim();
+    const cardInp = document.getElementById('dinp-card');
+    const bottomInp = document.getElementById('dinp');
+    let text = (cardInp?.value || bottomInp?.value || '').trim();
     if (!text) return;
 
-    inp.value = '';
+    if (cardInp) cardInp.value = '';
+    if (bottomInp) bottomInp.value = '';
     Chat.#addUser(text);
     Chat.#showTyping();
 
