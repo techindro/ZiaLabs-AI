@@ -191,6 +191,15 @@ class Auth {
     return !!(Auth.user && ApiClient.getToken());
   }
 
+  static guestLogin() {
+    const demoUser = { id: 'guest_' + Date.now(), name: 'Guest Researcher', email: 'guest@zialabs.ai', plan: 'Free' };
+    const demoToken = 'guest_demo_token_' + Date.now();
+    Auth.#save(demoUser, demoToken);
+    Toast.success('Welcome to ZiaLabs AI Guest Workspace!');
+    Dashboard.init();
+    App.showPage('pg-dash');
+  }
+
   static async resetPassword() {
     const emailInput = document.getElementById('si-email');
     let email = emailInput ? emailInput.value.trim() : '';
@@ -973,6 +982,14 @@ class App {
     // ensure sidebar and nav drawer are hidden on page switch if we were on mobile
     document.getElementById('dash-sidebar')?.classList.remove('open');
     document.querySelector('.glass-nav')?.classList.remove('nav-open');
+  }
+
+  static getStarted() {
+    if (Auth.isLoggedIn()) {
+      App.showPage('pg-dash');
+    } else {
+      Auth.guestLogin();
+    }
   }
 
   static showLandingSection(sectionId) {
