@@ -15,6 +15,29 @@ class ApiClient {
   static getToken() { return ApiClient.#token; }
 
   static async request(endpoint, opts = {}) {
+    const isAuthRoute = endpoint.startsWith('/auth/login') || 
+                        endpoint.startsWith('/auth/register') || 
+                        endpoint.startsWith('/auth/send-otp') || 
+                        endpoint.startsWith('/auth/verify-otp') || 
+                        endpoint.startsWith('/auth/demo');
+
+    // Auto-ensure guest token if token is missing and route is not auth
+    if (!ApiClient.#token && !isAuthRoute) {
+      try {
+        const demoRes = await fetch(`${API_BASE}/auth/demo`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+        const demoData = await demoRes.json();
+        if (demoData.token) {
+          ApiClient.setToken(demoData.token);
+          if (demoData.user) {
+            Auth.user = demoData.user;
+            localStorage.setItem('zl_user', JSON.stringify(demoData.user));
+          }
+        }
+      } catch (e) {
+        console.warn('Auto guest token initialization skipped:', e.message);
+      }
+    }
+
     const headers = { 'Content-Type': 'application/json' };
     if (ApiClient.#token) headers['Authorization'] = `Bearer ${ApiClient.#token}`;
 
@@ -34,7 +57,7 @@ class ApiClient {
     }
 
     if (!res.ok) {
-      if (res.status === 401 && !opts._isRetry && endpoint !== '/auth/login' && endpoint !== '/auth/register') {
+      if (res.status === 401 && !opts._isRetry && !isAuthRoute) {
         ApiClient.setToken(null);
         localStorage.removeItem('zl_user');
         try {
