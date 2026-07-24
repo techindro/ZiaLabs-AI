@@ -216,6 +216,8 @@ class Auth {
       Toast.success(`Password reset instructions sent to ${email}`);
     }
   }
+}
+
 class LanguageManager {
   static currentLang = 'English';
 
