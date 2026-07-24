@@ -6,6 +6,7 @@ const ChatMessage = require('../models/ChatMessage');
 const PaperSearchOrchestrator = require('../services/PaperSearchOrchestrator');
 const { publishEvent } = require('../config/kafka');
 const SecurityService = require('../services/SecurityService');
+const PaperLinkParser = require('../services/PaperLinkParser');
 
 const agent = new AIAgent();
 
@@ -17,14 +18,20 @@ router.post('/message', authMiddleware, async (req, res) => {
     }
 
     const cleanMessage = SecurityService.sanitizeInput(message.trim());
-    const response = await agent.chat(req.user.id, cleanMessage, language);
+    const detectedPaper = PaperLinkParser.parse(cleanMessage);
+
+    let response = await agent.chat(req.user.id, cleanMessage, language);
+
+    if (detectedPaper) {
+      response += PaperLinkParser.formatWidget(detectedPaper);
+    }
 
     // Publish chat message event to Kafka
     publishEvent('ai-synthesis', { event: 'message', userId: req.user.id, query: message.trim() }).catch(err => {
       console.warn('Failed to publish ai-synthesis message event:', err.message);
     });
 
-    res.json({ response });
+    res.json({ response, paper: detectedPaper });
   } catch (err) {
     console.error('chat error:', err.message);
     res.status(500).json({ error: 'AI agent error. Please try again.' });
