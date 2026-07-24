@@ -249,11 +249,14 @@ class Chat {
     const d = document.createElement('div');
     d.className = 'dm';
     const formatted = html
+      .replace(/### (.*?)\n/g, '<h4 style="font-size:14px;font-weight:700;color:var(--primary);margin:12px 0 6px 0;">$1</h4>')
+      .replace(/## (.*?)\n/g, '<h3 style="font-size:15px;font-weight:800;color:var(--black);margin:14px 0 8px 0;">$1</h3>')
       .replace(/\n/g, '<br>')
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    d.innerHTML = `<div class="dav b">ZL</div><div class="dbub b">${formatted}</div>`;
+    d.innerHTML = `<div class="dav b">ZL</div><div class="dbub b" style="font-size:14px;line-height:1.65;color:var(--black);">${formatted}</div>`;
     c.appendChild(d);
     c.scrollTop = c.scrollHeight;
+    if (window.MathRenderer) window.MathRenderer.render(d);
   }
 
   static #addUser(text) {
