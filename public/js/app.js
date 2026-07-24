@@ -989,6 +989,40 @@ class Payment {
   }
 }
 
+class SecurityGuard {
+  static zdrMode = localStorage.getItem('zl_zdr') === 'true';
+
+  static openModal() {
+    const modal = document.getElementById('security-modal');
+    if (modal) {
+      const toggle = document.getElementById('sec-toggle-zdr');
+      if (toggle) toggle.checked = SecurityGuard.zdrMode;
+      modal.classList.remove('d-none');
+    }
+  }
+
+  static closeModal() {
+    const modal = document.getElementById('security-modal');
+    if (modal) modal.classList.add('d-none');
+  }
+
+  static toggleZDR(enabled) {
+    SecurityGuard.zdrMode = enabled;
+    localStorage.setItem('zl_zdr', enabled);
+    if (enabled) {
+      if (window.Toast) Toast.success('Zero Data Retention (ZDR) Privacy Mode ENABLED 🛡️');
+    } else {
+      if (window.Toast) Toast.info('ZDR Privacy Mode Disabled');
+    }
+  }
+
+  static lockSession() {
+    SecurityGuard.closeModal();
+    Auth.signOut();
+    if (window.Toast) Toast.info('Session locked for user privacy.');
+  }
+}
+
 // SPA page router — shows/hides page divs based on id
 class App {
   static showPage(id) {

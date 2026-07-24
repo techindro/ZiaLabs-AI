@@ -5,6 +5,7 @@ const AIAgent    = require('../services/AIAgent');
 const ChatMessage = require('../models/ChatMessage');
 const PaperSearchOrchestrator = require('../services/PaperSearchOrchestrator');
 const { publishEvent } = require('../config/kafka');
+const SecurityService = require('../services/SecurityService');
 
 const agent = new AIAgent();
 
@@ -15,7 +16,8 @@ router.post('/message', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    const response = await agent.chat(req.user.id, message.trim(), language);
+    const cleanMessage = SecurityService.sanitizeInput(message.trim());
+    const response = await agent.chat(req.user.id, cleanMessage, language);
 
     // Publish chat message event to Kafka
     publishEvent('ai-synthesis', { event: 'message', userId: req.user.id, query: message.trim() }).catch(err => {

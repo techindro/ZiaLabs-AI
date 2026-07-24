@@ -25,9 +25,11 @@ const uploadRoutes  = require('./routes/upload');
 const newsRoutes    = require('./routes/news');
 const blogRoutes    = require('./routes/blog');
 const researchRoutes = require('./routes/research');
+const SecurityService = require('./services/SecurityService');
 
 const app = express();
 
+app.use(SecurityService.securityHeaders);
 app.use(cors());
 
 // Stripe webhook raw body handling
