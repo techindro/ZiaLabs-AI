@@ -3,20 +3,20 @@
 /* base reset + css vars */
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --primary: #047857;        /* OpenAI / Perplexity Emerald 700 */
-  --primary-dark: #065f46;   /* Emerald 800 */
-  --primary-light: #ecfdf5;  /* Soft Emerald Tint */
-  --accent: #10b981;         /* Emerald 500 */
-  --accent-dark: #047857;
-  --black: #0f172a;          /* Slate 900 */
-  --gray: #475569;           /* Slate 600 */
-  --gray-light: #94a3b8;     /* Slate 400 */
-  --border: #e2e8f0;         /* Slate 200 Crisp Border */
+  --primary: #004040;        /* Classic Deep Dark Slate Teal */
+  --primary-dark: #002d2d;   /* Rich Dark Slate */
+  --primary-light: #e6f0f0;  /* Soft Slate Tint */
+  --accent: #004040;         /* Matching Deep Slate */
+  --accent-dark: #002d2d;
+  --black: #001f1f;          /* Deep Dark Charcoal */
+  --gray: #4a5c5c;           /* Slate Muted Gray */
+  --gray-light: #8fa3a3;     /* Light Slate */
+  --border: #d8e0dc;         /* Soft Crisp Border */
   --white: #ffffff;
-  --red: #047857;
-  --red-light: #ecfdf5;
-  --red-dark: #065f46;
-  --bg-base: #fafafa;        /* Ultra-sleek off-white canvas */
+  --red: #004040;
+  --red-light: #e6f0f0;
+  --red-dark: #002d2d;
+  --bg-base: #f6f8f6;        /* Classic Soft Canvas */
   --bg-panel: #ffffff;
   --border-radius-lg: 16px;
   --border-radius-md: 10px;
