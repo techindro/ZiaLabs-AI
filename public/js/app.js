@@ -213,16 +213,21 @@ class Auth {
 
   static async guestLogin() {
     try {
-      const { user, token } = await ApiClient.post('/auth/demo', {});
-      Auth.#save(user, token);
-      Toast.success(`Welcome to ZiaLabs AI Guest Workspace, ${user.name}!`);
-      Dashboard.init();
-      App.showPage('pg-dash');
+      const res = await ApiClient.post('/auth/demo', {});
+      if (res && res.user && res.token) {
+        Auth.#save(res.user, res.token);
+      }
     } catch (err) {
+      console.warn('Guest demo endpoint bypass fallback:', err.message);
       const demoUser = { id: 'guest_' + Date.now(), name: 'Guest Researcher', email: 'guest@zialabs.ai', plan: 'Free' };
+      const demoToken = 'guest_demo_token_' + Date.now();
       Auth.user = demoUser;
       localStorage.setItem('zl_user', JSON.stringify(demoUser));
+      ApiClient.setToken(demoToken);
     }
+    if (window.Toast) Toast.success('Welcome to ZiaLabs AI Workspace!');
+    Dashboard.init();
+    App.showPage('pg-dash');
   }
 
   static async sendOTP() {
@@ -1093,11 +1098,18 @@ class App {
     document.querySelector('.glass-nav')?.classList.remove('nav-open');
   }
 
-  static getStarted() {
-    if (Auth.isLoggedIn()) {
+  static async getStarted() {
+    try {
+      if (Auth.isLoggedIn()) {
+        Dashboard.init();
+        App.showPage('pg-dash');
+      } else {
+        await Auth.guestLogin();
+      }
+    } catch (err) {
+      console.warn('getStarted fallback:', err.message);
+      Dashboard.init();
       App.showPage('pg-dash');
-    } else {
-      Auth.guestLogin();
     }
   }
 
