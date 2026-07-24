@@ -3178,6 +3178,34 @@ class AIDetector {
   }
 }
 
+class AgentGallery {
+  static openModal() {
+    const modal = document.getElementById('agent-gallery-modal-overlay');
+    if (modal) modal.classList.remove('d-none');
+  }
+
+  static closeModal() {
+    const modal = document.getElementById('agent-gallery-modal-overlay');
+    if (modal) modal.classList.add('d-none');
+  }
+
+  static selectAgent(agentId) {
+    AgentGallery.closeModal();
+    const prompts = {
+      biomed: 'I am using the BioMed & Genomics Agent. Please analyze UniProt accession metrics and gene targets for my research topic:',
+      aerospace: 'I am using the Aerospace & Physics Agent. Please perform propulsion thermodynamics and fluid dynamics calculations for:',
+      cs: 'I am using the CS & AI Systems Agent. Please suggest neural architecture design and optimization benchmarks for:',
+      literature: 'I am using the Literature Synthesis Agent. Please construct a consensus evidence matrix for:',
+      writer: 'I am using the Academic Writer Agent. Please draft a publication-grade abstract for:',
+      detector: 'I am using the Originality & Integrity Agent. Please perform perplexity analysis on:'
+    };
+
+    const promptText = prompts[agentId] || 'Selected Agent prompt active:';
+    App.quickPrompt(promptText);
+    Toast.success(`Activated ${agentId.toUpperCase()} Research Agent!`);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
   PWAInstaller.init();
