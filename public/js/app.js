@@ -1399,7 +1399,7 @@ class News {
               </button>
               <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.75);color:#fff;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600;backdrop-filter:blur(4px);display:flex;align-items:center;gap:4px;">
                 <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                <span>${newsItem ? '🔥 Trending News' : 'Research Paper'}</span>
+                <span>🔥 Trending News</span>
               </div>
             </div>
             <div style="font-size:12px;color:var(--red);font-weight:600;margin-bottom:8px">
