@@ -1482,12 +1482,30 @@
 
               <!-- Right: Lite dropdown, Mic & Send arrow -->
               <div style="display: flex; align-items: center; gap: 10px;">
-                <!-- Model Selection Dropdown (Lite / Gemini / OpenAI) -->
-                <div style="position:relative;display:inline-flex;align-items:center;">
-                  <select id="sel-model-dropdown" style="padding: 5px 24px 5px 12px; font-size: 11.5px; border-radius: 16px; background: #f3f4f6; color: var(--black); border: 1px solid var(--border); font-weight: 700; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"10\" height=\"10\" viewBox=\"0 0 24 24\" fill=\"%23374151\"><path d=\"M7 10l5 5 5-5H7z\"/></svg>'); background-repeat: no-repeat; background-position: right 8px center; font-family: var(--font-body); transition: border-color 0.2s, background-color 0.2s;" onchange="Chat.selectModelFromDropdown(this.value)" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
-                    <option value="gemini" selected style="background:#fff;color:#000;font-weight:600;padding:8px;">⚡ Gemini 2.5 (Lite)</option>
-                    <option value="openai" style="background:#fff;color:#000;font-weight:600;padding:8px;">🤖 OpenAI GPT-4o (Pro)</option>
-                  </select>
+                <!-- Model Selection Custom Popup Dropdown with Real Logos -->
+                <div class="cb-model-wrap" style="position:relative;display:inline-block;">
+                  <button type="button" id="btn-model-card-pill" class="filter-pill" style="padding: 5px 12px; font-size: 11.5px; border-radius: 16px; background: #f3f4f6; color: var(--black); border: 1px solid var(--border); font-weight: 700; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;" onclick="event.stopPropagation(); document.getElementById('menu-model-card-popup').classList.toggle('open')">
+                    <img id="img-model-card-active" src="/img/gemini.png" width="14" height="14" style="object-fit:contain;" alt="Gemini">
+                    <span id="lbl-model-card-active">Gemini 2.5 (Lite)</span>
+                    <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M7 10l5 5 5-5H7z"/></svg>
+                  </button>
+
+                  <div id="menu-model-card-popup" class="cb-model-menu" style="position:absolute;bottom:calc(100% + 6px);right:0;background:#ffffff;border:1px solid var(--border);border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,0.12);padding:6px;width:210px;z-index:999;display:none;flex-direction:column;gap:4px;">
+                    <div class="cb-model-item" style="padding:8px 12px;border-radius:8px;display:flex;align-items:center;gap:10px;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--black);transition:background 0.15s;" onclick="Chat.selectModelFromDropdown('gemini'); document.getElementById('menu-model-card-popup').classList.remove('open');" onmouseover="this.style.background='#f3f4f6';" onmouseout="this.style.background='transparent';">
+                      <img src="/img/gemini.png" width="18" height="18" style="object-fit:contain;" alt="Gemini">
+                      <div style="display:flex;flex-direction:column;align-items:flex-start;">
+                        <span style="font-weight:700;">Google Gemini 2.5</span>
+                        <span style="font-size:10px;color:var(--gray);">Lite / Fast Synthesis</span>
+                      </div>
+                    </div>
+                    <div class="cb-model-item" style="padding:8px 12px;border-radius:8px;display:flex;align-items:center;gap:10px;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--black);transition:background 0.15s;" onclick="Chat.selectModelFromDropdown('openai'); document.getElementById('menu-model-card-popup').classList.remove('open');" onmouseover="this.style.background='#f3f4f6';" onmouseout="this.style.background='transparent';">
+                      <img src="/img/openai.png" width="18" height="18" style="object-fit:contain;border-radius:3px;" alt="OpenAI">
+                      <div style="display:flex;flex-direction:column;align-items:flex-start;">
+                        <span style="font-weight:700;">OpenAI GPT-4o</span>
+                        <span style="font-size:10px;color:var(--gray);">Pro / Deep Reasoning</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <!-- Mic button (Sarvam Indic Voice STT) -->

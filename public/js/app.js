@@ -406,8 +406,31 @@ class Chat {
       selectEl.value = Chat.currentModel;
     }
 
+    const imgCardActive = document.getElementById('img-model-card-active');
+    const lblCardActive = document.getElementById('lbl-model-card-active');
+    if (imgCardActive && lblCardActive) {
+      if (isOpenAI) {
+        imgCardActive.src = '/img/openai.png';
+        lblCardActive.textContent = 'OpenAI GPT-4o (Pro)';
+      } else {
+        imgCardActive.src = '/img/gemini.png';
+        lblCardActive.textContent = 'Gemini 2.5 (Lite)';
+      }
+    }
+
     Chat.updateDropdownLabel();
   }
+
+// Close model dropdown popup on outside click
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('menu-model-card-popup');
+  const btn = document.getElementById('btn-model-card-pill');
+  if (menu && menu.classList.contains('open')) {
+    if (!menu.contains(e.target) && (!btn || !btn.contains(e.target))) {
+      menu.classList.remove('open');
+    }
+  }
+});
 
   static async #fetchHistory() {
     const chatEl = document.getElementById('dchat');
