@@ -249,6 +249,7 @@ class Chat {
     const d = document.createElement('div');
     d.className = 'dm';
     const formatted = html
+      .replace(/\[(\d+)\]/g, '<sup style="color:var(--primary);font-weight:700;background:var(--primary-light);padding:1px 5px;border-radius:4px;font-size:10px;margin:0 2px;">[$1]</sup>')
       .replace(/### (.*?)\n/g, '<h4 style="font-size:14px;font-weight:700;color:var(--primary);margin:12px 0 6px 0;">$1</h4>')
       .replace(/## (.*?)\n/g, '<h3 style="font-size:15px;font-weight:800;color:var(--black);margin:14px 0 8px 0;">$1</h3>')
       .replace(/\n/g, '<br>')
@@ -257,6 +258,73 @@ class Chat {
     c.appendChild(d);
     c.scrollTop = c.scrollHeight;
     if (window.MathRenderer) window.MathRenderer.render(d);
+  }
+
+  static async streamBot(fullText, sources = []) {
+    const c = document.getElementById('dchat');
+    const d = document.createElement('div');
+    d.className = 'dm';
+
+    let sourcesHeader = '';
+    if (sources && sources.length) {
+      sourcesHeader = `
+        <div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;">
+          <span style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;margin-right:4px;display:flex;align-items:center;">Sources:</span>
+          ${sources.map((s, idx) => `
+            <a href="${s.url || '#'}" target="_blank" style="text-decoration:none;font-size:11.5px;font-weight:600;color:var(--primary);background:var(--primary-light);border:1px solid var(--border);padding:3px 10px;border-radius:12px;display:inline-flex;align-items:center;gap:4px;">
+              <span>📄</span> ${s.title || `Source ${idx+1}`}
+            </a>
+          `).join('')}
+        </div>
+      `;
+    } else {
+      sourcesHeader = `
+        <div style="display:flex;gap:6px;margin-bottom:10px;">
+          <span style="font-size:11.5px;font-weight:600;color:var(--primary);background:var(--primary-light);border:1px solid var(--border);padding:3px 10px;border-radius:12px;display:inline-flex;align-items:center;gap:4px;">
+            <span>🌐</span> ZiaLabs Academic Intelligence Swarm
+          </span>
+        </div>
+      `;
+    }
+
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'dbub b';
+    contentDiv.style.cssText = 'font-size:14px;line-height:1.65;color:var(--black);';
+
+    d.innerHTML = `<div class="dav b">ZL</div>`;
+    const bubbleContainer = document.createElement('div');
+    bubbleContainer.style.cssText = 'flex:1;';
+    bubbleContainer.innerHTML = sourcesHeader;
+    bubbleContainer.appendChild(contentDiv);
+    d.appendChild(bubbleContainer);
+
+    c.appendChild(d);
+    c.scrollTop = c.scrollHeight;
+
+    const formatted = fullText
+      .replace(/\[(\d+)\]/g, '<sup style="color:var(--primary);font-weight:700;background:var(--primary-light);padding:1px 5px;border-radius:4px;font-size:10px;margin:0 2px;">[$1]</sup>')
+      .replace(/### (.*?)\n/g, '<h4 style="font-size:14px;font-weight:700;color:var(--primary);margin:12px 0 6px 0;">$1</h4>')
+      .replace(/## (.*?)\n/g, '<h3 style="font-size:15px;font-weight:800;color:var(--black);margin:14px 0 8px 0;">$1</h3>')
+      .replace(/\n/g, '<br>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    const tokens = formatted.split(' ');
+    let currentIdx = 0;
+
+    return new Promise((resolve) => {
+      const interval = setInterval(() => {
+        if (currentIdx >= tokens.length) {
+          clearInterval(interval);
+          if (window.MathRenderer) window.MathRenderer.render(d);
+          resolve();
+          return;
+        }
+
+        contentDiv.innerHTML = tokens.slice(0, currentIdx + 1).join(' ');
+        c.scrollTop = c.scrollHeight;
+        currentIdx += 2;
+      }, 15);
+    });
   }
 
   static #addUser(text) {
@@ -274,7 +342,7 @@ class Chat {
     const d = document.createElement('div');
     d.className = 'dm';
     d.id = 'dtyp';
-    d.innerHTML = `<div class="dav b">ZL</div><div class="dbub b"><div class="dtyping"><div class="ddot"></div><div class="ddot"></div><div class="ddot"></div></div></div>`;
+    d.innerHTML = `<div class="dav b">ZL</div><div class="dbub b" style="display:flex;align-items:center;gap:8px;"><div class="dtyping"><div class="ddot"></div><div class="ddot"></div><div class="ddot"></div></div><span style="font-size:12px;color:var(--primary);font-weight:600;" id="dtyp-status">Searching 2.5M+ academic sources...</span></div>`;
     c.appendChild(d);
     c.scrollTop = c.scrollHeight;
   }
@@ -288,10 +356,18 @@ class Chat {
     Chat.#addUser(text);
     Chat.#showTyping();
 
+    const statusEl = document.getElementById('dtyp-status');
+    if (statusEl) {
+      setTimeout(() => { if (statusEl) statusEl.textContent = '🧠 Synthesizing consensus evidence...'; }, 400);
+      setTimeout(() => { if (statusEl) statusEl.textContent = '✍️ Generating Perplexity-smooth response...'; }, 900);
+    }
+
     try {
-      const { response } = await ApiClient.post('/chat/message', { message: text });
+      const res = await ApiClient.post('/chat/message', { message: text });
       document.getElementById('dtyp')?.remove();
-      Chat.#addBot(response);
+      const answer = res.response || res.message || 'Response generated.';
+      const sources = res.sources || [];
+      await Chat.streamBot(answer, sources);
       Dashboard.loadStats();
     } catch (err) {
       document.getElementById('dtyp')?.remove();
