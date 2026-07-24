@@ -1083,7 +1083,7 @@ class News {
 
       const uniData = [
         { img: '/img/nasa_bg.png', logo: '/img/nasa.svg', uni: 'NASA Space AI', tag: 'NASA • ARTEMIS & AI', defaultTitle: 'NASA Artemis IV: AI Neural Guidance & Autonomous Lunar Landing Systems', defaultExcerpt: 'NASA Jet Propulsion Lab details real-time terrain-relative navigation AI powering autonomous precision landings on the Lunar South Pole...', slug: 'nasa-artemis-ai-autonomous-lunar-navigation' },
-        { img: '/img/iitd_bg.jpg', logo: '/img/iitd.svg', uni: 'IIT Delhi AI', tag: 'IIT DELHI • NEUROMORPHIC AI', defaultTitle: 'IIT Delhi mHAS: Sub-Milliwatt Neuromorphic AI Chip for Edge Perception', defaultExcerpt: 'IIT Delhi Yardi School of Artificial Intelligence develops mHAS chip, enabling ultra-low latency on-device neural processing...', slug: 'iit-delhi-mhas-neuromorphic-ai-chip' },
+        { img: '/img/iitd_bg.png', logo: '/img/iitd.svg', uni: 'IIT Delhi AI', tag: 'IIT DELHI • NEUROMORPHIC AI', defaultTitle: 'IIT Delhi mHAS: Sub-Milliwatt Neuromorphic AI Chip for Edge Perception', defaultExcerpt: 'IIT Delhi Yardi School of Artificial Intelligence develops mHAS chip, enabling ultra-low latency on-device neural processing...', slug: 'iit-delhi-mhas-neuromorphic-ai-chip' },
         { img: '/img/iitb_bg.png', logo: '/img/iitb.svg', uni: 'IIT Bombay AI', tag: 'IIT BOMBAY • INDIC AI', defaultTitle: 'IIT Bombay BharatGPT: Multi-Task Indic LLMs across 22 Official Indian Languages', defaultExcerpt: 'IIT Bombay AI Center presents BharatGPT, advancing native speech, script, and multi-modal reasoning across all 22 official Indian languages...', slug: 'iit-bombay-bharat-gpt-multilingual-ai-models' },
         { img: '/img/isro_bg.png', logo: '/img/isro.svg', uni: 'ISRO Space AI', tag: 'ISRO • SPACE & AI', defaultTitle: 'ISRO Gaganyaan: Autonomous AI Spacecraft Trajectory & Docking Systems', defaultExcerpt: 'ISRO unveils breakthrough autonomous neural guidance systems for the Gaganyaan crewed spaceflight program and future Bharatiya Antariksha Station...', slug: 'isro-gaganyaan-autonomous-ai-space-navigation' },
         { img: '/img/skyroot_bg.png', logo: '/img/skyroot.svg', uni: 'Skyroot Aerospace', tag: 'SKYROOT • AEROSPACE', defaultTitle: 'Skyroot Aerospace: AI-Optimized 3D-Printed Liquid Rocket Engines for Vikram-1', defaultExcerpt: 'Skyroot Aerospace details generative AI structural design and additive manufacturing for hyper-efficient 3D-printed rocket engines...', slug: 'skyroot-vikram-1-3d-printed-rocket-engines-ai' },
@@ -1757,7 +1757,7 @@ class Blog {
         if (author.includes('NASA') || title.includes('NASA') || title.includes('Artemis')) {
           info = { img: '/img/nasa_bg.png', logo: '/img/nasa.svg', uni: 'NASA Space AI' };
         } else if (author.includes('Delhi') || author.includes('IITD') || title.includes('mHAS')) {
-          info = { img: '/img/iitd_bg.jpg', logo: '/img/iitd.svg', uni: 'IIT Delhi AI' };
+          info = { img: '/img/iitd_bg.png', logo: '/img/iitd.svg', uni: 'IIT Delhi AI' };
         } else if (author.includes('Bombay') || author.includes('IITB') || title.includes('BharatGPT')) {
           info = { img: '/img/iitb_bg.png', logo: '/img/iitb.svg', uni: 'IIT Bombay AI' };
         } else if (author.includes('ISRO') || title.includes('ISRO') || title.includes('Gaganyaan')) {
