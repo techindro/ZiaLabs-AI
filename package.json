@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server/index.js",
     "dev": "nodemon server/index.js",
-    "mcp": "node server/mcp/index.js"
+    "mcp": "node server/mcp/index.js",
+    "vercel-build": "node -e \"console.log('Vercel build complete')\""
   },
   "keywords": [
     "ai",
