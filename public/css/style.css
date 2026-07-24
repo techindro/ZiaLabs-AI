@@ -1,31 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
 
 /* base reset + css vars */
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --primary: #004040;        /* Elicit Dark Slate Gray */
-  --primary-dark: #002d2d;
-  --primary-light: #f1f2e6;  /* Soft light ecru tint */
-  --accent: #004040;
-  --accent-dark: #002d2d;
-  --black: #001f1f;
-  --gray: #4a5c5c;
-  --gray-light: #8fa3a3;
-  --border: #e0e4cc;         /* Matching ecru border tone */
+  --primary: #047857;        /* OpenAI / Perplexity Emerald 700 */
+  --primary-dark: #065f46;   /* Emerald 800 */
+  --primary-light: #ecfdf5;  /* Soft Emerald Tint */
+  --accent: #10b981;         /* Emerald 500 */
+  --accent-dark: #047857;
+  --black: #0f172a;          /* Slate 900 */
+  --gray: #475569;           /* Slate 600 */
+  --gray-light: #94a3b8;     /* Slate 400 */
+  --border: #e2e8f0;         /* Slate 200 Crisp Border */
   --white: #ffffff;
-  --red: #004040;            /* Redirect ZiaLabs buttons to Elicit Slate Gray */
-  --red-light: #f5f6ee;
-  --red-dark: #002d2d;
-  --bg-base: #f9faf0;        /* Elicit Ecru White */
+  --red: #047857;
+  --red-light: #ecfdf5;
+  --red-dark: #065f46;
+  --bg-base: #fafafa;        /* Ultra-sleek off-white canvas */
   --bg-panel: #ffffff;
-  --border-radius-lg: 12px;
-  --border-radius-md: 8px;
-  --font-heading: 'Lora', 'Georgia', serif;
+  --border-radius-lg: 16px;
+  --border-radius-md: 10px;
+  --font-heading: 'Plus Jakarta Sans', 'Inter', sans-serif;
   --font-body: 'Inter', sans-serif;
-  --font-mono: 'Fira Code', 'Courier New', monospace;
+  --font-mono: 'Fira Code', monospace;
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -1px rgba(0,0,0,0.04);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.03);
+  --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01);
+  --shadow-lg: 0 20px 40px -15px rgba(0,0,0,0.08);
   --shadow-xl: 0 25px 50px -12px rgba(0,0,0,0.18);
 }
 
