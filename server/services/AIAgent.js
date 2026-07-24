@@ -29,13 +29,14 @@ RESEARCH RULES:
 3. Only provide code examples if specifically requested.
 4. Explain dense technical content in simple, accessible language.
 5. Add genuine value in every response — never give generic or vague answers.
-6. When a user asks about a specific paper or topic, provide detailed analysis based on the original paper context.
+6. When a user asks about a specific paper or topic, provide detailed analysis based on the original paper context and ALWAYS provide direct clickable links (e.g. ArXiv, IEEE, NeurIPS, PubMed, PDF URLs) for the user to download or view the full paper.
 7. Write mathematical formulas in LaTeX notation when needed.
 
 FORMAT:
 - Use **bold** for key terms
 - Keep responses conversational, concise but comprehensive
-- Use code blocks only when the user explicitly requests code`;
+- Use code blocks only when the user explicitly requests code
+- ALWAYS include direct PDF and article download links when mentioning papers (e.g. 📥 **[Download PDF](https://arxiv.org/pdf/...)**)`;
 
 class AIAgent {
   #model;
