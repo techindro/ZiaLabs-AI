@@ -3,6 +3,18 @@ const router  = express.Router();
 const BlogService = require('../services/BlogService');
 const RedisService = require('../config/redis');
 
+const DailyBlogFetcher = require('../services/DailyBlogFetcher');
+
+// GET /api/blog/sync (Manually trigger or auto-sync daily blogs)
+router.get('/sync', async (req, res) => {
+  try {
+    DailyBlogFetcher.autoUpdateDailyBlogs();
+    res.json({ success: true, message: 'Daily AI research blog sync initiated in background.' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/blog?tag=...&q=...
 router.get('/', async (req, res) => {
   try {

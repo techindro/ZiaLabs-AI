@@ -2,11 +2,15 @@ require('dotenv').config();
 
 const { app, ensureInitialized } = require('./app');
 const KafkaConsumer = require('./services/KafkaConsumer');
+const DailyBlogFetcher = require('./services/DailyBlogFetcher');
 
 const PORT = process.env.PORT || 3000;
 
 async function startServer() {
   await ensureInitialized();
+
+  // Start daily autonomous blog fetcher scheduler
+  DailyBlogFetcher.startDailyScheduler();
 
   // Start background Kafka consumer if enabled and not in serverless mode
   if (!process.env.VERCEL) {
