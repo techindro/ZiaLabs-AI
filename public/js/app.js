@@ -514,6 +514,18 @@ class Chat {
       Dashboard.loadStats();
     } catch (err) {
       document.getElementById('dtyp')?.remove();
+      if (err.message && (err.message.includes('Authentication') || err.message.includes('sign in') || err.message.includes('token') || err.message.includes('401'))) {
+        try {
+          await Auth.guestLogin();
+          const retryRes = await ApiClient.post('/chat/message', { message: text, language: LanguageManager.currentLang });
+          const answer = retryRes.response || retryRes.message || 'Response generated.';
+          const sources = retryRes.sources || [];
+          await Chat.streamBot(answer, sources);
+          return;
+        } catch (retryErr) {
+          console.warn('Guest retry chat error:', retryErr.message);
+        }
+      }
       Chat.#addBot(`Error: ${err.message}`);
     }
   }
