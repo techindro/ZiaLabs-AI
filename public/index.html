@@ -1287,11 +1287,14 @@
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M7 10l5 5 5-5H7z"/></svg>
               </button>
               <div class="cb-lang-menu">
-                <div class="cb-lang-item active" onclick="this.parentElement.querySelectorAll('.cb-lang-item').forEach(e=>e.classList.remove('active'));this.classList.add('active');this.closest('.cb-lang-wrap').classList.remove('open');">Hindi <span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg></span></div>
-                <div class="cb-lang-item" onclick="this.parentElement.querySelectorAll('.cb-lang-item').forEach(e=>e.classList.remove('active'));this.classList.add('active');this.closest('.cb-lang-wrap').classList.remove('open');">English</div>
-                <div class="cb-lang-item" onclick="this.parentElement.querySelectorAll('.cb-lang-item').forEach(e=>e.classList.remove('active'));this.classList.add('active');this.closest('.cb-lang-wrap').classList.remove('open');">Sanskrit</div>
-                <div class="cb-lang-item" onclick="this.parentElement.querySelectorAll('.cb-lang-item').forEach(e=>e.classList.remove('active'));this.classList.add('active');this.closest('.cb-lang-wrap').classList.remove('open');">Tamil</div>
-                <div class="cb-lang-item" onclick="this.parentElement.querySelectorAll('.cb-lang-item').forEach(e=>e.classList.remove('active'));this.classList.add('active');this.closest('.cb-lang-wrap').classList.remove('open');">Bhojpuri</div>
+                <div class="cb-lang-item active" onclick="LanguageManager.selectLang(this, 'English')">English</div>
+                <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'Hindi')">Hindi (हिन्दी)</div>
+                <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'French')">French (Français)</div>
+                <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'Sanskrit')">Sanskrit (संस्कृतम्)</div>
+                <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'Tamil')">Tamil (தமிழ்)</div>
+                <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'Bhojpuri')">Bhojpuri (भोजपुरी)</div>
+                <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'German')">German (Deutsch)</div>
+                <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'Spanish')">Spanish (Español)</div>
               </div>
             </div>
           </div>

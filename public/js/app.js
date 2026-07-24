@@ -207,6 +207,37 @@ class Auth {
       Toast.success(`Password reset instructions sent to ${email}`);
     }
   }
+class LanguageManager {
+  static currentLang = 'English';
+
+  static selectLang(el, lang) {
+    LanguageManager.currentLang = lang;
+    document.querySelectorAll('.cb-lang-item').forEach(e => e.classList.remove('active'));
+    el.classList.add('active');
+    
+    const wrap = el.closest('.cb-lang-wrap');
+    if (wrap) wrap.classList.remove('open');
+
+    const dinpCard = document.getElementById('dinp-card');
+    const dinpBottom = document.getElementById('dinp');
+
+    const placeholders = {
+      English: 'Give me any task to work on...',
+      Hindi: 'मुझे काम करने के लिए कोई भी शोध प्रश्न या कार्य दें...',
+      Sanskrit: 'मह्यम् कार्यम् कर्तुम् किमपि शोधप्रश्नम् यच्छतु...',
+      Tamil: 'எனக்கு ஏதேனும் ஆராய்ச்சி பணிகளை வழங்கவும்...',
+      Bhojpuri: 'हमरा के कवनो शोध काम या सवाल दीं...',
+      French: 'Donnez-moi une tâche de recherche sur laquelle travailler...',
+      German: 'Geben Sie mir eine Forschungsaufgabe...',
+      Spanish: 'Dame cualquier tarea de investigación...'
+    };
+
+    const prompt = placeholders[lang] || placeholders['English'];
+    if (dinpCard) dinpCard.placeholder = prompt;
+    if (dinpBottom) dinpBottom.placeholder = prompt;
+
+    if (window.Toast) Toast.success(`Language set to ${lang}`);
+  }
 }
 
 // chat panel — talks to the gemini-powered backend
@@ -363,7 +394,7 @@ class Chat {
     }
 
     try {
-      const res = await ApiClient.post('/chat/message', { message: text });
+      const res = await ApiClient.post('/chat/message', { message: text, language: LanguageManager.currentLang });
       document.getElementById('dtyp')?.remove();
       const answer = res.response || res.message || 'Response generated.';
       const sources = res.sources || [];

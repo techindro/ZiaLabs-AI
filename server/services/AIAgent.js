@@ -3,8 +3,8 @@ const ChatMessage = require('../models/ChatMessage');
 const User        = require('../models/User');
 
 // system prompt — multilingual research assistant
-// supports hindi, english, tamil, and bhojpuri natively
-const SYSTEM_PROMPT = `You are the ZiaLabs Research Agent — a professional AI research assistant that natively supports 4 languages: Hindi, English, Tamil, and Bhojpuri.
+// supports Hindi, English, Sanskrit, Tamil, Bhojpuri, French, German, and Spanish natively
+const SYSTEM_PROMPT = `You are the ZiaLabs Research Agent — a professional AI research assistant that natively supports 8 languages: Hindi, English, Sanskrit, Tamil, Bhojpuri, French, German, and Spanish.
 
 CONVERSATION STYLE:
 1. Focus on friendly research conversation ("baat chit"). Talk naturally like a human peer, rather than a rigid robot.
@@ -12,13 +12,16 @@ CONVERSATION STYLE:
 3. DO NOT output programming code or code blocks (like Python, R, or MATLAB) unless the user explicitly asks for code, implementation, or a programming snippet.
 
 LANGUAGE RULES:
-1. Detect the user's language from their message and reply in the SAME language.
-2. If the user writes in Hindi, reply fully in Hindi (Devanagari script).
-3. If the user writes in Tamil, reply fully in Tamil (Tamil script).
-4. If the user writes in Bhojpuri, reply fully in Bhojpuri.
-5. If the user writes in English, reply in clear professional English.
-6. If the user mixes languages (e.g. Hinglish), match their style naturally.
-7. Technical terms like paper titles, author names, and code can stay in English regardless of language.
+1. Detect the user's language or target requested language and reply in the SAME language.
+2. If the language is Hindi, reply fully in fluent Hindi (Devanagari script).
+3. If the language is Sanskrit, reply in classic clear Sanskrit (Devanagari script).
+4. If the language is Tamil, reply fully in Tamil (Tamil script).
+5. If the language is Bhojpuri, reply fully in warm conversational Bhojpuri.
+6. If the language is French, reply in professional French (Français).
+7. If the language is German, reply in clear academic German (Deutsch).
+8. If the language is Spanish, reply in fluent Spanish (Español).
+9. If the user writes in English or Hinglish, match their style naturally.
+10. Technical terms like paper titles, author names, and equations can stay in English regardless of language.
 
 RESEARCH RULES:
 1. Present key insights as structured bullet points or paragraphs for natural reading.
@@ -58,7 +61,7 @@ class AIAgent {
    * Main chat method. Handles context loading, quota checks, and the
    * actual gemini call. Falls back to canned responses if no API key.
    */
-  async chat(userId, message) {
+  async chat(userId, message, language = null) {
     if (!User.hasApiCallsRemaining(userId)) {
       return 'You have reached your monthly usage limit. Please upgrade to Pro or wait until next month to continue.';
     }
@@ -73,10 +76,6 @@ class AIAgent {
       try {
         const history = ChatMessage.getRecentContext(userId, 20);
 
-        // gemini requires strict alternating user/model turns in the history.
-        // if the db has consecutive messages from the same role (happens when
-        // the user sends multiple messages before the AI responds), gemini
-        // throws a 400. this loop filters out anything that breaks the pattern.
         let validHistory = [];
         let expected = 'user';
         for (const msg of history.slice(0, -1)) {
@@ -87,8 +86,9 @@ class AIAgent {
           }
         }
 
+        const promptWithLang = language ? `[Please respond natively in ${language}]\n\n${message}` : message;
         const chat   = this.#model.startChat({ history: validHistory });
-        const result = await chat.sendMessage(message);
+        const result = await chat.sendMessage(promptWithLang);
         response     = result.response.text();
       } catch (err) {
         console.error('gemini error:', err.message);

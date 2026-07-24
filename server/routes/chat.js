@@ -10,12 +10,12 @@ const agent = new AIAgent();
 
 router.post('/message', authMiddleware, async (req, res) => {
   try {
-    const { message } = req.body;
+    const { message, language } = req.body;
     if (!message || !message.trim()) {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    const response = await agent.chat(req.user.id, message.trim());
+    const response = await agent.chat(req.user.id, message.trim(), language);
 
     // Publish chat message event to Kafka
     publishEvent('ai-synthesis', { event: 'message', userId: req.user.id, query: message.trim() }).catch(err => {
