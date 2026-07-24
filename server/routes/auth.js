@@ -39,6 +39,16 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// guest demo sign-in — returns a REAL valid JWT token so guest sessions never get 401 Invalid Token errors
+router.post('/demo', async (req, res) => {
+  try {
+    const { user, token } = await AuthService.googleSignIn('Guest Researcher', 'guest@zialabs.ai');
+    res.json({ user, token });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // mock google sign-in for local dev
 // i'll swap this for real passport-google-oauth20 later
 router.post('/google', async (req, res) => {

@@ -33,7 +33,27 @@ class ApiClient {
       throw new Error(cleanText ? `Server Error (${res.status}): ${cleanText.substring(0, 100)}` : `Server Error (${res.status})`);
     }
 
-    if (!res.ok) throw new Error(data.error || `Something went wrong (${res.status})`);
+    if (!res.ok) {
+      if (res.status === 401 && !opts._isRetry && endpoint !== '/auth/login' && endpoint !== '/auth/register') {
+        ApiClient.setToken(null);
+        localStorage.removeItem('zl_user');
+        try {
+          const demoRes = await fetch(`${API_BASE}/auth/demo`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+          const demoData = await demoRes.json();
+          if (demoData.token) {
+            ApiClient.setToken(demoData.token);
+            if (demoData.user) {
+              Auth.user = demoData.user;
+              localStorage.setItem('zl_user', JSON.stringify(demoData.user));
+            }
+            return ApiClient.request(endpoint, { ...opts, _isRetry: true });
+          }
+        } catch (e) {
+          console.warn('Auto guest token recovery failed:', e.message);
+        }
+      }
+      throw new Error(data.error || `Something went wrong (${res.status})`);
+    }
     return data;
   }
 
@@ -191,13 +211,20 @@ class Auth {
     return !!(Auth.user && ApiClient.getToken());
   }
 
-  static guestLogin() {
-    const demoUser = { id: 'guest_' + Date.now(), name: 'Guest Researcher', email: 'guest@zialabs.ai', plan: 'Free' };
-    const demoToken = 'guest_demo_token_' + Date.now();
-    Auth.#save(demoUser, demoToken);
-    Toast.success('Welcome to ZiaLabs AI Guest Workspace!');
-    Dashboard.init();
-    App.showPage('pg-dash');
+  static async guestLogin() {
+    try {
+      const { user, token } = await ApiClient.post('/auth/demo', {});
+      Auth.#save(user, token);
+      Toast.success(`Welcome to ZiaLabs AI Guest Workspace, ${user.name}!`);
+      Dashboard.init();
+      App.showPage('pg-dash');
+    } catch (err) {
+      const demoUser = { id: 'guest_' + Date.now(), name: 'Guest Researcher', email: 'guest@zialabs.ai', plan: 'Free' };
+      Auth.user = demoUser;
+      localStorage.setItem('zl_user', JSON.stringify(demoUser));
+      Dashboard.init();
+      App.showPage('pg-dash');
+    }
   }
 
   static async resetPassword() {
