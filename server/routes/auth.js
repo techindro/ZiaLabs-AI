@@ -49,6 +49,71 @@ router.post('/demo', async (req, res) => {
   }
 });
 
+// In-memory store for OTPs (with 5-min expiration)
+const otpStore = new Map();
+
+// Send OTP to Global Mobile Phone Number
+router.post('/send-otp', async (req, res) => {
+  try {
+    const { phone, countryCode } = req.body;
+    if (!phone || !phone.trim()) {
+      return res.status(400).json({ error: 'Valid mobile phone number is required' });
+    }
+
+    const fullPhone = `${countryCode || '+1'}${phone.replace(/\D/g, '')}`;
+    const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+
+    otpStore.set(fullPhone, { otp, expiresAt: Date.now() + 5 * 60 * 1000 });
+
+    console.log(`📱 [GLOBAL OTP SENT] Phone: ${fullPhone} | OTP Code: ${otp}`);
+
+    res.json({
+      message: `OTP code sent to ${fullPhone}`,
+      fullPhone,
+      demoOtp: otp // Always return demoOtp for seamless user testing
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Verify OTP & Sign In / Register Global User
+router.post('/verify-otp', async (req, res) => {
+  try {
+    const { phone, countryCode, otp } = req.body;
+    if (!phone || !otp) {
+      return res.status(400).json({ error: 'Phone number and 6-digit OTP are required' });
+    }
+
+    const fullPhone = `${countryCode || '+1'}${phone.replace(/\D/g, '')}`;
+    const record = otpStore.get(fullPhone);
+
+    // Allow 123456 as master test OTP or verify generated OTP
+    if (otp.trim() !== '123456') {
+      if (!record || record.expiresAt < Date.now()) {
+        return res.status(400).json({ error: 'OTP expired or not found. Please request a new code.' });
+      }
+      if (record.otp !== otp.trim()) {
+        return res.status(400).json({ error: 'Invalid OTP code. Please try again.' });
+      }
+    }
+
+    otpStore.delete(fullPhone);
+
+    const email = `user_${fullPhone.replace(/\+/g, '')}@zialabs.ai`;
+    const name = `Global Researcher (${fullPhone})`;
+    const { user, token } = await AuthService.googleSignIn(name, email);
+
+    user.phone = fullPhone;
+
+    publishEvent('user-activity', { event: 'otp-login', userId: user.id, phone: fullPhone }).catch(() => {});
+
+    res.json({ user, token, message: 'Global Phone Authentication Successful!' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // mock google sign-in for local dev
 // i'll swap this for real passport-google-oauth20 later
 router.post('/google', async (req, res) => {

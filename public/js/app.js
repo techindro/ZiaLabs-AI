@@ -222,8 +222,54 @@ class Auth {
       const demoUser = { id: 'guest_' + Date.now(), name: 'Guest Researcher', email: 'guest@zialabs.ai', plan: 'Free' };
       Auth.user = demoUser;
       localStorage.setItem('zl_user', JSON.stringify(demoUser));
+    }
+  }
+
+  static async sendOTP() {
+    const countryCode = document.getElementById('otp-country-code').value;
+    const phone = document.getElementById('otp-phone-input').value.trim();
+    if (!phone) {
+      if (window.Toast) Toast.error('Please enter a valid mobile phone number!');
+      return;
+    }
+    const btn = document.getElementById('send-otp-btn');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    try {
+      const data = await ApiClient.post('/auth/send-otp', { phone, countryCode });
+      if (window.Toast) Toast.success(`OTP code sent to ${data.fullPhone}!`);
+      document.getElementById('otp-verify-box').classList.remove('d-none');
+      const msgEl = document.getElementById('otp-status-msg');
+      if (msgEl && data.demoOtp) {
+        msgEl.textContent = `Demo Testing Code: ${data.demoOtp}`;
+      }
+      btn.textContent = 'Resend';
+      btn.disabled = false;
+    } catch (err) {
+      if (window.Toast) Toast.error(err.message || 'Failed to send OTP code');
+      btn.textContent = 'Send OTP';
+      btn.disabled = false;
+    }
+  }
+
+  static async verifyOTP() {
+    const countryCode = document.getElementById('otp-country-code').value;
+    const phone = document.getElementById('otp-phone-input').value.trim();
+    const otp = document.getElementById('otp-code-input').value.trim();
+    if (!phone || !otp) {
+      if (window.Toast) Toast.error('Please enter phone number and 6-digit OTP!');
+      return;
+    }
+
+    try {
+      const { user, token } = await ApiClient.post('/auth/verify-otp', { phone, countryCode, otp });
+      Auth.#save(user, token);
+      if (window.Toast) Toast.success(`Welcome to ZiaLabs AI, ${user.name}!`);
       Dashboard.init();
       App.showPage('pg-dash');
+    } catch (err) {
+      if (window.Toast) Toast.error(err.message || 'Invalid or expired OTP code');
     }
   }
 
