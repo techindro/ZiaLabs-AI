@@ -1422,23 +1422,35 @@
 
         <!-- Top bar: logo + language dropdown -->
         <div class="cb-topbar">
-          <div class="cb-brand">
-            <span class="cb-brand-name">ZiaLabs</span>
-            <span class="cb-brand-ai">AI</span>
-            <div class="cb-lang-wrap">
-              <button class="cb-lang-toggle" onclick="this.parentElement.classList.toggle('open')">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M7 10l5 5 5-5H7z"/></svg>
-              </button>
-              <div class="cb-lang-menu">
-                <div class="cb-lang-item active" onclick="LanguageManager.selectLang(this, 'English')">English</div>
-                <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'Hindi')">Hindi (हिन्दी)</div>
-                <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'French')">French (Français)</div>
-                <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'Sanskrit')">Sanskrit (संस्कृतम्)</div>
-                <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'Tamil')">Tamil (தமிழ்)</div>
-                <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'Bhojpuri')">Bhojpuri (भोजपुरी)</div>
-                <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'German')">German (Deutsch)</div>
-                <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'Spanish')">Spanish (Español)</div>
+          <div class="cb-brand" style="display:flex;align-items:center;gap:12px;width:100%;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="cb-brand-name">ZiaLabs</span>
+              <span class="cb-brand-ai">AI</span>
+              <div class="cb-lang-wrap">
+                <button class="cb-lang-toggle" onclick="this.parentElement.classList.toggle('open')">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M7 10l5 5 5-5H7z"/></svg>
+                </button>
+                <div class="cb-lang-menu">
+                  <div class="cb-lang-item active" onclick="LanguageManager.selectLang(this, 'English')">English</div>
+                  <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'Hindi')">Hindi (हिन्दी)</div>
+                  <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'French')">French (Français)</div>
+                  <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'Sanskrit')">Sanskrit (संस्कृतम्)</div>
+                  <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'Tamil')">Tamil (தமிழ்)</div>
+                  <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'Bhojpuri')">Bhojpuri (भोजपुरी)</div>
+                  <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'German')">German (Deutsch)</div>
+                  <div class="cb-lang-item" onclick="LanguageManager.selectLang(this, 'Spanish')">Spanish (Español)</div>
+                </div>
               </div>
+            </div>
+
+            <!-- Dual AI Model Selector Pill Switcher with Official Logos -->
+            <div style="display:inline-flex;align-items:center;background:#f3f4f6;border:1px solid var(--border);border-radius:20px;padding:3px;">
+              <button class="btn-model-gemini active" onclick="Chat.setModel('gemini')" style="padding:4px 14px;border-radius:16px;border:none;font-size:12px;font-weight:700;cursor:pointer;background:var(--primary);color:#fff;display:inline-flex;align-items:center;gap:6px;transition:all 0.2s;">
+                <img src="/img/gemini.svg" width="14" height="14" style="vertical-align:-2px;" alt="Gemini"> Gemini 2.5
+              </button>
+              <button class="btn-model-openai" onclick="Chat.setModel('openai')" style="padding:4px 14px;border-radius:16px;border:none;font-size:12px;font-weight:700;cursor:pointer;background:transparent;color:var(--gray);display:inline-flex;align-items:center;gap:6px;transition:all 0.2s;">
+                <img src="/img/openai.svg" width="14" height="14" style="vertical-align:-2px;" alt="OpenAI"> OpenAI GPT-4o
+              </button>
             </div>
           </div>
         </div>

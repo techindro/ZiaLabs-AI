@@ -456,7 +456,9 @@ class Chat {
     d.className = 'dm';
 
     let sourcesHeader = '';
-    const modelBadge = Chat.currentModel === 'openai' ? '🤖 OpenAI GPT-4o Engine' : '⚡ Google Gemini 2.5 Flash';
+    const modelBadge = Chat.currentModel === 'openai' 
+      ? '<img src="/img/openai.svg" width="12" height="12" style="vertical-align:-1px;margin-right:4px;" alt="OpenAI"> OpenAI GPT-4o Engine' 
+      : '<img src="/img/gemini.svg" width="12" height="12" style="vertical-align:-1px;margin-right:4px;" alt="Gemini"> Google Gemini 2.5';
     if (sources && sources.length) {
       sourcesHeader = `
         <div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;">
