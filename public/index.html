@@ -1333,7 +1333,7 @@
 
           <!-- SciSpace High-Premium Floating Input Card -->
           <div style="background: #ffffff; border: 1.5px solid #e5e7eb; border-radius: 20px; padding: 18px 20px; box-shadow: 0 12px 30px rgba(0,0,0,0.04); width: 100%; text-align: left; transition: border-color 0.2s, box-shadow 0.2s; margin-bottom: 24px;" onmouseover="this.style.borderColor='var(--primary)';" onmouseout="this.style.borderColor='#e5e7eb';">
-            <textarea placeholder="Give me any task to work on..." id="dinp-card" style="width: 100%; border: none; outline: none; font-size: 15px; font-family: var(--font-body); color: var(--black); background: transparent; resize: none; height: 60px; line-height: 1.5;" onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); document.getElementById('dinp').value = this.value; Chat.send(); document.getElementById('chatbot-welcome').style.display='none'; document.getElementById('chatbot-thread').style.display='flex';}"></textarea>
+            <textarea placeholder="Give me any task to work on..." id="dinp-card" style="width: 100%; border: none; outline: none; font-size: 15px; font-family: var(--font-body); color: var(--black); background: transparent; resize: none; height: 60px; line-height: 1.5;" onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); document.getElementById('dinp').value = this.value; Chat.send(); document.getElementById('chatbot-welcome').style.display='none'; document.getElementById('chatbot-thread').style.display='flex'; const b = document.getElementById('cb-bottom-bar'); if(b) b.style.display='block';}"></textarea>
             
             <!-- Bottom Control Row inside Card -->
             <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid #f3f4f6;">
@@ -1356,7 +1356,7 @@
                 </button>
 
                 <!-- Send button -->
-                <button style="width: 36px; height: 36px; border-radius: 10px; background: var(--primary); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(4,120,87,0.25);" onclick="document.getElementById('dinp').value = document.getElementById('dinp-card').value; Chat.send(); document.getElementById('chatbot-welcome').style.display='none'; document.getElementById('chatbot-thread').style.display='flex';">
+                <button style="width: 36px; height: 36px; border-radius: 10px; background: var(--primary); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(4,120,87,0.25);" onclick="document.getElementById('dinp').value = document.getElementById('dinp-card').value; Chat.send(); document.getElementById('chatbot-welcome').style.display='none'; document.getElementById('chatbot-thread').style.display='flex'; const b = document.getElementById('cb-bottom-bar'); if(b) b.style.display='block';">
                   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
                 </button>
               </div>
@@ -1421,13 +1421,13 @@
         <div class="chatbot-thread" id="chatbot-thread" style="display:none; max-width: 820px; margin: 0 auto; width: 100%;">
           <div class="chatbot-thread-head" style="border-radius: 12px 12px 0 0;">
             <div class="panel-title">ZiaLabs AI Workspace</div>
-            <div class="panel-action" onclick="Chat.clear();document.getElementById('chatbot-welcome').style.display='';document.getElementById('chatbot-thread').style.display='none';">New chat</div>
+            <div class="panel-action" onclick="Chat.clear();document.getElementById('chatbot-welcome').style.display='';document.getElementById('chatbot-thread').style.display='none';const b=document.getElementById('cb-bottom-bar');if(b)b.style.display='none';">New chat</div>
           </div>
           <div class="chat-msgs" id="dchat"></div>
         </div>
 
-        <!-- Bottom input bar (Centered SciSpace Style) -->
-        <div class="cb-input-bar" style="max-width: 820px; margin: 0 auto; width: 100%; padding: 16px 0 24px 0;">
+        <!-- Bottom input bar (Centered SciSpace Style, hidden on welcome hero) -->
+        <div class="cb-input-bar" id="cb-bottom-bar" style="display:none; max-width: 820px; margin: 0 auto; width: 100%; padding: 16px 0 24px 0;">
           <div class="cb-input-wrap" style="box-shadow: 0 10px 30px rgba(0,0,0,0.06); border-radius: 24px; padding: 8px 12px 8px 24px;">
             <input type="text" placeholder="Give me any research query or task to work on..." id="dinp" style="font-size: 15px;"
               onkeydown="if(event.key==='Enter'){Chat.send();document.getElementById('chatbot-welcome').style.display='none';document.getElementById('chatbot-thread').style.display='flex';}">
