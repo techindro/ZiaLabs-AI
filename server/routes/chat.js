@@ -7,6 +7,7 @@ const PaperSearchOrchestrator = require('../services/PaperSearchOrchestrator');
 const { publishEvent } = require('../config/kafka');
 const SecurityService = require('../services/SecurityService');
 const PaperLinkParser = require('../services/PaperLinkParser');
+const PerplexityWebSearch = require('../services/PerplexityWebSearch');
 
 const agent = new AIAgent();
 
@@ -19,34 +20,19 @@ router.post('/message', authMiddleware, async (req, res) => {
 
     const cleanMessage = SecurityService.sanitizeInput(message.trim());
     const detectedPaper = PaperLinkParser.parse(cleanMessage);
-    let searchResults = null;
 
-    // Auto-search real papers when user asks for paper, link, ArXiv, NeurIPS, IEEE, or research query
-    if (!detectedPaper && /(paper|arxiv|neurips|ieee|pdf|link|download|journal|article|research|literature|study)/i.test(cleanMessage)) {
-      try {
-        const searchData = await PaperSearchOrchestrator.search(cleanMessage, 3);
-        if (searchData && searchData.papers && searchData.papers.length > 0) {
-          searchResults = searchData.papers;
-        }
-      } catch (err) {
-        console.warn('Paper auto-search error:', err.message);
-      }
-    }
+    // Run Perplexity-style real-time internet & academic web search across ArXiv, Semantic Scholar, BioRxiv, and DDG
+    const searchResult = await PerplexityWebSearch.searchInternet(cleanMessage);
 
-    let response = await agent.chat(req.user.id, cleanMessage, language);
+    const promptWithContext = searchResult.formattedContext ? 
+      `${cleanMessage}\n\n${searchResult.formattedContext}` : cleanMessage;
+
+    let response = await agent.chat(req.user.id, promptWithContext, language);
 
     if (detectedPaper) {
       response += PaperLinkParser.formatWidget(detectedPaper);
-    } else if (searchResults && searchResults.length > 0) {
-      response += `\n\n---\n### 📄 **Direct Paper & PDF Download Links**\n`;
-      searchResults.slice(0, 3).forEach((p, idx) => {
-        const pdfUrl = p.pdfUrl || (p.arxivId ? `https://arxiv.org/pdf/${p.arxivId}.pdf` : p.url);
-        const pageUrl = p.url || (p.arxivId ? `https://arxiv.org/abs/${p.arxivId}` : pdfUrl);
-        response += `**${idx + 1}. ${p.title}** (${p.year || 'Research Paper'})\n`;
-        if (p.authors && p.authors.length) response += `*Authors: ${Array.isArray(p.authors) ? p.authors.join(', ') : p.authors}*\n`;
-        response += `📥 **[Download PDF](${pdfUrl})** &nbsp;|&nbsp; 🌐 **[View Article Page](${pageUrl})**\n\n`;
-      });
-      response += `---`;
+    } else if (searchResult.citationWidget) {
+      response += searchResult.citationWidget;
     }
 
     // Publish chat message event to Kafka
@@ -54,7 +40,7 @@ router.post('/message', authMiddleware, async (req, res) => {
       console.warn('Failed to publish ai-synthesis message event:', err.message);
     });
 
-    res.json({ response, paper: detectedPaper, papers: searchResults });
+    res.json({ response, paper: detectedPaper, sources: searchResult.papers });
   } catch (err) {
     console.error('chat error:', err.message);
     res.status(500).json({ error: 'AI agent error. Please try again.' });
