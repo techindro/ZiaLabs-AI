@@ -1354,6 +1354,8 @@ class News {
       const uniData = [
         { img: '/img/meta_bg.png', logo: '/img/meta.svg', uni: 'Meta AI (FAIR)', tag: 'META AI • OPEN FOUNDATION MODELS', defaultTitle: 'Llama 3.3 70B: Multimodal Reasoning & Open Weights Benchmarks', defaultExcerpt: 'Meta AI Fundamental AI Research (FAIR) team releases open-weights foundation models outperforming closed proprietary architectures...', slug: 'meta-ai-llama-3-3-open-foundation-models' },
         { img: '/img/meta_bg.png', logo: '/img/meta.svg', uni: 'Meta AI Research', tag: 'META AI • COMPUTER VISION', defaultTitle: 'Meta Segment Anything 2 (SAM 2): Real-Time Visual Object Tracking in Videos', defaultExcerpt: 'Meta AI FAIR team presents SAM 2, achieving state-of-the-art zero-shot promptable video segmentation across complex visual scenes...', slug: 'meta-segment-anything-2-video-segmentation' },
+        { img: '/img/tesla_bg.png', logo: '/img/tesla.svg', uni: 'Tesla AI & Robotics', tag: 'TESLA • HUMANOID ROBOTICS', defaultTitle: 'Tesla Optimus Gen 2: Real-Time Tactile Neural Control & End-to-End Task Manipulation', defaultExcerpt: 'Tesla AI & Robotics unveils Optimus Gen 2, featuring end-to-end neural network policy control, 11-DoF tactile hands, and autonomous fleet learning...', slug: 'tesla-optimus-gen-2-humanoid-robotics-ai' },
+        { img: '/img/tesla_bg.png', logo: '/img/tesla.svg', uni: 'Tesla FSD AI', tag: 'TESLA • AUTONOMOUS DRIVING', defaultTitle: 'Tesla FSD V13: End-to-End Vision-Only Neural Networks & Unprotected Turns', defaultExcerpt: 'Tesla AI Lab deploys FSD V13, replacing 300,000 lines of explicit C++ code with unified end-to-end vision transformer models trained on 10B+ miles...', slug: 'tesla-fsd-v13-end-to-end-neural-vision' },
         { img: '/img/spacex_bg.png', logo: '/img/spacex.svg', uni: 'SpaceX Starship AI', tag: 'SPACEX • AUTONOMOUS AEROSPACE', defaultTitle: 'SpaceX Starship: Autonomous Real-Time Neural Trajectory & Mechazilla Catch', defaultExcerpt: 'SpaceX details real-time high-rate sensor telemetry and deep neural guidance models for autonomous Starship booster precision landing...', slug: 'spacex-starship-autonomous-neural-trajectory-catch' },
         { img: '/img/spacex_bg.png', logo: '/img/spacex.svg', uni: 'SpaceX Starlink AI', tag: 'SPACEX • SATELLITE COMMUNICATIONS', defaultTitle: 'SpaceX Starlink: Autonomous AI Constellation Routing & Direct-to-Cell Connectivity', defaultExcerpt: 'SpaceX deploys real-time dynamic neural beam steering across 6,000+ active Starlink satellites to deliver direct-to-cell LTE connectivity...', slug: 'spacex-starlink-autonomous-ai-routing-direct-to-cell' },
         { img: '/img/nasa_bg.png', logo: '/img/nasa.svg', uni: 'NASA Space AI', tag: 'NASA • ARTEMIS & AI', defaultTitle: 'NASA Artemis IV: AI Neural Guidance & Autonomous Lunar Landing Systems', defaultExcerpt: 'NASA Jet Propulsion Lab details real-time terrain-relative navigation AI powering autonomous precision landings on the Lunar South Pole...', slug: 'nasa-artemis-ai-autonomous-lunar-navigation' },
@@ -1373,9 +1375,9 @@ class News {
         { img: '/img/tsinghua_bg.png', logo: '/img/tsinghua.png', uni: 'Tsinghua AI', tag: 'TSINGHUA • MULTIMODAL AI', defaultTitle: 'Multimodal Agent Swarms for Robotics', defaultExcerpt: 'Tsinghua AI Center presents cooperative multi-agent vision-language-action policies in complex physical environments...', slug: 'multimodal-agent-swarms-robotics' }
       ];
 
-      // Prioritize Meta AI and SpaceX Starship AI at the top of the featured Blog grid
-      const priorityItems = uniData.filter(item => item.uni.includes('Meta') || item.uni.includes('SpaceX'));
-      const remainingItems = uniData.filter(item => !item.uni.includes('Meta') && !item.uni.includes('SpaceX')).sort(() => 0.5 - Math.random());
+      // Prioritize Meta AI, Tesla AI, and SpaceX Starship AI at the top of the featured Blog grid
+      const priorityItems = uniData.filter(item => item.uni.includes('Meta') || item.uni.includes('Tesla') || item.uni.includes('SpaceX'));
+      const remainingItems = uniData.filter(item => !item.uni.includes('Meta') && !item.uni.includes('Tesla') && !item.uni.includes('SpaceX')).sort(() => 0.5 - Math.random());
       const featuredData = [...priorityItems, ...remainingItems].slice(0, 6);
 
       const htmlContent = featuredData.map((info, idx) => {
