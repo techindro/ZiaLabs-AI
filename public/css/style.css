@@ -42,6 +42,44 @@ body{
 .page{display:none}
 .page.active{display:block}
 
+/* Infinite Automatic Smooth Marquee for Universities & Companies */
+.marquee-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 60px;
+  align-items: center;
+  animation: marqueeSlide 35s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeSlide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.marquee-logo:hover {
+  transform: scale(1.1);
+  opacity: 1 !important;
+}
+
 /* navbar */
 nav{
   display:flex;

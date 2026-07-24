@@ -1149,6 +1149,32 @@ class SarvamIndicVoice {
   }
 }
 
+class LogoShuffle {
+  static initAutoShuffle() {
+    setInterval(() => {
+      const tracks = document.querySelectorAll('.marquee-track');
+      tracks.forEach(track => {
+        const logos = Array.from(track.children);
+        if (logos.length > 2) {
+          // Move the first logo element to the end of the track smoothly
+          const first = logos[0];
+          first.style.opacity = '0';
+          setTimeout(() => {
+            track.appendChild(first);
+            first.style.opacity = '0.5';
+          }, 300);
+        }
+      });
+    }, 8000);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => LogoShuffle.initAutoShuffle());
+} else {
+  LogoShuffle.initAutoShuffle();
+}
+
 // SPA page router — shows/hides page divs based on id
 class App {
   static showPage(id) {
