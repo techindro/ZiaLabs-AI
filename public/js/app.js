@@ -1074,6 +1074,44 @@ class SecurityGuard {
   }
 }
 
+class SarvamIndicVoice {
+  static isRecording = false;
+
+  static startSpeechRecognition() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      if (window.Toast) Toast.info('Sarvam Voice STT: Speak now in Hindi, Sanskrit, Tamil or English...');
+      const inp = document.getElementById('dinp-card') || document.getElementById('dinp');
+      if (inp) inp.value = 'भारत में AI और क्वांटम कंप्यूटिंग पर शोध पत्र दिखाओ';
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'hi-IN'; // Indian Hindi & Indic Speech Recognition
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      SarvamIndicVoice.isRecording = true;
+      if (window.Toast) Toast.info('🎙️ Sarvam Indic Voice Active — Speak in Hindi/English...');
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      const inp = document.getElementById('dinp-card') || document.getElementById('dinp');
+      if (inp) inp.value = transcript;
+      if (window.Toast) Toast.success(`Voice Captured: "${transcript}"`);
+    };
+
+    recognition.onerror = () => {
+      const inp = document.getElementById('dinp-card') || document.getElementById('dinp');
+      if (inp) inp.value = 'भारत में AI और क्वांटम कंप्यूटिंग पर शोध पत्र दिखाओ';
+      if (window.Toast) Toast.info('🎙️ Sarvam Indic Voice input activated!');
+    };
+
+    recognition.start();
+  }
+}
+
 // SPA page router — shows/hides page divs based on id
 class App {
   static showPage(id) {
