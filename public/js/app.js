@@ -457,8 +457,8 @@ class Chat {
 
     let sourcesHeader = '';
     const modelBadge = Chat.currentModel === 'openai' 
-      ? '<img src="/img/openai.svg" width="12" height="12" style="vertical-align:-1px;margin-right:4px;" alt="OpenAI"> OpenAI GPT-4o Engine' 
-      : '<img src="/img/gemini.svg" width="12" height="12" style="vertical-align:-1px;margin-right:4px;" alt="Gemini"> Google Gemini 2.5';
+      ? '<img src="/img/openai.png" width="12" height="12" style="vertical-align:-1px;margin-right:4px;border-radius:2px;object-fit:contain;" alt="OpenAI"> OpenAI GPT-4o Engine' 
+      : '<img src="/img/gemini.png" width="12" height="12" style="vertical-align:-1px;margin-right:4px;object-fit:contain;" alt="Gemini"> Google Gemini 2.5';
     if (sources && sources.length) {
       sourcesHeader = `
         <div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;">
