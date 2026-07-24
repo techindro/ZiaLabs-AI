@@ -1352,6 +1352,8 @@ class News {
       }
 
       const uniData = [
+        { img: '/img/meta_bg.png', logo: '/img/meta.svg', uni: 'Meta AI (FAIR)', tag: 'META AI • OPEN FOUNDATION MODELS', defaultTitle: 'Llama 3.3 70B: Multimodal Reasoning & Open Weights Benchmarks', defaultExcerpt: 'Meta AI Fundamental AI Research (FAIR) team releases open-weights foundation models outperforming closed proprietary architectures...', slug: 'meta-ai-llama-3-3-open-foundation-models' },
+        { img: '/img/spacex_bg.png', logo: '/img/spacex.svg', uni: 'SpaceX Starship AI', tag: 'SPACEX • AUTONOMOUS AEROSPACE', defaultTitle: 'SpaceX Starship: Autonomous Real-Time Neural Trajectory & Mechazilla Catch', defaultExcerpt: 'SpaceX details real-time high-rate sensor telemetry and deep neural guidance models for autonomous Starship booster precision landing...', slug: 'spacex-starship-autonomous-neural-trajectory-catch' },
         { img: '/img/nasa_bg.png', logo: '/img/nasa.svg', uni: 'NASA Space AI', tag: 'NASA • ARTEMIS & AI', defaultTitle: 'NASA Artemis IV: AI Neural Guidance & Autonomous Lunar Landing Systems', defaultExcerpt: 'NASA Jet Propulsion Lab details real-time terrain-relative navigation AI powering autonomous precision landings on the Lunar South Pole...', slug: 'nasa-artemis-ai-autonomous-lunar-navigation' },
         { img: '/img/iitd_bg.png', logo: '/img/iitd.svg', uni: 'IIT Delhi AI', tag: 'IIT DELHI • NEUROMORPHIC AI', defaultTitle: 'IIT Delhi mHAS: Sub-Milliwatt Neuromorphic AI Chip for Edge Perception', defaultExcerpt: 'IIT Delhi Yardi School of Artificial Intelligence develops mHAS chip, enabling ultra-low latency on-device neural processing...', slug: 'iit-delhi-mhas-neuromorphic-ai-chip' },
         { img: '/img/iitb_bg.png', logo: '/img/iitb.svg', uni: 'IIT Bombay AI', tag: 'IIT BOMBAY • INDIC AI', defaultTitle: 'IIT Bombay BharatGPT: Multi-Task Indic LLMs across 22 Official Indian Languages', defaultExcerpt: 'IIT Bombay AI Center presents BharatGPT, advancing native speech, script, and multi-modal reasoning across all 22 official Indian languages...', slug: 'iit-bombay-bharat-gpt-multilingual-ai-models' },
@@ -1366,14 +1368,13 @@ class News {
         { img: '/img/eth_zurich_bg.png', logo: '/img/eth_zurich.png', uni: 'ETH Zurich', tag: 'ETH ZURICH • QUANTUM SYSTEMS', defaultTitle: 'Photonic Interconnects for Quantum Systems', defaultExcerpt: 'ETH Zurich Quantum Systems Lab demonstrates ultra-low loss optical interconnects for distributed cryogenic quantum computing...', slug: 'photonic-interconnects-quantum-systems' },
         { img: '/img/iitm_bg.png', logo: '/img/iitm.svg', uni: 'IIT Madras', tag: 'IIT MADRAS • EDUCATION TECH', defaultTitle: 'Democratizing AI: Prompt Engineering for Millions', defaultExcerpt: 'IIT Madras launches SWAYAM Plus to scale AI education across India, focusing on industry-aligned skill development...', slug: 'democratizing-ai-prompt-engineering' },
         { img: '/img/stanford_bg.png', logo: '/img/stanford.png', uni: 'Stanford BioLab', tag: 'STANFORD • BIOMEDICAL AI', defaultTitle: 'Genomic Foundation Transformer Models', defaultExcerpt: 'Stanford AI BioLab presents zero-shot variant effect predictions across multi-species genomic sequence datasets...', slug: 'genomic-foundation-transformer-models' },
-        { img: '/img/tsinghua_bg.png', logo: '/img/tsinghua.png', uni: 'Tsinghua AI', tag: 'TSINGHUA • MULTIMODAL AI', defaultTitle: 'Multimodal Agent Swarms for Robotics', defaultExcerpt: 'Tsinghua AI Center presents cooperative multi-agent vision-language-action policies in complex physical environments...', slug: 'multimodal-agent-swarms-robotics' },
-        { img: '/img/spacex_bg.png', logo: '/img/spacex.svg', uni: 'SpaceX Starship AI', tag: 'SPACEX • AUTONOMOUS AEROSPACE', defaultTitle: 'SpaceX Starship: Autonomous Real-Time Neural Trajectory & Mechazilla Catch', defaultExcerpt: 'SpaceX details real-time high-rate sensor telemetry and deep neural guidance models for autonomous Starship booster precision landing...', slug: 'spacex-starship-autonomous-neural-trajectory-catch' },
-        { img: '/img/meta_bg.png', logo: '/img/meta.svg', uni: 'Meta AI (FAIR)', tag: 'META AI • OPEN FOUNDATION MODELS', defaultTitle: 'Llama 3.3 70B: Multimodal Reasoning & Open Weights Benchmarks', defaultExcerpt: 'Meta AI Fundamental AI Research (FAIR) team releases open-weights foundation models outperforming closed proprietary architectures...', slug: 'meta-ai-llama-3-3-open-foundation-models' }
+        { img: '/img/tsinghua_bg.png', logo: '/img/tsinghua.png', uni: 'Tsinghua AI', tag: 'TSINGHUA • MULTIMODAL AI', defaultTitle: 'Multimodal Agent Swarms for Robotics', defaultExcerpt: 'Tsinghua AI Center presents cooperative multi-agent vision-language-action policies in complex physical environments...', slug: 'multimodal-agent-swarms-robotics' }
       ];
 
-      // Dynamic random shuffle across all 15+ top global & Indian universities & research institutes (MIT, Stanford, IIT Bombay, IISc, NASA, etc.)
-      const shuffledUniData = [...uniData].sort(() => 0.5 - Math.random());
-      const featuredData = shuffledUniData.slice(0, 6);
+      // Prioritize Meta AI and SpaceX Starship AI at the top of the featured Blog grid
+      const priorityItems = uniData.filter(item => item.uni.includes('Meta') || item.uni.includes('SpaceX'));
+      const remainingItems = uniData.filter(item => !item.uni.includes('Meta') && !item.uni.includes('SpaceX')).sort(() => 0.5 - Math.random());
+      const featuredData = [...priorityItems, ...remainingItems].slice(0, 6);
 
       const htmlContent = featuredData.map((info, idx) => {
         const newsItem = newsItems[idx];
