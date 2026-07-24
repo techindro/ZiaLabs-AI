@@ -1314,6 +1314,7 @@ class App {
       }
 
       News.load();
+      Blog.loadTrendingNews();
       if (document.getElementById('m-paper-tab-overfit')) {
         LandingShowcase.select('overfit');
       }
@@ -1329,8 +1330,9 @@ class News {
     const box = document.getElementById('blog-grid');
     const researchBox = document.getElementById('research-publication-grid');
     const insightsBox = document.getElementById('insights-publication-grid');
+    const homeGrid = document.getElementById('home-blog-posts-grid');
 
-    if (!box && !researchBox && !insightsBox) return;
+    if (!box && !researchBox && !insightsBox && !homeGrid) return;
 
     try {
       let newsItems = [];
