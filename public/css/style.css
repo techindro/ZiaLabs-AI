@@ -59,6 +59,10 @@ body{
   animation: marqueeSlide 35s linear infinite;
 }
 
+.marquee-track.marquee-reverse {
+  animation: marqueeSlideReverse 40s linear infinite;
+}
+
 .marquee-track:hover {
   animation-play-state: paused;
 }
@@ -66,6 +70,11 @@ body{
 @keyframes marqueeSlide {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+
+@keyframes marqueeSlideReverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
 }
 
 .marquee-logo {
