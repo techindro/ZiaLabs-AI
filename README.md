@@ -26,7 +26,7 @@ ZiaLabs started as a weekend hack and evolved into a proper full-stack project w
 | Frontend | HTML, CSS, vanilla JavaScript (SPA pattern) |
 | Backend | Node.js, Express |
 | Database | SQLite via sql.js (in-memory + file persistence) |
-| AI | Google Gemini API (`gemini-flash-latest`) | OpenAI API Key |
+| AI | Google Gemini API (`gemini-flash-latest`) , OpenAI API Key |
 | Auth | bcrypt, JWT |
 | Payments | Rozarpay Checkout + Webhooks |
 | Search APIs | ArXiv REST API, Semantic Scholar Graph API |
